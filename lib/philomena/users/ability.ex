@@ -3,7 +3,6 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
   alias Philomena.Roles.Role
   alias Philomena.Badges.Award
   alias Philomena.Badges.Badge
-  alias Philomena.Channels.Channel
   alias Philomena.Comments.Comment
   alias Philomena.Commissions.Commission
   alias Philomena.Conversations.Conversation
@@ -384,9 +383,6 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
 
   # Show static pages
   def can?(_user, :show, %StaticPage{}), do: true
-
-  # Show channels
-  def can?(_user, :show, %Channel{}), do: true
 
   # Otherwise...
   def can?(_user, _action, _model), do: false

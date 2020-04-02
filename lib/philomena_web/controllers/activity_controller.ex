@@ -8,7 +8,6 @@ defmodule PhilomenaWeb.ActivityController do
     Images.Image,
     ImageFeatures.ImageFeature,
     Comments.Comment,
-    Channels.Channel,
     Topics.Topic,
     Forums.Forum
   }
@@ -77,14 +76,6 @@ defmodule PhilomenaWeb.ActivityController do
       |> preload([:tags])
       |> Repo.one()
 
-    streams =
-      Channel
-      |> where([c], c.nsfw == false)
-      |> where([c], not is_nil(c.last_fetched_at))
-      |> order_by(desc: :is_live, asc: :title)
-      |> limit(6)
-      |> Repo.all()
-
     topics =
       Topic
       |> join(:inner, [t], f in Forum, on: [id: t.forum_id])
@@ -111,7 +102,6 @@ defmodule PhilomenaWeb.ActivityController do
       top_scoring: top_scoring,
       watched: watched,
       featured_image: featured_image,
-      streams: streams,
       topics: topics,
       interactions: interactions,
       layout_class: "layout--wide"

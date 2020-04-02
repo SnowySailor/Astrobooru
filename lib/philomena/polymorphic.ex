@@ -3,7 +3,6 @@ defmodule Philomena.Polymorphic do
   import Ecto.Query
 
   @classes %{
-    "Channel" => Philomena.Channels.Channel,
     "Comment" => Philomena.Comments.Comment,
     "Commission" => Philomena.Commissions.Commission,
     "Conversation" => Philomena.Conversations.Conversation,
@@ -12,7 +11,6 @@ defmodule Philomena.Polymorphic do
     "Forum" => Philomena.Forums.Forum,
     "Gallery" => Philomena.Galleries.Gallery,
     "Image" => Philomena.Images.Image,
-    "LivestreamChannel" => Philomena.Channels.Channel,
     "Post" => Philomena.Posts.Post,
     "Report" => Philomena.Reports.Report,
     "Topic" => Philomena.Topics.Topic,

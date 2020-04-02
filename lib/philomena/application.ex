@@ -15,8 +15,6 @@ defmodule Philomena.Application do
       # {Philomena.Worker, arg},
       Philomena.Servers.ImageProcessor,
       Philomena.Servers.UserLinkUpdater,
-      Philomena.Servers.PicartoChannelUpdater,
-      Philomena.Servers.PiczelChannelUpdater,
       Philomena.Servers.UserFingerprintUpdater,
       Philomena.Servers.UserIpUpdater,
       Philomena.Servers.Config,

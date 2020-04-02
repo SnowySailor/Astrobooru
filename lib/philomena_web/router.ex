@@ -19,7 +19,6 @@ defmodule PhilomenaWeb.Router do
     plug PhilomenaWeb.SiteNoticePlug
     plug PhilomenaWeb.ForumListPlug
     plug PhilomenaWeb.FilterSelectPlug
-    plug PhilomenaWeb.ChannelPlug
     plug PhilomenaWeb.AdminCountersPlug
   end
 
@@ -271,14 +270,6 @@ defmodule PhilomenaWeb.Router do
         singleton: true
     end
 
-    resources "/channels", ChannelController, only: [] do
-      resources "/read", Channel.ReadController, only: [:create], singleton: true
-
-      resources "/subscription", Channel.SubscriptionController,
-        only: [:create, :delete],
-        singleton: true
-    end
-
     resources "/dnp", DnpEntryController, only: [:new, :create, :edit, :update]
 
     resources "/ip_profiles", IpProfileController, only: [:show] do
@@ -382,7 +373,6 @@ defmodule PhilomenaWeb.Router do
       singleton: true
 
     resources "/pages", PageController, only: [:index, :new, :create, :edit, :update]
-    resources "/channels", ChannelController, only: [:new, :create, :edit, :update]
   end
 
   scope "/", PhilomenaWeb do
@@ -477,7 +467,6 @@ defmodule PhilomenaWeb.Router do
     resources "/dnp", DnpEntryController, only: [:index, :show]
     resources "/staff", StaffController, only: [:index]
     resources "/stats", StatController, only: [:index]
-    resources "/channels", ChannelController, only: [:index, :show]
     resources "/settings", SettingController, only: [:edit, :update], singleton: true
     resources "/duplicate_reports", DuplicateReportController, only: [:index, :show, :create]
 
