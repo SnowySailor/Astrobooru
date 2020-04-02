@@ -1,11 +1,8 @@
 defmodule Philomena.Images.TagValidator do
   import Ecto.Changeset
 
-  @safe_rating MapSet.new(["safe"])
-  @sexual_ratings MapSet.new(["suggestive", "questionable", "explicit"])
-  @horror_ratings MapSet.new(["semi-grimdark", "grimdark"])
-  @gross_rating MapSet.new(["grotesque"])
-  @empty MapSet.new()
+  @ratings MapSet.new(["dso", "planetary", "lunar", "solar", "landscape"])
+  @empty   MapSet.new()
 
   def validate_tags(changeset) do
     tags = changeset |> get_field(:tags)
@@ -20,23 +17,11 @@ defmodule Philomena.Images.TagValidator do
     changeset
     |> validate_number_of_tags(tag_set, 3)
     |> validate_has_rating(rating_set)
-    |> validate_safe(rating_set)
-    |> validate_sexual_exclusion(rating_set)
-    |> validate_horror_exclusion(rating_set)
+    |> validate_only_one_rating(rating_set)
   end
 
   defp ratings(%MapSet{} = tag_set) do
-    safe = MapSet.intersection(tag_set, @safe_rating)
-    sexual = MapSet.intersection(tag_set, @sexual_ratings)
-    horror = MapSet.intersection(tag_set, @horror_ratings)
-    gross = MapSet.intersection(tag_set, @gross_rating)
-
-    %{
-      safe: safe,
-      sexual: sexual,
-      horror: horror,
-      gross: gross
-    }
+    MapSet.intersection(tag_set, @ratings)
   end
 
   defp validate_number_of_tags(changeset, tag_set, num) do
@@ -58,30 +43,11 @@ defmodule Philomena.Images.TagValidator do
 
   defp validate_has_rating(changeset, _ratings), do: changeset
 
-  defp validate_safe(changeset, %{safe: s, sexual: x, horror: h, gross: g})
-       when s != @empty and (x != @empty or h != @empty or g != @empty) do
-    changeset
-    |> add_error(:tag_input, "may not contain any other rating if safe")
-  end
-
-  defp validate_safe(changeset, _ratings), do: changeset
-
-  defp validate_sexual_exclusion(changeset, %{sexual: x}) do
+  defp validate_only_one_rating(changeset, ratings) do
     cond do
-      MapSet.size(x) > 1 ->
+      MapSet.size(ratings) > 1 ->
         changeset
-        |> add_error(:tag_input, "may contain at most one sexual rating")
-
-      true ->
-        changeset
-    end
-  end
-
-  defp validate_horror_exclusion(changeset, %{horror: h}) do
-    cond do
-      MapSet.size(h) > 1 ->
-        changeset
-        |> add_error(:tag_input, "may contain at most one grim rating")
+        |> add_error(:tag_input, "may contain only one type")
 
       true ->
         changeset

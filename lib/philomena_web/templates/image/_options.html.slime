@@ -29,7 +29,7 @@
   .block__tab.hidden data-tab="sharing"
     #embed_options
       - source_link = if @image.source_url in [nil, ""], do: " (Original source unknown at time of posting)", else: " - [url=#{@image.source_url}]Original source[/url]"
-      h5 Derpibooru
+      h5 Astrobooru
       p
         strong> Small thumbnail
         input.input#embed_small_thumbnail_tag type="text" value=">>#{@image.id}s" cols="10" readonly="readonly"

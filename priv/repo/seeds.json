@@ -1,50 +1,35 @@
 {
-  "system_filters": [{
-      "name": "Default",
-      "description": "The site's default filter.",
-      "hidden": [
-        "explicit",
-        "grotesque"
-      ],
-      "spoilered": [
-        "questionable"
-      ]
-    },
+  "system_filters": [
     {
       "name": "Everything",
       "description": "This filter won't filter out anything at all.",
       "hidden": [],
       "spoilered": []
+    },
+    {
+      "name": "DSOs",
+      "description": "This filter will only show DSO images.",
+      "hidden": ["planetary", "solar", "lunar", "landscape"],
+      "spoilered": []
     }
   ],
-  "forums": [{
+  "forums": [
+    {
       "name": "General Discussion",
       "short_name": "dis",
-      "description": "This is a discussion forum for everything unrelated to the show or other forums",
+      "description": "This is a discussion forum for everything unrelated to astrophotography other forums",
       "access_level": "normal"
     },
     {
-      "name": "Episode Discussion",
-      "short_name": "pony",
-      "description": "Discuss the show, characters, and theories",
+      "name": "Equipment Discussion",
+      "short_name": "equip",
+      "description": "This is a discussion forum for everything related to astrophotography equipment",
       "access_level": "normal"
     },
     {
       "name": "Site and Policy",
       "short_name": "meta",
       "description": "For site discussion and policy discussion",
-      "access_level": "normal"
-    },
-    {
-      "name": "Art Chat",
-      "short_name": "art",
-      "description": "Discuss art of any form, and share techniques and tips",
-      "access_level": "normal"
-    },
-    {
-      "name": "Roleplaying",
-      "short_name": "rp",
-      "description": "Roleplaying forum, in which people play roles",
       "access_level": "normal"
     },
     {
@@ -63,18 +48,16 @@
   "users": [{
     "name": "Administrator",
     "email": "admin@example.com",
-    "password": "trixieisbestpony",
-    "password_confirmation": "trixieisbestpony",
+    "password": "examplepassword",
+    "password_confirmation": "examplepassword",
     "role": "admin"
   }],
   "rating_tags": [
-    "safe",
-    "suggestive",
-    "questionable",
-    "explicit",
-    "semi-grimdark",
-    "grimdark",
-    "grotesque"
+    "dso",
+    "planetary",
+    "solar",
+    "lunar",
+    "landscape"
   ],
   "roles": [
     {"name": "moderator", "resource_type": "Image"},

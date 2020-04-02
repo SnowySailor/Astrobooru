@@ -3,11 +3,6 @@
     h4
       ' Read the
       a> href="/pages/rules" site rules
-      ' and check our
-      a> href="/dnp" do-not-post list
-    p
-      ' Don't post content the artist doesn't want here (or shared in general),
-      strong including commercial content.
 
   = if !@conn.assigns.current_user do
     p
@@ -18,16 +13,11 @@
       = checkbox f, :captcha, class: "js-captcha", value: 0
       = label f, :captcha, "I am not a robot!"
 
-  p
-    strong
-      ' Please check it isn't already here with
-      a href="/search/reverse" reverse search.
-
   / todo: extract this
   h4 Select an image
   .image-other
     #js-image-upload-previews
-    p Upload a file from your computer, or provide a link to the page containing the image and click Fetch.
+    p Upload a file from your computer
     .field
       = file_input f, :image, class: "input js-scraper"
       = error_tag f, :image_size
@@ -37,23 +27,12 @@
       = error_tag f, :image_mime_type
       = error_tag f, :image_orig_sha512_hash
 
-    .field.field--inline
-      = url_input f, :scraper_url, class: "input input--wide js-scraper", placeholder: "Link a deviantART page, a Tumblr post, or the image directly"
-      button.button.button--separate-left#js-scraper-preview type="button" title="Fetch the image at the specified URL" data-disable-with="Fetch"
-        ' Fetch
-
     .field-error-js.hidden.js-scraper
 
   h4 About this image
   .field
-    = label f, :source_url, "The page you found this image on"
-    = url_input f, :source_url, class: "input input--wide js-image-input", placeholder: "Source URL"
-  
-  .field
     label for="image[tag_input]"
-      ' Describe with
-      strong> 3+
-      ' tags, including ratings and applicable artist tags
+      ' Describe with 3+ tags, including types and applicable equipment tags
 
     = render PhilomenaWeb.TagView, "_tag_editor.html", f: f, name: :tag_input, type: :upload
     = error_tag f, :tag_input
