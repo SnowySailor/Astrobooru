@@ -1,7 +1,7 @@
 {
   "system_filters": [
     {
-      "name": "Everything",
+      "name": "Default",
       "description": "This filter won't filter out anything at all.",
       "hidden": [],
       "spoilered": []
