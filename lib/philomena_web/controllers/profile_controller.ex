@@ -27,7 +27,6 @@ defmodule PhilomenaWeb.ProfileController do
       awards: [:badge, :awarded_by],
       public_links: :tag,
       verified_links: :tag,
-      commission: [sheet_image: :tags, items: [example_image: :tags]]
     ]
 
   plug :set_admin_metadata
@@ -126,8 +125,6 @@ defmodule PhilomenaWeb.ProfileController do
 
     scratchpad = Renderer.render_one(%{body: user.scratchpad || ""}, conn)
 
-    commission_information = commission_info(user.commission, conn)
-
     recent_galleries =
       Gallery
       |> where(creator_id: ^user.id)
@@ -150,7 +147,6 @@ defmodule PhilomenaWeb.ProfileController do
       "show.html",
       user: user,
       interactions: interactions,
-      commission_information: commission_information,
       recent_artwork: recent_artwork,
       recent_uploads: recent_uploads,
       recent_faves: recent_faves,
@@ -197,11 +193,6 @@ defmodule PhilomenaWeb.ProfileController do
 
   defp map_fetch(nil, _field_name), do: nil
   defp map_fetch(map, field_name), do: Map.get(map, field_name)
-
-  defp commission_info(%{information: info}, conn) when info not in [nil, ""],
-    do: Renderer.render_one(%{body: info}, conn)
-
-  defp commission_info(_commission, _conn), do: ""
 
   defp tags([]), do: []
   defp tags(links), do: Enum.map(links, & &1.tag) |> Enum.reject(&is_nil/1)

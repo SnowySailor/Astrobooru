@@ -11,8 +11,6 @@ defmodule PhilomenaWeb.StatController do
   alias Philomena.Users.User
   alias Philomena.Galleries.Gallery
   alias Philomena.Galleries.Interaction
-  alias Philomena.Commissions.Commission
-  alias Philomena.Commissions.Item
   alias Philomena.Reports.Report
   alias Philomena.Repo
   import Ecto.Query
@@ -20,7 +18,6 @@ defmodule PhilomenaWeb.StatController do
   def index(conn, _params) do
     {gallery_count, gallery_size, distinct_creators, images_in_galleries} = galleries()
     {open_reports, report_count, response_time} = moderation()
-    {open_commissions, commission_items} = commissions()
     {image_aggs, comment_aggs} = aggregations()
     {forums, topics, posts} = forums()
     {users, users_24h} = users()
@@ -35,8 +32,6 @@ defmodule PhilomenaWeb.StatController do
       posts_count: posts,
       users_count: users,
       users_24h: users_24h,
-      open_commissions: open_commissions,
-      commission_items: commission_items,
       open_reports: open_reports,
       report_stat_count: report_count,
       response_time: response_time,
@@ -102,13 +97,6 @@ defmodule PhilomenaWeb.StatController do
     last_gi = Repo.one(last(Interaction))
 
     {gallery_count, gallery_size, distinct_creators, diff(last_gi, first_gi)}
-  end
-
-  defp commissions do
-    open_commissions = Repo.aggregate(where(Commission, open: true), :count, :id)
-    commission_items = Repo.aggregate(Item, :count, :id)
-
-    {open_commissions, commission_items}
   end
 
   defp moderation do

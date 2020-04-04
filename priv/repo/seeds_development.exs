@@ -33,7 +33,7 @@ for user_def <- resources["users"] do
   |> Repo.insert(on_conflict: :nothing)
 end
 
-pleb = Repo.get_by!(User, name: "Pleb")
+pleb = Repo.get_by!(User, name: "Planetary Beta")
 request_attributes = [
   fingerprint: "c1836832948",
   ip: ip,

@@ -22,7 +22,6 @@ defmodule Philomena.Users.User do
   alias Philomena.Notifications.UnreadNotification
   alias Philomena.Galleries.Gallery
   alias Philomena.Users.User
-  alias Philomena.Commissions.Commission
   alias Philomena.Roles.Role
   alias Philomena.UserFingerprints.UserFingerprint
   alias Philomena.UserIps.UserIp
@@ -44,7 +43,6 @@ defmodule Philomena.Users.User do
     has_many :user_fingerprints, UserFingerprint
     has_many :bans, UserBan
     has_many :donations, Donation
-    has_one :commission, Commission
     many_to_many :roles, Role, join_through: "users_roles", on_replace: :delete
 
     belongs_to :current_filter, Filter

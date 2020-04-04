@@ -93,16 +93,6 @@ elixir:
       = number_with_delimiter(@images_in_galleries)
     ' times.
 
-  h3 Commissions
-  p
-    ' There are
-    span.stat>
-      = number_with_delimiter(@open_commissions)
-    ' open commission listings on the site, offering a total of
-    span.stat>
-      = number_with_delimiter(@commission_items)
-    ' items.
-
   h3 Moderation
   p
     ' We have received
