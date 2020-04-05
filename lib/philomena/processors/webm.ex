@@ -96,18 +96,22 @@ defmodule Philomena.Processors.Webm do
         file,
         "-c:v",
         "libvpx",
-        "-quality",
+        "-deadline",
         "good",
         "-cpu-used",
-        "3",
+        "5",
         "-auto-alt-ref",
         "0",
+        "-qmin",
+        "15",
+        "-qmax",
+        "35",
         "-crf",
-        "10",
-        "-b:v",
-        "5M",
+        "31",
         "-vf",
         scale_filter,
+        "-threads",
+        "1",
         webm
       ])
 
@@ -132,6 +136,8 @@ defmodule Philomena.Processors.Webm do
         "5M",
         "-vf",
         scale_filter,
+        "-threads",
+        "1",
         mp4
       ])
 
