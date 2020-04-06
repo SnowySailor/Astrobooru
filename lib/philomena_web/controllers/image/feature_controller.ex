@@ -14,7 +14,7 @@ defmodule PhilomenaWeb.Image.FeatureController do
     Tags.reindex_tags(image.added_tags)
 
     conn
-    |> put_flash(:info, "Image marked as featured image.")
+    |> put_flash(:info, "Image marked as image of the day.")
     |> redirect(to: Routes.image_path(conn, :show, image))
   end
 
