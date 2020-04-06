@@ -97,7 +97,7 @@ defmodule Philomena.Images do
 
   def feature_image(featurer, %Image{} = image) do
     image = Repo.preload(image, :tags)
-    [featured] = Tags.get_or_create_tags("featured image")
+    [featured] = Tags.get_or_create_tags("image of the day")
 
     feature =
       %ImageFeature{user_id: featurer.id, image_id: image.id}
