@@ -13,7 +13,12 @@
       "planetary",
       "solar",
       "lunar",
-      "landscape"
+      "aurora-borealis",
+      "terrestrial",
+      "comet",
+      "sattelite",
+      "asteriod",
+      "equipment"
     ],
     "Often Forgotten": [
       "narrowband",
