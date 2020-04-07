@@ -78,28 +78,6 @@ function setupImageUpload() {
     if (!remoteUrl.value) return;
 
     disableFetch();
-
-    scrapeUrl(remoteUrl.value).then(data => {
-      if (data.errors && data.errors.length > 0) {
-        scraperError.innerText = data.errors.join(' ');
-        showError();
-        return;
-      }
-
-      hideError();
-
-      // Set source
-      if (sourceEl) sourceEl.value = sourceEl.value || data.source_url || '';
-      // Set description
-      if (descrEl) descrEl.value = descrEl.value || data.description || '';
-      // Add author
-      if (tagsEl && data.author_name) addTag(tagsEl, `artist:${data.author_name.toLowerCase()}`);
-      // Clear selected file, if any
-      fileField.value = '';
-      showImages(data.images);
-
-      enableFetch();
-    }).catch(showError);
   });
 }
 

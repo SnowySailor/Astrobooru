@@ -13,7 +13,7 @@
 
         .field
           = label f, :tag_input do
-            ' Separate tags with commas. Use 'artist:name' tags to identify artists. Got questions? Check the
+            ' Separate tags with commas. Use 'photographer:name' tags to identify artists. Got questions? Check the
             a> href="/pages/tags" tag guidelines
             ' or the
             a href="/pages/spoilers" spoiler guidelines

@@ -11,11 +11,11 @@
           em> specific
           ' to you, usually
           code>
-            | artist:
-            em artist name here
+            | photographer:
+            em photographer name here
           ' or a series name
       p Should be blank only if your content isn't on the site, generally
-      = text_input f, :tag_name, value: assigns[:tag_name], class: "input", autocomplete: "off", placeholder: "artist:name", data: [ac: "true", ac_min_length: "3", ac_source: "/tags/autocomplete?term="]
+      = text_input f, :tag_name, value: assigns[:tag_name], class: "input", autocomplete: "off", placeholder: "photographer:name", data: [ac: "true", ac_min_length: "3", ac_source: "/tags/autocomplete?term="]
 
   .field
     label for="uri"

@@ -1,6 +1,6 @@
 h1 User Links
 p Link creation is done via the Users menu.
-p Verifying a link will automatically award an artist badge if the link is public, no artist badge exists, and an "artist:" tag is specified.
+p Verifying a link will automatically award an photographer badge if the link is public, no photographer badge already exists, and a "photographer:" tag is specified.
 
 = form_for :user_link, Routes.admin_user_link_path(@conn, :index), [method: "get", class: "hform"], fn f ->
   .field
