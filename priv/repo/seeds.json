@@ -9,7 +9,7 @@
     {
       "name": "DSOs",
       "description": "This filter will only show DSO images.",
-      "hidden": ["planetary", "solar", "lunar", "landscape"],
+      "hidden": ["planetary", "solar", "lunar", "aurora-borealis", "terrestrial", "comet", "sattelite", "asteriod", "equipment"],
       "spoilered": []
     }
   ],
