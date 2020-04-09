@@ -41,15 +41,15 @@ p
   ' search for tags with a name that is similar to the query's
   em word stems
   ' . For example,
-  code winged humanization
+  code asi 1600
   ' ,
-  code wings
+  code asi 183
   ' , and
-  code> spread wings
+  code> zwo asi
   ' would all be matched by a search for
-  code wing
+  code asi
   ' , but
-  code> sewing
+  code> aside
   ' would not be.
 
 h3 Allowed fields
@@ -67,7 +67,7 @@ table.table
       td Literal
       td Matches the name of the target tag, if this tag is aliased.
       td
-        code = link "alias_of:twilight sparkle", to: Routes.tag_path(@conn, :index, tq: "alias_of:twilight sparkle")
+        code = link "alias_of:m31", to: Routes.tag_path(@conn, :index, tq: "alias_of:m31")
     tr
       td
         code aliased
@@ -81,14 +81,14 @@ table.table
       td Literal
       td Matches the name of any of this tag's aliases.
       td
-        code = link "aliases:ts", to: Routes.tag_path(@conn, :index, tq: "aliases:ts")
+        code = link "aliases:andromeda galaxy", to: Routes.tag_path(@conn, :index, tq: "aliases:andromeda galaxy")
     tr
       td
         code analyzed_name
       td Full Text
       td Matches the name of this tag. This is the default field.
       td
-        code = link "analyzed_name:wing", to: Routes.tag_path(@conn, :index, tq: "analyzed_name:wing")
+        code = link "analyzed_name:galaxy", to: Routes.tag_path(@conn, :index, tq: "analyzed_name:galaxy")
     tr
       td
         code category
@@ -102,67 +102,53 @@ table.table
       td Full Text
       td Matches the text of the full description for this tag.
       td
-        code = link "description:species", to: Routes.tag_path(@conn, :index, tq: "description:species")
+        code = link "description:nebula", to: Routes.tag_path(@conn, :index, tq: "description:nebula")
     tr
       td
         code id
       td Numeric Range
       td Matches the numeric surrogate key for this tag.
       td
-        code = link "id:40482", to: Routes.tag_path(@conn, :index, tq: "id:40482")
+        code = link "id:12", to: Routes.tag_path(@conn, :index, tq: "id:12")
     tr
       td
         code images
       td Numeric Range
       td Matches tags with the specified image count.
       td
-        code = link "images.lte:1000", to: Routes.tag_path(@conn, :index, tq: "images.lte:1000")
+        code = link "images.lte:50", to: Routes.tag_path(@conn, :index, tq: "images.lte:50")
     tr
       td
         code implied_by
       td Literal
       td Matches this tag if it is implied by the given tag.
       td
-        code = link "implied_by:transparent background", to: Routes.tag_path(@conn, :index, tq: "implied_by:transparent background")
+        code = link "implied_by:canon", to: Routes.tag_path(@conn, :index, tq: "implied_by:canon")
     tr
       td
         code implies
       td Literal
       td Matches this tag if it implies the given tag.
       td
-        code = link "implies:shipping", to: Routes.tag_path(@conn, :index, tq: "implies:shipping")
+        code = link "implies:dslr", to: Routes.tag_path(@conn, :index, tq: "implies:dslr")
     tr
       td
         code name
       td Literal
       td Matches the exact name of this tag.
       td
-        code = link "name:safe", to: Routes.tag_path(@conn, :index, tq: "name:safe")
-    tr
-      td
-        code name_in_namespace
-      td Literal
-      td Matches the name of this tag with any namespace component removed.
-      td
-        code = link "name_in_namespace:johnjoseco", to: Routes.tag_path(@conn, :index, tq: "name_in_namespace:johnjoseco")
+        code = link "name:dso", to: Routes.tag_path(@conn, :index, tq: "name:dso")
     tr
       td
         code namespace
       td Literal
       td Matches tags with the given namespace.
       td
-        code = link "namespace:artist", to: Routes.tag_path(@conn, :index, tq: "namespace:artist")
+        code = link "namespace:photographer", to: Routes.tag_path(@conn, :index, tq: "namespace:photographer")
     tr
       td
         code short_description
       td Full Text
       td Matches the text of the short description for this tag.
       td
-        code = link "short_description:gender", to: Routes.tag_path(@conn, :index, tq: "short_description:gender")
-    tr
-      td
-        code slug
-      td Literal
-      td Matches the slug of this tag.
-      td
-        code = link "slug:-fwslash-mlp-fwslash-", to: Routes.tag_path(@conn, :index, tq: "slug:-fwslash-mlp-fwslash-")
+        code = link "short_description:comet", to: Routes.tag_path(@conn, :index, tq: "short_description:comet")

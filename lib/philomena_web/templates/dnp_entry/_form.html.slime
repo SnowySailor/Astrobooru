@@ -3,11 +3,11 @@
     h3 Getting on the DNP list?
 
     p
-      ' We offer the DNP list in order to give artists the last say on their art, but we
-      ' won't deny that we are sad whenever we see good art and artists disappear.
+      ' We offer the DNP list in order to give photographers the last say on their photos, but we
+      ' won't deny that we are sad whenever we see good photos and photographers disappear.
       ' Because we know that many who seek a DNP do so on their first contact with the site,
-      ' we'd be very grateful if you as the artist would like to give the site a shot first.
-      ' Why not upload some of your own art? The community might appreciate it more than you think.
+      ' we'd be very grateful if you as the photographer would like to give the site a shot first.
+      ' Why not upload some of your own photos? The community might appreciate it more than you think.
 
     p
       ' Do you wish to submit a DNP Request?
@@ -18,10 +18,10 @@
     h3 Options
 
     p
-      ' We are aware of several common reasons for why artists seek a DNP.
+      ' We are aware of several common reasons for why photographers seek a DNP.
       ' They include things such as unwanted edits or a wish to disassociate
-      ' their name from their artwork. Many of these concerns can be addressed
-      ' without removing art.
+      ' their name from their photographs. Many of these concerns can be addressed
+      ' without removing photos.
 
     p We have created several options for you below:
 
@@ -46,23 +46,23 @@
         = select f, :dnp_type, selectable_types(), class: "js-dnp-type input input--wide"
         = error_tag f, :dnp_type
 
-      / Artist Tag
-      strong Artist Tag
-      p Select the artist tag you would like to request a DNP entry for
+      / Photographer Tag
+      strong Photographer Tag
+      p Select the photographer tag you would like to request a DNP entry for
       .field
         = select f, :tag_id, selectable_options(@selectable_tags), class: "input"
         = error_tag f, :tag_id
       hr
       / Conditions
       strong Conditions
-      p If you selected "Other", or have other conditions applicable to your request, please enter them here. If someone always has permission to upload your artwork, enter their name here. (Optional)
+      p If you selected "Other", or have other conditions applicable to your request, please enter them here. If someone always has permission to upload your photographs, enter their name here. (Optional)
       .field
         = textarea f, :conditions, class: "input input--wide", placeholder: "Conditions"
         = error_tag f, :conditions
       hr
       / Reason
       strong Reason For Request
-      p Please indicate the reason why you would like your artwork to be removed. (Required)
+      p Please indicate the reason why you would like your photographs to be removed. (Required)
       .field
         = textarea f, :reason, class: "input input--wide", placeholder: "Reason", required: true
         = error_tag f, :reason
@@ -73,7 +73,7 @@
       hr
       / Instructions
       strong Instructions
-      p If you would like existing artwork to be removed under this request, please provide instructions, such as "Remove all art with my artist tag that contain the "edit" tag." (Optional)
+      p If you would like existing photographs to be removed under this request, please provide instructions, such as "Remove all photos with my photographer tag that contain the "edit" tag." (Optional)
       .field
         = textarea f, :instructions, class: "input input--wide", placeholder: "Instructions"
         = error_tag f, :instructions

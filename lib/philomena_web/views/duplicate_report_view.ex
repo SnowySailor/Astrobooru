@@ -104,7 +104,7 @@ defmodule PhilomenaWeb.DuplicateReportView do
 
   defp artist_tags(%{tags: tags}) do
     tags
-    |> Enum.filter(&(&1.namespace == "artist"))
+    |> Enum.filter(&(&1.namespace == "photographer"))
     |> Enum.map(& &1.name)
     |> MapSet.new()
   end

@@ -49,27 +49,3 @@ And if everything goes wrong:
     git push -f production master
 
 (to be repeated until it works again)
-
-## TODO
-* Automatic platesolving and tag modification with catalog objects (M, NGC, C, Arp, etc.)
-* Create "telescope:" colored tag prefix (grey)
-* Create "mount:" colored tag prefix (yellow)
-* Create "guidescope:" colored tag prefix (green)
-* Create "camera:" colored tag prefix (red)
-* Create "editing-software:" colored tax prefix (light blue)
-* Copy existing pages from DB to seeds.json
-* Add total integration time to user stats
-* Exposure lengths and filter types for images
-  * Allow search by total integration time
-* Allow users to upgrade to monthly premium subscription
-  * PayPal integration
-  * Credit card integration?
-  * Create premium user role
-* Sift through text to remove all character names and non-astronomy references
-* Limit uploads to 15MB for premium users
-* Limit uploads to 2MB for non-premium users
-* Premium account subscriptions
-* `"artist:"` to `"photographer:"`
-* Default profile images changed
-* Restyle pages to be darker
-* Contact page

@@ -93,7 +93,7 @@
 
     = if Enum.any?(@dnp_entries) do
       hr
-      strong.comment_deleted This artist is on the Do-Not-Post List with the following restrictions:
+      strong.comment_deleted This photographer is on the Do-Not-Post List with the following restrictions:
 
       = for {body, entry} <- @dnp_entries do
         br

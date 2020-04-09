@@ -65,17 +65,15 @@ defmodule Philomena.DnpEntries.DnpEntry do
   def reasons do
     [
       {"No Edits",
-       "I would like to prevent edited versions of my artwork from being uploaded in the future"},
-      {"Artist Tag Change",
-       "I would like my artist tag to be changed to something that can not be connected to my current name"},
+       "I would like to prevent edited versions of my photographs from being uploaded in the future"},
+      {"Photographer Tag Change",
+       "I would like my photographer tag to be changed to something that can not be connected to my current name"},
       {"Uploader Credit Change",
-       "I would like the uploader credit for already existing uploads of my art to be assigned to me"},
-      {"Certain Type/Location Only",
-       "I only want to allow art of a certain type or from a certain location to be uploaded to Astrobooru"},
+       "I would like the uploader credit for already existing uploads of my photos to be assigned to me"},
       {"With Permission Only",
-       "I only want people with my permission to be allowed to upload my art to Astrobooru"},
-      {"Artist Upload Only",
-       "I want to be the only person allowed to upload my art to Astrobooru"},
+       "I only want people with my permission to be allowed to upload my photos to Astrobooru"},
+      {"Photographer Upload Only",
+       "I want to be the only person allowed to upload my photos to Astrobooru"},
       {"Other", "I would like a DNP entry under other conditions"}
     ]
   end

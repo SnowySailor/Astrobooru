@@ -79,7 +79,7 @@ defmodule PhilomenaWeb.LayoutView do
   def theme_name(_user), do: "default"
 
   def artist_tags(tags),
-    do: Enum.filter(tags, &(&1.namespace == "artist"))
+    do: Enum.filter(tags, &(&1.namespace == "photographer"))
 
   def opengraph?(conn),
     do:

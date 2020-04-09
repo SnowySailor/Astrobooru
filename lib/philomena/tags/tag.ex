@@ -178,7 +178,7 @@ defmodule Philomena.Tags.Tag do
   defp join_namespace_parts([_namespace, _name], original_name),
     do: original_name
 
-  defp ununderscore(<<"artist:", _rest::binary>> = name),
+  defp ununderscore(<<"photographer:", _rest::binary>> = name),
     do: name
 
   defp ununderscore(name),
