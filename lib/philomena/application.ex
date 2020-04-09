@@ -18,11 +18,14 @@ defmodule Philomena.Application do
       Philomena.Servers.UserFingerprintUpdater,
       Philomena.Servers.UserIpUpdater,
       Philomena.Servers.Config,
-      Pow.Store.Backend.MnesiaCache,
+      {Pow.Store.Backend.MnesiaCache, extra_db_nodes: Node.list()},
       {Redix, name: :redix, host: Application.get_env(:philomena, :redis_host)},
 
       # Start the endpoint when the application starts
-      PhilomenaWeb.Endpoint
+      PhilomenaWeb.Endpoint,
+
+      # Connection drainer for SIGTERM
+      {RanchConnectionDrainer, ranch_ref: PhilomenaWeb.Endpoint.HTTP, shutdown: 30_000}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
