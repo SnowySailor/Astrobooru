@@ -58,16 +58,8 @@ defmodule Philomena.DnpEntries.DnpEntry do
     do: changeset
 
   def types do
-    # [
-    #   "No Edits",
-    #   "Photographer Tag Change",
-    #   "Uploader Credit Change",
-    #   "With Permission Only",
-    #   "Photographer Upload Only",
-    #   "Other"
-    # ]
     reasons()
-    |> Enum.map(fn reason -> elem(reason, 0) end)
+    |> Enum.map(fn {title, _desc} -> title end)
   end
 
   def reasons do

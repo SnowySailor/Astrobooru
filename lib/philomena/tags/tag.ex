@@ -8,36 +8,27 @@ defmodule Philomena.Tags.Tag do
   alias Philomena.Slug
 
   @namespaces [
-    "artist",
-    "art pack",
-    "ask",
-    "blog",
-    "colorist",
-    "comic",
-    "editor",
-    "fanfic",
-    "oc",
-    "parent",
-    "parents",
+    "mount",
+    "camera",
+    "guide camera",
+    "telescope",
+    "guide scope",
+    "capture software",
+    "processing software",
     "photographer",
-    "series",
-    "species",
-    "spoiler",
-    "video"
+    "object"
   ]
 
   @namespace_categories %{
-    "artist" => "origin",
-    "art pack" => "content-fanmade",
-    "colorist" => "origin",
-    "comic" => "content-fanmade",
-    "editor" => "origin",
-    "fanfic" => "content-fanmade",
-    "oc" => "oc",
+    "mount" => "equipment",
+    "camera" => "equipment",
+    "guide camera" => "equipment",
+    "telescope" => "equipment",
+    "guide scope" => "equipment",
+    "capture software" => "software",
+    "processing software" => "software",
     "photographer" => "origin",
-    "series" => "content-fanmade",
-    "spoiler" => "spoiler",
-    "video" => "content-fanmade"
+    "object" => "object"
   }
 
   @derive {Phoenix.Param, key: :slug}
@@ -136,11 +127,9 @@ defmodule Philomena.Tags.Tag do
         &1.category != "error",
         &1.category != "rating",
         &1.category != "origin",
-        &1.category != "character",
-        &1.category != "oc",
-        &1.category != "species",
-        &1.category != "content-fanmade",
-        &1.category != "content-official",
+        &1.category != "equipment",
+        &1.category != "software",
+        &1.category != "object",
         &1.category != "spoiler",
         &1.name
       }
@@ -152,12 +141,9 @@ defmodule Philomena.Tags.Tag do
       "error",
       "rating",
       "origin",
-      "character",
-      "oc",
-      "species",
-      "content-fanmade",
-      "content-official",
-      "spoiler"
+      "software",
+      "equipment",
+      "object"
     ]
   end
 

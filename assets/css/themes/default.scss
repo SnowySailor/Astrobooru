@@ -48,14 +48,12 @@ $assistant_color: #511b4e !default;
 
 $tag_normal_color: #4aa158 !default;
 $tag_category_rating_color: #418dd9 !default;
-$tag_category_spoiler_color: #d49b39 !default;
+$tag_category_equipment_color: #d49b39 !default;
 $tag_category_origin_color: #6f66d6 !default;
-$tag_category_oc_color: #b157b7 !default;
+$tag_category_software_color: #b157b7 !default;
 $tag_category_error_color: #d45460 !default;
-$tag_category_character_color: #4aaabf !default;
 $tag_category_content_official_color: #b9b541 !default;
-$tag_category_content_fanmade_color: #cc8eb5 !default;
-$tag_category_species_color: #b16b50 !default;
+$tag_category_object_color: #cc8eb5 !default;
 
 $commission_category_color: #e07b27 !default;
 
@@ -115,22 +113,18 @@ $tag_normal_background: darken($tag_normal_color, 29%) !default;
 $tag_normal_border: darken($tag_normal_color, 18%) !default;
 $tag_category_rating_background: darken($tag_category_rating_color, 35%) !default;
 $tag_category_rating_border: desaturate(darken($tag_category_rating_color, 20%), 10%) !default;
-$tag_category_spoiler_background: darken($tag_category_spoiler_color, 34%) !default;
-$tag_category_spoiler_border: darken($tag_category_spoiler_color, 23%) !default;
+$tag_category_equipment_background: darken($tag_category_equipment_color, 34%) !default;
+$tag_category_equipment_border: darken($tag_category_equipment_color, 23%) !default;
 $tag_category_origin_background: darken($tag_category_origin_color, 40%) !default;
 $tag_category_origin_border: desaturate(darken($tag_category_origin_color, 22%), 28%) !default;
-$tag_category_oc_background: darken($tag_category_oc_color, 33%) !default;
-$tag_category_oc_border: darken($tag_category_oc_color, 15%) !default;
+$tag_category_software_background: darken($tag_category_software_color, 33%) !default;
+$tag_category_software_border: darken($tag_category_software_color, 15%) !default;
 $tag_category_error_background: desaturate(darken($tag_category_error_color, 38%), 6%) !default;
 $tag_category_error_border: darken($tag_category_error_color, 22%) !default;
-$tag_category_character_background: darken($tag_category_character_color, 33%) !default;
-$tag_category_character_border: darken($tag_category_character_color, 20%) !default;
 $tag_category_content_official_background: desaturate(darken($tag_category_content_official_color, 29%), 2%) !default;
 $tag_category_content_official_border: darken($tag_category_content_official_color, 20%) !default;
-$tag_category_content_fanmade_background: darken($tag_category_content_fanmade_color, 40%) !default;
-$tag_category_content_fanmade_border: desaturate(darken($tag_category_content_fanmade_color, 20%), 10%) !default;
-$tag_category_species_background: darken($tag_category_species_color, 35%) !default;
-$tag_category_species_border: desaturate(darken($tag_category_species_color, 20%), 10%) !default;
+$tag_category_object_background: darken($tag_category_object_color, 40%) !default;
+$tag_category_object_fanmade_border: desaturate(darken($tag_category_object_color, 20%), 10%) !default;
 
 $commission_category_background: darken($commission_category_color, 36%) !default;
 $commission_category_border: darken($commission_category_color, 25%) !default;
