@@ -19,7 +19,7 @@
 
   .field
     label for="uri"
-      ' URL of your art webpage
+      ' URL of your photography webpage
     = url_input f, :uri, class: "input input--wide", placeholder: "https://www.deviantart.com/your-name", required: true
     = error_tag f, :uri
 

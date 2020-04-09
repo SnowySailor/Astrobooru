@@ -67,9 +67,9 @@ p Verifying a link will automatically award an photographer badge if the link is
               br
               = if not verified?(link) do
                 = if contacted?(link) do
-                  ' Artist contacted
+                  ' Photographer contacted
                 - else
-                  = link "Artist contacted", to: Routes.admin_user_link_contact_path(@conn, :create, link), method: :post
+                  = link "Photographer contacted", to: Routes.admin_user_link_contact_path(@conn, :create, link), method: :post
 
             td
               = public_text(link)
