@@ -56,20 +56,24 @@ defmodule PhilomenaWeb.Router do
       error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  pipeline :captcha_data_provider do
+    plug PhilomenaWeb.CaptchaDataProviderPlug
+  end
+
   scope "/" do
-    pipe_through [:browser, :ensure_totp, :ensure_not_banned, :ensure_tor_authorized]
+    pipe_through [:browser, :ensure_totp, :ensure_not_banned, :ensure_tor_authorized, :captcha_data_provider]
 
     pow_registration_routes()
   end
 
   scope "/" do
-    pipe_through [:browser, :ensure_totp]
+    pipe_through [:browser, :ensure_totp, :captcha_data_provider]
 
     pow_session_routes()
   end
 
   scope "/" do
-    pipe_through [:browser, :ensure_totp, :ensure_tor_authorized]
+    pipe_through [:browser, :ensure_totp, :ensure_tor_authorized, :captcha_data_provider]
 
     pow_extension_routes()
   end
@@ -434,8 +438,6 @@ defmodule PhilomenaWeb.Router do
       resources "/tag_changes", Profile.TagChangeController, only: [:index]
       resources "/source_changes", Profile.SourceChangeController, only: [:index]
     end
-
-    resources "/captchas", CaptchaController, only: [:create]
 
     scope "/posts", Post, as: :post do
       resources "/preview", PreviewController, only: [:create]

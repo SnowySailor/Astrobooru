@@ -6,6 +6,7 @@ defmodule PhilomenaWeb.Image.SourceController do
   alias Philomena.Images.Image
   alias Philomena.Images
   alias Philomena.Repo
+  alias Philomena.Captcha
   import Ecto.Query
 
   plug PhilomenaWeb.FilterBannedUsersPlug
@@ -38,7 +39,8 @@ defmodule PhilomenaWeb.Image.SourceController do
           layout: false,
           source_change_count: source_change_count,
           image: image,
-          changeset: changeset
+          changeset: changeset,
+          captcha_site_key: Captcha.get_captcha_site_key()
         )
 
       {:error, :image, changeset, _} ->
@@ -48,7 +50,8 @@ defmodule PhilomenaWeb.Image.SourceController do
           layout: false,
           source_change_count: 0,
           image: image,
-          changeset: changeset
+          changeset: changeset,
+          captcha_site_key: Captcha.get_captcha_site_key()
         )
     end
   end

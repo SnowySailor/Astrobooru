@@ -20,6 +20,7 @@ defmodule PhilomenaWeb.ImageController do
   alias Philomena.Comments
   alias Philomena.Tags
   alias Philomena.Repo
+  alias Philomena.Captcha
   import Ecto.Query
 
   plug :load_image when action in [:show]
@@ -90,7 +91,8 @@ defmodule PhilomenaWeb.ImageController do
       interactions: interactions,
       watching: watching,
       layout_class: "layout--wide",
-      title: "##{image.id} - #{image.tag_list_cache}"
+      title: "##{image.id} - #{image.tag_list_cache}",
+      captcha_site_key: Captcha.get_captcha_site_key()
     ]
 
     if image.hidden_from_users do
@@ -105,7 +107,7 @@ defmodule PhilomenaWeb.ImageController do
       %Image{}
       |> Images.change_image()
 
-    render(conn, "new.html", title: "New Image", changeset: changeset)
+    render(conn, "new.html", title: "New Image", changeset: changeset, captcha_site_key: Captcha.get_captcha_site_key())
   end
 
   def create(conn, %{"image" => image_params}) do
@@ -128,7 +130,7 @@ defmodule PhilomenaWeb.ImageController do
 
       {:error, :image, changeset, _} ->
         conn
-        |> render("new.html", changeset: changeset)
+        |> render("new.html", changeset: changeset, captcha_site_key: Captcha.get_captcha_site_key())
     end
   end
 

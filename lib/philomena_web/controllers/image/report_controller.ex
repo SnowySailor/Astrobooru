@@ -6,6 +6,7 @@ defmodule PhilomenaWeb.Image.ReportController do
   alias Philomena.Images.Image
   alias Philomena.Reports.Report
   alias Philomena.Reports
+  alias Philomena.Captcha
 
   plug PhilomenaWeb.FilterBannedUsersPlug
   plug PhilomenaWeb.UserAttributionPlug
@@ -32,7 +33,8 @@ defmodule PhilomenaWeb.Image.ReportController do
       title: "Reporting Image",
       reportable: image,
       changeset: changeset,
-      action: action
+      action: action,
+      captcha_site_key: Captcha.get_captcha_site_key()
     )
   end
 
