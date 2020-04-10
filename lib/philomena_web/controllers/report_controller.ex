@@ -5,6 +5,7 @@ defmodule PhilomenaWeb.ReportController do
   alias Philomena.Reports.Report
   alias Philomena.Reports
   alias Philomena.Repo
+  alias Philomena.Captcha
   import Ecto.Query
 
   def index(conn, _params) do
@@ -60,7 +61,7 @@ defmodule PhilomenaWeb.ReportController do
             # Note that we are depending on the controller that called
             # us to have set up the view already (Phoenix does this)
             conn
-            |> render("new.html", reportable: reportable, changeset: changeset, action: action)
+            |> render("new.html", reportable: reportable, changeset: changeset, action: action, captcha_site_key: Captcha.get_captcha_site_key())
         end
     end
   end

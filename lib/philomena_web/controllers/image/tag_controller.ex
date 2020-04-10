@@ -8,6 +8,7 @@ defmodule PhilomenaWeb.Image.TagController do
   alias Philomena.Images
   alias Philomena.Tags
   alias Philomena.Repo
+  alias Philomena.Captcha
   import Ecto.Query
 
   plug PhilomenaWeb.FilterBannedUsersPlug
@@ -47,7 +48,8 @@ defmodule PhilomenaWeb.Image.TagController do
           layout: false,
           tag_change_count: tag_change_count,
           image: image,
-          changeset: changeset
+          changeset: changeset,
+          captcha_site_key: Captcha.get_captcha_site_key()
         )
 
       {:error, :image, changeset, _} ->
@@ -61,7 +63,8 @@ defmodule PhilomenaWeb.Image.TagController do
           layout: false,
           tag_change_count: 0,
           image: image,
-          changeset: changeset
+          changeset: changeset,
+          captcha_site_key: Captcha.get_captcha_site_key()
         )
     end
   end

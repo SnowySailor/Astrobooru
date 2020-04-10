@@ -28,9 +28,8 @@ h1 Register
     = password_input f, :password_confirmation, class: "input", placeholder: "Confirm password", required: true
     = error_tag f, :password_confirmation
 
-  .field
-    = checkbox f, :captcha, class: "js-captcha", value: 0
-    = label f, :captcha, "I am not a robot!"
+  div.h-captcha data-sitekey=@conn.assigns.captcha_site_key
+  script(src="https://hcaptcha.com/1/api.js" async defer)
 
   br
 

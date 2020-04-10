@@ -62,8 +62,8 @@ p
 
     = if !@conn.assigns.current_user do
       .field
-        = checkbox f, :captcha, class: "js-captcha", value: 0
-        = label f, :captcha, "I am not a robot!"
+        div.h-captcha data-sitekey=@captcha_site_key
+        script(src="https://hcaptcha.com/1/api.js" async defer)
       p
         ' This helps stop bot spam; log in if you don't want to deal with captchas.
 

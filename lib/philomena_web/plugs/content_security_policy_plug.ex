@@ -11,11 +11,15 @@ defmodule PhilomenaWeb.ContentSecurityPolicyPlug do
         "manifest-src 'self'; img-src 'self' data: #{cdn_uri} #{camo_uri}; " <>
         "block-all-mixed-content"
 
-    [csp_value: csp_value]
+    cdp_value =
+      "https://hcaptcha.com/1/api.js"
+
+    [csp_value: csp_value, cdp_value: cdp_value]
   end
 
-  def call(conn, csp_value: csp_value) do
+  def call(conn, csp_value: csp_value, cdp_value: cdp_value) do
     Conn.put_resp_header(conn, "content-security-policy", csp_value)
+    Conn.put_resp_header(conn, "x-permitted-cross-domain-policies", cdp_value)
   end
 
   defp cdn_uri, do: Application.get_env(:philomena, :cdn_host) |> to_uri()

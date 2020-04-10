@@ -10,8 +10,8 @@
       | If you're logged in, you can still post anonymously and won't have to deal with captchas!
 
     .field
-      = checkbox f, :captcha, class: "js-captcha", value: 0
-      = label f, :captcha, "I am not a robot!"
+      div.h-captcha data-sitekey=@captcha_site_key
+      script(src="https://hcaptcha.com/1/api.js" async defer)
 
   / todo: extract this
   h4 Select an image

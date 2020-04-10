@@ -11,7 +11,9 @@ config :philomena, Philomena.Repo,
 
 config :philomena,
   elasticsearch_url: "http://elasticsearch:9200",
-  redis_host: "redis"
+  redis_host: "redis",
+  captcha_site_key: "your-captcha-site-key",
+  captcha_secret_key: "your-captcha-secret-key"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

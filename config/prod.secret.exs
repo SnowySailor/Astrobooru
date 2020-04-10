@@ -36,7 +36,9 @@ config :philomena,
   proxy_host: System.get_env("PROXY_HOST"),
   camo_host: System.get_env("CAMO_HOST"),
   camo_key: System.get_env("CAMO_KEY"),
-  cdn_host: System.get_env("CDN_HOST")
+  cdn_host: System.get_env("CDN_HOST"),
+  catpcha_site_key: System.get_env("CAPTCHA_SITE_KEY"),
+  captcha_secret_key: System.get_env("CAPTCHA_SECRET_KEY")
 
 config :philomena, Philomena.Repo,
   # ssl: true,

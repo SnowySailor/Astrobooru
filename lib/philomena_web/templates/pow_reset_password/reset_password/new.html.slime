@@ -12,7 +12,7 @@ p
     = text_input f, :email, class: "input", placeholder: "Email"
 
   .field
-    = checkbox f, :captcha, class: "js-captcha", value: 0
-    = label f, :captcha, "I am not a robot!"
+    div.h-captcha data-sitekey=@conn.assigns.captcha_site_key
+    script(src="https://hcaptcha.com/1/api.js" async defer)
 
   = submit "Submit", class: "button"
