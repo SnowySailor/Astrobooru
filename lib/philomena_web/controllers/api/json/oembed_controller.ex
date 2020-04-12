@@ -59,10 +59,10 @@ defmodule PhilomenaWeb.Api.Json.OembedController do
       provider_name: "Astrobooru",
       provider_url: PhilomenaWeb.Endpoint.url(),
       cache_age: 7200,
-      derpibooru_id: image.id,
-      derpibooru_score: image.score,
-      derpibooru_comments: image.comments_count,
-      derpibooru_tags: Enum.map(image.tags, & &1.name)
+      astrobooru_id: image.id,
+      astrobooru_score: image.score,
+      astrobooru_comments: image.comments_count,
+      astrobooru_tags: Enum.map(image.tags, & &1.name)
     }
   end
 

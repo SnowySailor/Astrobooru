@@ -86,7 +86,7 @@ defmodule Philomena.UserLinks.UserLink do
 
   defp put_verification_code(changeset) do
     code = :crypto.strong_rand_bytes(5) |> Base.encode16()
-    change(changeset, verification_code: "DERPI-LINKVALIDATION-#{code}")
+    change(changeset, verification_code: "ASTRO-LINKVALIDATION-#{code}")
   end
 
   defp put_next_check_at(changeset) do
