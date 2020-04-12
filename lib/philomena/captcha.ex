@@ -30,7 +30,7 @@ defmodule Philomena.Captcha do
   end
 
   defp validate_body?(raw_body) do
-    case Poison.decode(raw_body, keys: :atoms) do
+    case Jason.decode(raw_body, keys: :atoms) do
       {:ok, %{success: success}} -> success
       _ -> false
     end
