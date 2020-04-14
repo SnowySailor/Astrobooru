@@ -1,0 +1,9 @@
+.block
+  .block__content.js-resizable-media-container
+    = if Enum.any?(@subscription_options) do
+      = for subscription_option <- @subscription_options do
+        = render PhilomenaWeb.PremiumSubscriptionView, "_subscription_option.html", subscription_option: subscription_option, conn: @conn
+
+    - else
+      .block.block--fixed.block--no-margin.block--warning
+        ' Sorry, no subscriptions are available right now

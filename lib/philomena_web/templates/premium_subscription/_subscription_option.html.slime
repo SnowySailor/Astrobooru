@@ -1,0 +1,8 @@
+.media-box
+  p.media-box__header
+    = @subscription_option.title
+
+  .media-box__content.media-box__content--large
+  	= @subscription_option.cost
+  	' every
+  	= @subscription_option.recurrence

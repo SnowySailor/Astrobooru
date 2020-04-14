@@ -144,6 +144,8 @@ defmodule PhilomenaWeb.Router do
       resources "/unread", UnreadController, only: [:index]
     end
 
+    resources "/subscription", PremiumSubscriptionController, only: [:show], singleton: true
+
     resources "/notifications", NotificationController, only: [:index, :delete]
 
     resources "/conversations", ConversationController, only: [:index, :show, :new, :create] do

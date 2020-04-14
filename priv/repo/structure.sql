@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.1 (Debian 12.1-1.pgdg100+1)
--- Dumped by pg_dump version 12.1 (Debian 12.1-1.pgdg90+1)
+-- Dumped by pg_dump version 12.2 (Debian 12.2-2.pgdg90+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -487,6 +487,16 @@ CREATE SEQUENCE public.duplicate_reports_id_seq
 --
 
 ALTER SEQUENCE public.duplicate_reports_id_seq OWNED BY public.duplicate_reports.id;
+
+
+--
+-- Name: ecto_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ecto_migrations (
+    version bigint NOT NULL,
+    inserted_at timestamp(0) without time zone
+);
 
 
 --
@@ -1159,6 +1169,38 @@ CREATE SEQUENCE public.posts_id_seq
 --
 
 ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
+
+
+--
+-- Name: premium_subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.premium_subscriptions (
+    id bigint NOT NULL,
+    start_date timestamp(0) without time zone NOT NULL,
+    end_date timestamp(0) without time zone NOT NULL,
+    type character varying(255) NOT NULL,
+    user_id bigint
+);
+
+
+--
+-- Name: premium_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.premium_subscriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: premium_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.premium_subscriptions_id_seq OWNED BY public.premium_subscriptions.id;
 
 
 --
@@ -2205,6 +2247,13 @@ ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_
 
 
 --
+-- Name: premium_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.premium_subscriptions ALTER COLUMN id SET DEFAULT nextval('public.premium_subscriptions_id_seq'::regclass);
+
+
+--
 -- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2441,6 +2490,14 @@ ALTER TABLE ONLY public.duplicate_reports
 
 
 --
+-- Name: ecto_migrations ecto_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ecto_migrations
+    ADD CONSTRAINT ecto_migrations_pkey PRIMARY KEY (version);
+
+
+--
 -- Name: filters filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2558,6 +2615,14 @@ ALTER TABLE ONLY public.polls
 
 ALTER TABLE ONLY public.posts
     ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: premium_subscriptions premium_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.premium_subscriptions
+    ADD CONSTRAINT premium_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -3842,6 +3907,20 @@ CREATE INDEX intensities_index ON public.images USING btree (se_intensity, sw_in
 
 
 --
+-- Name: premium_subscriptions_type_end_date_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX premium_subscriptions_type_end_date_index ON public.premium_subscriptions USING btree (type, end_date);
+
+
+--
+-- Name: premium_subscriptions_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX premium_subscriptions_user_id_index ON public.premium_subscriptions USING btree (user_id);
+
+
+--
 -- Name: temp_unique_index_tags_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4648,8 +4727,16 @@ ALTER TABLE ONLY public.gallery_subscriptions
 
 
 --
+-- Name: premium_subscriptions premium_subscriptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.premium_subscriptions
+    ADD CONSTRAINT premium_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20160808041755), (20160809232725), (20160822170235), (20160913153024), (20160915233149), (20160918200925), (20160919034130), (20160920021519), (20160925132327), (20160929150114), (20161009141824), (20161011224029), (20161029012511), (20161030191614), (20161030215925), (20161031002200), (20161031114954), (20161209080614), (20161210105940), (20161228103559), (20170108031907), (20170216020601), (20170326235920), (20170327072407), (20170410193327), (20170412013535), (20170425214508), (20170425225954), (20170502231917), (20170621040031), (20170621062427), (20170807225232), (20170910003727), (20170910131245), (20170915013822), (20171020012152), (20171205041859), (20180105002050), (20180105181254), (20180126224124), (20180202052820), (20180223224631), (20180225143247), (20180225163429), (20180310033852), (20180310042958), (20180329014502), (20180331052125), (20180526094815), (20180616192644), (20180705201559), (20180714221027), (20180825145354), (20190124231823), (20190414222338), (20190419011106), (20190430174334), (20190511144122), (20190526141623), (20190526150817), (20190526182309), (20190526211227), (20190616175122), (20190630124943), (20190701020707), (20190720141012), (20190720144118), (20190725001227), (20190727205108), (20190729205120), (20190729223821), (20190809212148), (20190810011525);
+INSERT INTO public."ecto_migrations" (version) VALUES (20200413034023);
 
