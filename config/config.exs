@@ -48,6 +48,9 @@ config :philomena, :pow,
 config :bcrypt_elixir,
   log_rounds: 12
 
+config :branca,
+  key: "your-secret-key"
+
 config :elastix,
   json_codec: Jason
 

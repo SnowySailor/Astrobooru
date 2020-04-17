@@ -13,22 +13,22 @@ defmodule PhilomenaWeb.PremiumSubscriptionController do
     [
       %{
         title: "Monthly",
-        cost: 5.50,
+        cost: Decimal.from_float(5.50),
         recurrence: "month"
       },
       %{
         title: "Tri-monthly",
-        cost: 15.00,
+        cost: Decimal.from_float(15.00),
         recurrence: "3 months"
       },
       %{
         title: "Semi-annual",
-        cost: 27.00,
+        cost: Decimal.from_float(27.00),
         recurrence: "6 months"
       },
       %{
         title: "Yearly",
-        cost: 50.00,
+        cost: Decimal.from_float(50.00),
         recurrence: "year"
       }
     ]
