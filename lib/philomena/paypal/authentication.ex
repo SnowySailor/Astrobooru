@@ -22,27 +22,22 @@ defmodule Philomena.Paypal.Authentication do
   end
 
   def get_new_authorization() do
-    headers = [{"Authorization", "Basic " <> create_auth()}]
-    resp = HTTPoison.post(
-      get_paypal_api_base_url() <> "oauth2/token",
-      "grant_type=client_credentials",
-      headers
-    )
-
-    case resp do
-      {:ok, %HTTPoison.Response{body: body, status_code: 200}} -> parse_response(body)
-    end
+    resp =
+      HTTPoison.post!(
+        get_paypal_api_base_url() <> "oauth2/token",
+        "grant_type=client_credentials",
+        [{"Authorization", "Basic " <> create_auth()}]
+      )
+      |> parse_response()
   end
 
   def create_auth() do
-    get_paypal_client_id() <> ":" <> get_paypal_client_secret()
+    (get_paypal_client_id() <> ":" <> get_paypal_client_secret())
     |> Base.encode64()
   end
 
-  def parse_response(body) do
-    case Jason.decode(body, keys: :atoms) do
-      {:ok, %{access_token: token, expires_in: expiry}} -> {token, expiry}
-    end
+  defp parse_response(%HTTPoison.Response{status_code: 200, body: body}) do
+    Jason.decode!(body, keys: :atoms)
   end
 
   def flush_token_cache() do

@@ -11,6 +11,8 @@ defmodule Philomena.Users do
   alias Philomena.Users.User
   alias Philomena.Roles.Role
 
+  alias Philomena.PremiumSubscription
+
   use Pow.Ecto.Context,
     repo: Repo,
     user: User
@@ -171,6 +173,32 @@ defmodule Philomena.Users do
     user
     |> User.api_key_changeset()
     |> Repo.update()
+  end
+
+  def premium?(%User{} = user) do
+    data =
+      PremiumSubscription.SubscriptionPayment
+      |> join(:inner, [p], s in PremiumSubscription.Subscription, on: p.subscription_id == s.id)
+      |> join(:inner, [_, s], u in User, on: s.user_id == u.id)
+      |> where([_, _, u], u.id == ^user.id)
+      |> order_by([p], desc: p.payment_date)
+      |> select([p, s], {p, s})
+      |> limit(1)
+      |> Repo.one()
+
+    case data do
+      nil ->
+        false
+
+      {payment, subscription} ->
+        payment.payment_date
+        |> DateTime.add(subscription.payment_duration, :second)
+        |> DateTime.compare(DateTime.utc_now())
+        |> case do
+          :lt -> false
+          _ -> true
+        end
+    end
   end
 
   @doc """

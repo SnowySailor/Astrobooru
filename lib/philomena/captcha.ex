@@ -22,7 +22,12 @@ defmodule Philomena.Captcha do
 
   defp get_hcaptcha_response_body(response_token) do
     request_body = URI.encode_query(%{secret: get_captcha_secret_key(), response: response_token})
-    resp = HTTPoison.post("https://hcaptcha.com/siteverify", request_body, %{"Content-Type" => "application/x-www-form-urlencoded"})
+
+    resp =
+      HTTPoison.post("https://hcaptcha.com/siteverify", request_body, %{
+        "Content-Type" => "application/x-www-form-urlencoded"
+      })
+
     case resp do
       {:ok, %HTTPoison.Response{body: raw_body, status_code: 200}} -> raw_body
       _ -> ""

@@ -1021,6 +1021,51 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: paypal_billing_plans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.paypal_billing_plans (
+    id character varying(255) NOT NULL,
+    product_id character varying(255) NOT NULL
+);
+
+
+--
+-- Name: paypal_products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.paypal_products (
+    id character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255) NOT NULL,
+    type character varying(255) NOT NULL,
+    category character varying(255) NOT NULL
+);
+
+
+--
+-- Name: paypal_subscription_payments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.paypal_subscription_payments (
+    subscription_id character varying(255) NOT NULL,
+    payment_date timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: paypal_subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.paypal_subscriptions (
+    id character varying(255) NOT NULL,
+    user_id bigint NOT NULL,
+    billing_plan_id character varying(255) NOT NULL,
+    payment_duration integer NOT NULL
+);
+
+
+--
 -- Name: poll_options; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1169,38 +1214,6 @@ CREATE SEQUENCE public.posts_id_seq
 --
 
 ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
-
-
---
--- Name: premium_subscriptions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.premium_subscriptions (
-    id bigint NOT NULL,
-    start_date timestamp(0) without time zone NOT NULL,
-    end_date timestamp(0) without time zone NOT NULL,
-    type character varying(255) NOT NULL,
-    user_id bigint
-);
-
-
---
--- Name: premium_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.premium_subscriptions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: premium_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.premium_subscriptions_id_seq OWNED BY public.premium_subscriptions.id;
 
 
 --
@@ -2247,13 +2260,6 @@ ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_
 
 
 --
--- Name: premium_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.premium_subscriptions ALTER COLUMN id SET DEFAULT nextval('public.premium_subscriptions_id_seq'::regclass);
-
-
---
 -- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2586,6 +2592,38 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: paypal_billing_plans paypal_billing_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_billing_plans
+    ADD CONSTRAINT paypal_billing_plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: paypal_products paypal_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_products
+    ADD CONSTRAINT paypal_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: paypal_subscription_payments paypal_subscription_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_subscription_payments
+    ADD CONSTRAINT paypal_subscription_payments_pkey PRIMARY KEY (subscription_id, payment_date);
+
+
+--
+-- Name: paypal_subscriptions paypal_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_subscriptions
+    ADD CONSTRAINT paypal_subscriptions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: poll_options poll_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2615,14 +2653,6 @@ ALTER TABLE ONLY public.polls
 
 ALTER TABLE ONLY public.posts
     ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
-
-
---
--- Name: premium_subscriptions premium_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.premium_subscriptions
-    ADD CONSTRAINT premium_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -3907,17 +3937,10 @@ CREATE INDEX intensities_index ON public.images USING btree (se_intensity, sw_in
 
 
 --
--- Name: premium_subscriptions_type_end_date_index; Type: INDEX; Schema: public; Owner: -
+-- Name: paypal_subscriptions_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX premium_subscriptions_type_end_date_index ON public.premium_subscriptions USING btree (type, end_date);
-
-
---
--- Name: premium_subscriptions_user_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX premium_subscriptions_user_id_index ON public.premium_subscriptions USING btree (user_id);
+CREATE INDEX paypal_subscriptions_user_id_index ON public.paypal_subscriptions USING btree (user_id);
 
 
 --
@@ -4727,16 +4750,40 @@ ALTER TABLE ONLY public.gallery_subscriptions
 
 
 --
--- Name: premium_subscriptions premium_subscriptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: paypal_billing_plans paypal_billing_plans_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.premium_subscriptions
-    ADD CONSTRAINT premium_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.paypal_billing_plans
+    ADD CONSTRAINT paypal_billing_plans_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.paypal_products(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: paypal_subscription_payments paypal_subscription_payments_subscription_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_subscription_payments
+    ADD CONSTRAINT paypal_subscription_payments_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.paypal_subscriptions(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: paypal_subscriptions paypal_subscriptions_billing_plan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_subscriptions
+    ADD CONSTRAINT paypal_subscriptions_billing_plan_id_fkey FOREIGN KEY (billing_plan_id) REFERENCES public.paypal_billing_plans(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: paypal_subscriptions paypal_subscriptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_subscriptions
+    ADD CONSTRAINT paypal_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."ecto_migrations" (version) VALUES (20200413034023);
+INSERT INTO public."ecto_migrations" (version) VALUES (20200419012600), (20200419012620), (20200419012955), (20200419014349);
 

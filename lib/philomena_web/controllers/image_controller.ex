@@ -107,7 +107,11 @@ defmodule PhilomenaWeb.ImageController do
       %Image{}
       |> Images.change_image()
 
-    render(conn, "new.html", title: "New Image", changeset: changeset, captcha_site_key: Captcha.get_captcha_site_key())
+    render(conn, "new.html",
+      title: "New Image",
+      changeset: changeset,
+      captcha_site_key: Captcha.get_captcha_site_key()
+    )
   end
 
   def create(conn, %{"image" => image_params}) do
@@ -130,7 +134,10 @@ defmodule PhilomenaWeb.ImageController do
 
       {:error, :image, changeset, _} ->
         conn
-        |> render("new.html", changeset: changeset, captcha_site_key: Captcha.get_captcha_site_key())
+        |> render("new.html",
+          changeset: changeset,
+          captcha_site_key: Captcha.get_captcha_site_key()
+        )
     end
   end
 

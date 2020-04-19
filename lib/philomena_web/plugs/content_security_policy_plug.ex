@@ -11,8 +11,7 @@ defmodule PhilomenaWeb.ContentSecurityPolicyPlug do
         "manifest-src 'self'; img-src 'self' data: #{cdn_uri} #{camo_uri}; " <>
         "block-all-mixed-content"
 
-    cdp_value =
-      "https://hcaptcha.com/1/api.js"
+    cdp_value = "https://hcaptcha.com/1/api.js"
 
     [csp_value: csp_value, cdp_value: cdp_value]
   end
