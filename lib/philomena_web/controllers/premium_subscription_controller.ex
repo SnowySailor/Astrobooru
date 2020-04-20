@@ -1,7 +1,7 @@
 defmodule PhilomenaWeb.PremiumSubscriptionController do
   use PhilomenaWeb, :controller
 
-  def show(conn, _params) do
+  def index(conn, _params) do
     render(
       conn,
       "show.html",
@@ -14,22 +14,26 @@ defmodule PhilomenaWeb.PremiumSubscriptionController do
       %{
         title: "Monthly",
         cost: Decimal.from_float(5.50),
-        recurrence: "month"
+        recurrence: "month",
+        id: "1"
       },
       %{
         title: "Tri-monthly",
         cost: Decimal.from_float(15.00),
-        recurrence: "3 months"
+        recurrence: "3 months",
+        id: "2"
       },
       %{
         title: "Semi-annual",
         cost: Decimal.from_float(27.00),
-        recurrence: "6 months"
+        recurrence: "6 months",
+        id: "3"
       },
       %{
         title: "Yearly",
         cost: Decimal.from_float(50.00),
-        recurrence: "year"
+        recurrence: "year",
+        id: "4"
       }
     ]
   end

@@ -1026,7 +1026,8 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 CREATE TABLE public.paypal_billing_plans (
     id character varying(255) NOT NULL,
-    product_id character varying(255) NOT NULL
+    product_id character varying(255) NOT NULL,
+    cycle_duration integer NOT NULL
 );
 
 
@@ -1060,8 +1061,7 @@ CREATE TABLE public.paypal_subscription_payments (
 CREATE TABLE public.paypal_subscriptions (
     id character varying(255) NOT NULL,
     user_id bigint NOT NULL,
-    billing_plan_id character varying(255) NOT NULL,
-    payment_duration integer NOT NULL
+    billing_plan_id character varying(255) NOT NULL
 );
 
 

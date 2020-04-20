@@ -1,6 +1,7 @@
 defmodule Philomena.PremiumSubscription.Product do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Philomena.PremiumSubscription.BillingPlan
 
   @primary_key {:id, :string, autogenerate: false}
   @derive {Phoenix.Param, key: :id}

@@ -2,6 +2,8 @@ defmodule Philomena.PremiumSubscription.SubscriptionPayment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Philomena.PremiumSubscription.Subscription
+
   @primary_key false
   schema "paypal_subscription_payments" do
     belongs_to :subscription, Subscription, type: :string, primary_key: true

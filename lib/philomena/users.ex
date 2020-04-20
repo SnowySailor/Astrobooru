@@ -180,9 +180,10 @@ defmodule Philomena.Users do
       PremiumSubscription.SubscriptionPayment
       |> join(:inner, [p], s in PremiumSubscription.Subscription, on: p.subscription_id == s.id)
       |> join(:inner, [_, s], u in User, on: s.user_id == u.id)
+      |> join(:inner, [_, s], bp in PremiumSubscription.BillingPlan, on: s.billing_plan_id == bp.id)
       |> where([_, _, u], u.id == ^user.id)
       |> order_by([p], desc: p.payment_date)
-      |> select([p, s], {p, s})
+      |> select([p, _, _, bp], {p, bp})
       |> limit(1)
       |> Repo.one()
 
@@ -190,9 +191,9 @@ defmodule Philomena.Users do
       nil ->
         false
 
-      {payment, subscription} ->
+      {payment, billing_plan} ->
         payment.payment_date
-        |> DateTime.add(subscription.payment_duration, :second)
+        |> DateTime.add(billing_plan.cycle_duration, :second)
         |> DateTime.compare(DateTime.utc_now())
         |> case do
           :lt -> false

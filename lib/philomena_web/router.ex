@@ -150,7 +150,9 @@ defmodule PhilomenaWeb.Router do
       resources "/unread", UnreadController, only: [:index]
     end
 
-    resources "/subscription", PremiumSubscriptionController, only: [:show], singleton: true
+    resources "/subscription", PremiumSubscriptionController, only: [] do
+      resources "/subscribe", PremiumSubscription.SubscribeController, only: [:index, :create]
+    end
 
     resources "/notifications", NotificationController, only: [:index, :delete]
 
@@ -384,6 +386,8 @@ defmodule PhilomenaWeb.Router do
     get "/", ActivityController, :index
 
     resources "/activity", ActivityController, only: [:index]
+
+    resources "/subscription", PremiumSubscriptionController, only: [:index]
 
     scope "/images", Image, as: :image do
       resources "/scrape", ScrapeController, only: [:create]

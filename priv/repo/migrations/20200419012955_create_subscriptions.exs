@@ -15,8 +15,6 @@ defmodule Philomena.Repo.Migrations.CreatePaypalSubscriptions do
             type: :string
           ),
           null: false
-
-      add :payment_duration, :integer, null: false
     end
 
     create index(:paypal_subscriptions, [:user_id])
