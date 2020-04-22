@@ -22,6 +22,10 @@ defmodule PhilomenaWeb.Router do
     plug PhilomenaWeb.AdminCountersPlug
   end
 
+  pipeline :paypal_webhook do
+    plug PhilomenaWeb.PaypalWebhookValidatorPlug
+  end
+
   pipeline :api do
     plug PhilomenaWeb.ApiTokenPlug
     plug PhilomenaWeb.EnsureUserEnabledPlug
@@ -95,6 +99,12 @@ defmodule PhilomenaWeb.Router do
     scope "/sessions", Session, as: :session do
       resources "/totp", TotpController, only: [:new, :create], singleton: true
     end
+  end
+
+  scope "/paypal", PhilomenaWeb do
+    pipe_through [:paypal_webhook]
+
+    resources "/hook", PaypalHookController, only: [:create]
   end
 
   scope "/api/v1/rss", PhilomenaWeb.Api.Rss, as: :api_rss do

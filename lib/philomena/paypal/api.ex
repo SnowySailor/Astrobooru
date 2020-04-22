@@ -27,4 +27,13 @@ defmodule Philomena.Paypal.API do
 
   def update_product(product) do
   end
+
+  def webhook_signature_valid?(signature) do
+    body = Jason.encode!(signature)
+    IO.inspect(body)
+    case Request.post("/v1/notifications/verify-webhook-signature", body) do
+      %{verification_status: "SUCCESS"} -> true
+      _ -> false
+    end
+  end
 end
