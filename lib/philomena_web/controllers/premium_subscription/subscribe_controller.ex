@@ -5,6 +5,7 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
   alias Philomena.Users.User
   alias Philomena.PremiumSubscription.Subscription
   alias Philomena.Repo
+  require Logger
 
   def create(conn, %{"premium_subscription_id" => plan_id}) do
     conn
@@ -56,8 +57,8 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
           payer_selected: "PAYPAL",
           payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
         },
-        return_url: "http://astrobooru.com" <> Routes.activity_path(conn, :index),
-        cancel_url: "http://astrobooru.com" <> Routes.premium_subscription_path(conn, :index)
+        return_url: "https://astrobooru.com" <> Routes.activity_path(conn, :index),
+        cancel_url: "https://astrobooru.com" <> Routes.premium_subscription_path(conn, :index)
       }
     }
     
@@ -66,13 +67,13 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
     |> get_approval_link()
   end
 
-  defp get_approval_link(%{:links => links}) do
+  defp get_approval_link(%{links: links}) do
     Enum.filter(links, fn link -> link.rel == "approve" end)
     |> Enum.fetch!(0)
     |> (fn %{href: link} -> link end).()
   end
 
-  defp associate_user_with_subscription(%{:id => id} = subscription, plan_id, %User{id: user_id}) do
+  defp associate_user_with_subscription({:ok, %{id: id} = subscription}, plan_id, %User{id: user_id}) do
     _ = %Subscription{
       id: id,
       billing_plan_id: plan_id,
@@ -82,4 +83,7 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
     |> Repo.insert(on_conflict: :nothing)
     subscription
   end
+
+  defp associate_user_with_subscription(error, plan_id, user),
+    do: Logger.error("error associating user (#{user.id}) with subscription (plan: #{plan_id}): #{inspect(error)}")
 end

@@ -8,7 +8,7 @@ defmodule Philomena.Paypal.Request do
 
     get_paypal_api_base_url()
     |> URI.merge(endpoint)
-    |> HTTPoison.get!(headers)
+    |> HTTPoison.get(headers)
     |> Retry.autoretry(max_attempts: 1, wait: 0)
     |> parse_response()
   end
@@ -18,31 +18,50 @@ defmodule Philomena.Paypal.Request do
 
     get_paypal_api_base_url()
     |> URI.merge(endpoint)
-    |> HTTPoison.post!(body, headers)
+    |> HTTPoison.post(body, headers)
     |> Retry.autoretry(max_attempts: 1, wait: 0)
     |> parse_response()
   end
 
-  defp parse_response(%HTTPoison.Response{status_code: 201, body: body}),
-    do: Jason.decode!(body, keys: :atoms)
+  def get!(endpoint, headers \\ []) do
+    headers = add_paypal_headers(headers)
 
-  defp parse_response(%HTTPoison.Response{status_code: 200, body: body}),
-    do: Jason.decode!(body, keys: :atoms)
-
-  defp wipe_token_if_unauthorized(%HTTPoison.Response{status_code: 401} = resp) do
-    Authentication.flush_token_cache()
-
-    %HTTPoison.Response{
-      resp
-      | request: %HTTPoison.Request{
-          resp.request
-          | headers: add_paypal_headers(resp.request.headers)
-        }
-    }
+    get_paypal_api_base_url()
+    |> URI.merge(endpoint)
+    |> HTTPoison.get!(headers)
+    |> Retry.autoretry(max_attempts: 1, wait: 0)
+    |> parse_response!()
   end
 
-  defp wipe_token_if_unauthorized(resp),
-    do: resp
+  def post!(endpoint, body, headers \\ []) do
+    headers = add_paypal_headers(headers)
+
+    get_paypal_api_base_url()
+    |> URI.merge(endpoint)
+    |> HTTPoison.post!(body, headers)
+    |> Retry.autoretry(max_attempts: 1, wait: 0)
+    |> parse_response!()
+  end
+
+  defp parse_response!(%HTTPoison.Response{status_code: 201, body: body}),
+    do: Jason.decode!(body, keys: :atoms)
+
+  defp parse_response!(%HTTPoison.Response{status_code: 200, body: body}),
+    do: Jason.decode!(body, keys: :atoms)
+
+  defp parse_response({:ok, %HTTPoison.Response{status_code: status_code, body: body} = response}) do
+    case status_code do
+      n when n in [200, 201] ->
+        case Jason.decode(body, keys: :atoms) do
+          {:ok, data} -> {:ok, data}
+          _ -> {:parse_error, %{}}
+        end
+      _ -> {:error, response}
+    end
+  end
+
+  defp parse_response({_, response}),
+    do: {:request_failure, response}
 
   defp add_paypal_headers(headers) do
     Map.new(headers, fn x -> x end)
@@ -53,10 +72,4 @@ defmodule Philomena.Paypal.Request do
 
   defp get_paypal_api_base_url(),
     do: Application.get_env(:philomena, :paypal_api_base_url)
-
-  defp get_paypal_client_id(),
-    do: Application.get_env(:philomena, :paypal_client_id)
-
-  defp get_paypal_client_secret(),
-    do: Application.get_env(:philomena, :paypal_client_secret)
 end

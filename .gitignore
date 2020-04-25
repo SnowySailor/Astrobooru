@@ -39,4 +39,5 @@ npm-debug.log
 # Mnesia
 /Mnesia*
 
-docker/ssl_data/*
+docker/web/ssl_data/*
+!docker/web/ssl_data/.keep

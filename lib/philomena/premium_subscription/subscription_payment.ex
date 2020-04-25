@@ -14,6 +14,6 @@ defmodule Philomena.PremiumSubscription.SubscriptionPayment do
   def changeset(subscription, attrs) do
     subscription
     |> cast(attrs, [])
-    |> validate_required([:payment_date, :payment_duration, :subscription_id])
+    |> validate_required([:payment_date, :subscription_id])
   end
 end
