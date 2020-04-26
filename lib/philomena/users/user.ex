@@ -3,6 +3,7 @@ defmodule Philomena.Users.User do
   alias Philomena.Slug
 
   use Ecto.Schema
+  import Ecto.Query, warn: false
 
   use Pow.Ecto.Schema,
     password_hash_methods: {&Password.hash_pwd_salt/1, &Password.verify_pass/2},
@@ -27,7 +28,8 @@ defmodule Philomena.Users.User do
   alias Philomena.UserIps.UserIp
   alias Philomena.Bans.User, as: UserBan
   alias Philomena.Donations.Donation
-  alias Philomena.PremiumSubscription.Subscription
+  alias Philomena.PremiumSubscription.{SubscriptionPayment,BillingPlan,Subscription}
+  alias Philomena.Repo
 
   @derive {Phoenix.Param, key: :slug}
 
@@ -447,6 +449,36 @@ defmodule Philomena.Users.User do
         false
     end
   end
+
+  def premium?(%User{} = user) do
+    data =
+      SubscriptionPayment
+      |> join(:inner, [p], s in Subscription, on: p.subscription_id == s.id)
+      |> join(:inner, [_, s], u in User, on: s.user_id == u.id)
+      |> join(:inner, [_, s], bp in BillingPlan, on: s.billing_plan_id == bp.id)
+      |> where([_, _, u], u.id == ^user.id)
+      |> order_by([p], desc: p.payment_date)
+      |> select([p, _, _, bp], {p, bp})
+      |> limit(1)
+      |> Repo.one()
+
+    case data do
+      nil ->
+        false
+
+      {payment, billing_plan} ->
+        payment.payment_date
+        |> DateTime.add(billing_plan.cycle_duration, :second)
+        |> DateTime.compare(DateTime.utc_now())
+        |> case do
+          :lt -> false
+          _ -> true
+        end
+    end
+  end
+
+  def premium?(_),
+    do: false
 
   defp backup_code_valid?(user, token),
     do: Enum.any?(user.otp_backup_codes, &Password.verify_pass(token, &1))

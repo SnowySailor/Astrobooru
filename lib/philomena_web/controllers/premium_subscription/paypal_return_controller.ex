@@ -29,6 +29,6 @@ defmodule PhilomenaWeb.PremiumSubscription.PaypalReturnController do
     DateTime.from_iso8601(time)
   end
 
-  defp get_start_time(struct),
+  defp get_start_time(_data),
     do: nil
 end

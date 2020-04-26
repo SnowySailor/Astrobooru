@@ -1,9 +1,13 @@
 .block
   .block__content.js-resizable-media-container
-    = if Enum.any?(@subscription_options) do
-      = for subscription_option <- @subscription_options do
-        = render PhilomenaWeb.PremiumSubscriptionView, "_subscription_option.html", subscription_option: subscription_option, conn: @conn
-
-    - else
+    = if @is_premium do
       .block.block--fixed.block--no-margin.block--warning
-        ' Sorry, no subscriptions are available right now
+        ' You currently have a premium subscription
+    - else
+      = if Enum.any?(@subscription_options) do
+        = for subscription_option <- @subscription_options do
+          = render PhilomenaWeb.PremiumSubscriptionView, "_subscription_option.html", subscription_option: subscription_option, conn: @conn
+
+      - else
+        .block.block--fixed.block--no-margin.block--warning
+          ' Sorry, no subscriptions are available right now

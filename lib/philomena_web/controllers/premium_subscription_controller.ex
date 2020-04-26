@@ -1,11 +1,13 @@
 defmodule PhilomenaWeb.PremiumSubscriptionController do
   use PhilomenaWeb, :controller
+  alias Philomena.Users.User
 
   def index(conn, _params) do
     render(
       conn,
       "show.html",
-      subscription_options: get_subscription_options()
+      subscription_options: get_subscription_options(),
+      is_premium: User.premium?(conn.assigns.current_user)
     )
   end
 
