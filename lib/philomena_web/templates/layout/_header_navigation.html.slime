@@ -32,3 +32,5 @@
     | Tags
   a.header__link href="/galleries"
     | Galleries
+  a.header__link href="/subscription"
+    | Premium Subscriptions

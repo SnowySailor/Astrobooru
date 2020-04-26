@@ -23,6 +23,9 @@ nav#burger
   a href="/comments"
     i.fa.fa-fw.fa-comments<>
     ' Comments
+  a href="/subscription"
+    i.fa.fa-fw.fa-star<>
+    ' Premium Subscriptions
   a href="/pages/donations"
     i.fa.fa-fw.fa-heart<>
     ' Donate
