@@ -57,8 +57,8 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
           payer_selected: "PAYPAL",
           payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
         },
-        return_url: "https://astrobooru.com" <> Routes.activity_path(conn, :index),
-        cancel_url: "https://astrobooru.com" <> Routes.premium_subscription_path(conn, :index)
+        return_url: Path.join([get_site_url(), Routes.paypal_return_path(conn, :index)]),
+        cancel_url: Path.join([get_site_url(), Routes.premium_subscription_path(conn, :index)])
       }
     }
     
@@ -86,4 +86,7 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
 
   defp associate_user_with_subscription(error, plan_id, user),
     do: Logger.error("error associating user (#{user.id}) with subscription (plan: #{plan_id}): #{inspect(error)}")
+
+  defp get_site_url(),
+    do: Application.get_env(:philomena, :site_url)
 end

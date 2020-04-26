@@ -7,7 +7,7 @@ defmodule Philomena.Paypal.Request do
     headers = add_paypal_headers(headers)
 
     get_paypal_api_base_url()
-    |> URI.merge(endpoint)
+    |> Path.join(endpoint)
     |> HTTPoison.get(headers)
     |> Retry.autoretry(max_attempts: 1, wait: 0)
     |> parse_response()
@@ -17,7 +17,7 @@ defmodule Philomena.Paypal.Request do
     headers = add_paypal_headers(headers)
 
     get_paypal_api_base_url()
-    |> URI.merge(endpoint)
+    |> Path.join(endpoint)
     |> HTTPoison.post(body, headers)
     |> Retry.autoretry(max_attempts: 1, wait: 0)
     |> parse_response()

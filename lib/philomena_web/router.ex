@@ -164,6 +164,8 @@ defmodule PhilomenaWeb.Router do
       resources "/subscribe", PremiumSubscription.SubscribeController, only: [:index, :create]
     end
 
+    resources "/subscription/paypal/return", PremiumSubscription.PaypalReturnController, only: [:index]
+
     resources "/notifications", NotificationController, only: [:index, :delete]
 
     resources "/conversations", ConversationController, only: [:index, :show, :new, :create] do

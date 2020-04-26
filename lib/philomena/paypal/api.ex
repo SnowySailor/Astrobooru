@@ -4,7 +4,8 @@ defmodule Philomena.Paypal.API do
   def get_subscription_options() do
   end
 
-  def get_products() do
+  def get_subscription(id) do
+    Request.get("/v1/billing/subscriptions/#{id}")
   end
 
   def create_subscription(subscription) do
@@ -28,7 +29,7 @@ defmodule Philomena.Paypal.API do
   def update_product(product) do
   end
 
-  def webhook_signature_valid?(signature) when is_binary(signature) do
+  def webhook_signature_valid?(signature) do
     case Request.post("/v1/notifications/verify-webhook-signature", signature) do
       {:ok, %{verification_status: "SUCCESS"}} -> true
       _ -> false
