@@ -36,7 +36,6 @@ defmodule Philomena.PremiumSubscription.Subscription do
       subscriptions
       |> Enum.filter(&active?(&1.id))
       |> Enum.map(&API.cancel_subscription(&1.id, reason))
-      |> Enum.map(&log_errors(&1))
       |> Enum.all?(fn {status, _} -> status == :ok end)
 
     if success do
@@ -49,15 +48,8 @@ defmodule Philomena.PremiumSubscription.Subscription do
     success
   end
 
-  def log_errors(data) do
-    IO.inspect(data)
-    data
-  end
-
   def active?(id) do
-    data = API.get_subscription(id)
-    IO.inspect(data)
-    case data do
+    case API.get_subscription(id) do
       {:ok, %{status: "ACTIVE"}} -> true
       {:ok, _} -> false
     end

@@ -24,6 +24,8 @@ defmodule PhilomenaWeb.PaypalHookController do
 
   defp handle_by_resource_type("subscription", %{"event_type" => type} = event) do
     case type do
+      "BILLING.SUBSCRIPTION.CANCELLED" ->
+        BillingSubscription.cancelled(event)
       "BILLING.SUBSCRIPTION.ACTIVATED" ->
         BillingSubscription.activated(event)
       "PAYMENT.SALE.COMPLETED" ->
