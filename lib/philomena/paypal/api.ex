@@ -13,6 +13,11 @@ defmodule Philomena.Paypal.API do
     Request.post("/v1/billing/subscriptions", body)
   end
 
+  def cancel_subscription(id, reason) do
+    body = Jason.encode!(%{reason: reason})
+    Request.post("/v1/billing/subscriptions/#{id}/cancel", body)
+  end
+
   def create_order(order) do
     body = Jason.encode!(order)
     Request.post("/v2/checkout/orders", body)

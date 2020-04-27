@@ -480,6 +480,24 @@ defmodule Philomena.Users.User do
   def premium?(_),
     do: false
 
+  def can_cancel_premium_subscription?(%User{} = user) do
+    not
+    (
+      Subscription
+      |> where([s], s.cancelled == false and s.user_id == ^user.id)
+      |> limit(1)
+      |> Repo.one()
+      |> is_nil()
+    )
+  end
+
+  def can_purchase_premium_subscription?(%User{} = user) do
+    not can_cancel_premium_subscription?(user)
+  end
+
+  def can_purchase_premium_subscription?(_),
+    do: true
+
   defp backup_code_valid?(user, token),
     do: Enum.any?(user.otp_backup_codes, &Password.verify_pass(token, &1))
 

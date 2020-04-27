@@ -43,11 +43,16 @@ defmodule Philomena.Paypal.Request do
     |> parse_response!()
   end
 
-  defp parse_response!(%HTTPoison.Response{status_code: 201, body: body}),
-    do: Jason.decode!(body, keys: :atoms)
-
-  defp parse_response!(%HTTPoison.Response{status_code: 200, body: body}),
-    do: Jason.decode!(body, keys: :atoms)
+  defp parse_response!({:ok, %HTTPoison.Response{status_code: status_code, body: body} = response}) do
+    case status_code do
+      n when n in [200, 201] ->
+        Jason.decode!(body, keys: :atoms)
+      n when n in [204] ->
+        %{}
+      _ ->
+        {:error, response}
+    end
+  end
 
   defp parse_response({:ok, %HTTPoison.Response{status_code: status_code, body: body} = response}) do
     case status_code do
@@ -56,7 +61,10 @@ defmodule Philomena.Paypal.Request do
           {:ok, data} -> {:ok, data}
           _ -> {:parse_error, %{}}
         end
-      _ -> {:error, response}
+      n when n in [204] ->
+        {:ok, %{}}
+      _ ->
+        {:error, response}
     end
   end
 

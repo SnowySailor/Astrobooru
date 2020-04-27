@@ -8,15 +8,15 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
   require Logger
 
   def create(conn, %{"premium_subscription_id" => plan_id}) do
-    case User.premium?(conn.assigns.current_user) do
+    case User.can_purchase_premium_subscription?(conn.assigns.current_user) do
       true ->
-        conn
-        |> put_flash(:info, "You already have a premium subscription")
-        |> redirect(external: Routes.activity_path(conn, :index))
-      false ->
         conn
         |> create_new_subscription(plan_id)
         |> (&(redirect(conn, external: &1))).()
+      false ->
+        conn
+        |> put_flash(:info, "You already have a premium subscription")
+        |> redirect(external: Routes.activity_path(conn, :index))
     end
   end
 

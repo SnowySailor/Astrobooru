@@ -1,0 +1,35 @@
+h2 Cancel your premium subscription
+
+.image-other
+  p
+    | If you would like to cancel your premium subscription, please select a reason below and click the 'Cancel My Subscription' button.
+    br
+    br
+    strong
+      ' Please note
+    | that after you cancel your subscription, your account will hold its premium status until the end of the current billing period. For example, if you were charged for a month of premium and you cancelled your subscription after 10 days, your account will still holds its premium status until the month is up.
+
+  = form_for @conn, Routes.cancel_path(@conn, :create), fn f ->
+    .field
+      = select f, :reason, cancel_reasons(), class: "input"
+    .block
+      .block__header.block__header--js-tabbed
+        a.selected href="#" data-click-tab="write"
+          i.fas.fa-edit>
+          ' Edit
+
+        a href="#" data-click-tab="preview"
+          i.fa.fa-eye>
+          ' Preview
+
+      .block__tab.communication-edit__tab.selected data-tab="write"
+        = render PhilomenaWeb.TextileView, "_help.html", conn: @conn
+        = render PhilomenaWeb.TextileView, "_toolbar.html", conn: @conn
+
+        .field
+          = textarea f, :reason_text, class: "input input--wide input--text js-preview-input js-toolbar-input", placeholder: "If you would like, please let us know more about why you are cancelling."
+
+      .block__tab.communication-edit__tab.hidden data-tab="preview"
+        ' [Loading preview...]
+
+    = submit "Cancel My Subscription", class: "button"

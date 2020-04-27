@@ -7,7 +7,7 @@ defmodule PhilomenaWeb.PremiumSubscriptionController do
       conn,
       "show.html",
       subscription_options: get_subscription_options(),
-      is_premium: User.premium?(conn.assigns.current_user)
+      can_purchase: User.can_purchase_premium_subscription?(conn.assigns.current_user)
     )
   end
 
