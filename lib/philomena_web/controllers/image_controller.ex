@@ -25,6 +25,8 @@ defmodule PhilomenaWeb.ImageController do
   alias Philomena.Users.User
   import Ecto.Query
 
+  require Size
+
   plug :load_image when action in [:show]
 
   plug PhilomenaWeb.FilterBannedUsersPlug when action in [:new, :create]
@@ -119,10 +121,8 @@ defmodule PhilomenaWeb.ImageController do
   def create(conn, %{"image" => image_params}) do
     attributes = conn.assigns.attributes
 
-    IO.inspect(File.stat!(image_params["image"].path))
-
-    case User.file_size_allowed?(image_params["image"].path) do
-      {true, nil} ->
+    case User.file_size_allowed?(conn.assigns.current_user, image_params["image"].path) do
+      {true, _} ->
         case Images.create_image(attributes, image_params) do
           {:ok, %{image: image}} ->
             spawn(fn ->
@@ -150,7 +150,7 @@ defmodule PhilomenaWeb.ImageController do
         conn
         |> put_flash(
           :error,
-          ["Image too large (maximum #{size} MB)."] ++
+          ["Image too large (maximum #{Size.humanize!(size)})."] ++
             if(not User.premium?(conn.assigns.current_user),
               do: [
                 " Upgrade to ",

@@ -31,7 +31,10 @@ defmodule Philomena.Users.User do
   alias Philomena.PremiumSubscription.{SubscriptionPayment, BillingPlan, Subscription}
   alias Philomena.Repo
 
+  require Size
+
   @derive {Phoenix.Param, key: :slug}
+  @default_max_upload_size Size.megabytes(3)
 
   schema "users" do
     has_many :links, UserLink
@@ -496,8 +499,30 @@ defmodule Philomena.Users.User do
   def can_purchase_premium_subscription?(_),
     do: true
 
-  def file_size_allowed?(_) do
-    {false, 3}
+  def file_size_allowed?(user, path) do
+    size = max_allowed_file_size(user)
+    {File.stat!(path).size <= size, size}
+  end
+
+  def max_allowed_file_size(%User{} = user) do
+    {limit} =
+      Subscription
+      |> where([s], s.user_id == ^user.id and s.cancelled == false)
+      |> limit(1)
+      |> select([s], [s.image_size_limit])
+      |> Repo.one()
+
+    case limit do
+      nil ->
+        @default_max_upload_size
+
+      _ ->
+        limit
+    end
+  end
+
+  def max_allowed_file_size(_) do
+    @default_max_upload_size
   end
 
   defp backup_code_valid?(user, token),
