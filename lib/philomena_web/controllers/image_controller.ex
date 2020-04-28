@@ -1,5 +1,6 @@
 defmodule PhilomenaWeb.ImageController do
   use PhilomenaWeb, :controller
+  alias Phoenix.HTML.Link
 
   alias PhilomenaWeb.ImageLoader
   alias PhilomenaWeb.CommentLoader
@@ -21,6 +22,7 @@ defmodule PhilomenaWeb.ImageController do
   alias Philomena.Tags
   alias Philomena.Repo
   alias Philomena.Captcha
+  alias Philomena.Users.User
   import Ecto.Query
 
   plug :load_image when action in [:show]
@@ -117,25 +119,49 @@ defmodule PhilomenaWeb.ImageController do
   def create(conn, %{"image" => image_params}) do
     attributes = conn.assigns.attributes
 
-    case Images.create_image(attributes, image_params) do
-      {:ok, %{image: image}} ->
-        spawn(fn ->
-          Images.repair_image(image)
-        end)
+    IO.inspect(File.stat!(image_params["image"].path))
 
-        # ImageProcessor.cast(image.id)
-        Images.reindex_image(image)
-        Tags.reindex_tags(image.added_tags)
-        UserStatistics.inc_stat(conn.assigns.current_user, :uploads)
+    case User.file_size_allowed?(image_params["image"].path) do
+      {true, nil} ->
+        case Images.create_image(attributes, image_params) do
+          {:ok, %{image: image}} ->
+            spawn(fn ->
+              Images.repair_image(image)
+            end)
 
+            # ImageProcessor.cast(image.id)
+            Images.reindex_image(image)
+            Tags.reindex_tags(image.added_tags)
+            UserStatistics.inc_stat(conn.assigns.current_user, :uploads)
+
+            conn
+            |> put_flash(:info, "Image created successfully.")
+            |> redirect(to: Routes.image_path(conn, :show, image))
+
+          {:error, :image, changeset, _} ->
+            conn
+            |> render("new.html",
+              changeset: changeset,
+              captcha_site_key: Captcha.get_captcha_site_key()
+            )
+        end
+
+      {false, size} ->
         conn
-        |> put_flash(:info, "Image created successfully.")
-        |> redirect(to: Routes.image_path(conn, :show, image))
-
-      {:error, :image, changeset, _} ->
-        conn
+        |> put_flash(
+          :error,
+          ["Image too large (maximum #{size} MB)."] ++
+            if(not User.premium?(conn.assigns.current_user),
+              do: [
+                " Upgrade to ",
+                Link.link("Astrobooru Premium", to: Routes.premium_subscription_path(conn, :index)),
+                " to increase your limit."
+              ],
+              else: []
+            )
+        )
         |> render("new.html",
-          changeset: changeset,
+          changeset: %Image{} |> Images.change_image(),
           captcha_site_key: Captcha.get_captcha_site_key()
         )
     end

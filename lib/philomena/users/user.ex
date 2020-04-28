@@ -28,7 +28,7 @@ defmodule Philomena.Users.User do
   alias Philomena.UserIps.UserIp
   alias Philomena.Bans.User, as: UserBan
   alias Philomena.Donations.Donation
-  alias Philomena.PremiumSubscription.{SubscriptionPayment,BillingPlan,Subscription}
+  alias Philomena.PremiumSubscription.{SubscriptionPayment, BillingPlan, Subscription}
   alias Philomena.Repo
 
   @derive {Phoenix.Param, key: :slug}
@@ -481,15 +481,12 @@ defmodule Philomena.Users.User do
     do: false
 
   def can_cancel_premium_subscription?(%User{} = user) do
-    not
-    (
-      Subscription
-      |> join(:inner, [s], sp in SubscriptionPayment, on: sp.subscription_id == s.id)
-      |> where([s], s.cancelled == false and s.user_id == ^user.id)
-      |> limit(1)
-      |> Repo.one()
-      |> is_nil()
-    )
+    not (Subscription
+         |> join(:inner, [s], sp in SubscriptionPayment, on: sp.subscription_id == s.id)
+         |> where([s], s.cancelled == false and s.user_id == ^user.id)
+         |> limit(1)
+         |> Repo.one()
+         |> is_nil())
   end
 
   def can_purchase_premium_subscription?(%User{} = user) do
@@ -498,6 +495,10 @@ defmodule Philomena.Users.User do
 
   def can_purchase_premium_subscription?(_),
     do: true
+
+  def file_size_allowed?(_) do
+    {false, 3}
+  end
 
   defp backup_code_valid?(user, token),
     do: Enum.any?(user.otp_backup_codes, &Password.verify_pass(token, &1))

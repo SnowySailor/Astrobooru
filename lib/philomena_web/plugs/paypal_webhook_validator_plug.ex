@@ -10,16 +10,16 @@ defmodule PhilomenaWeb.PaypalWebhookValidatorPlug do
     conn
     |> extract_webhook_signature(conn.params)
     |> API.webhook_signature_valid?()
-    |>
-      case do
-        true ->
-          conn
-        false ->
-          conn
-          |> put_status(:unauthorized)
-          |> text("")
-          |> halt()
-      end
+    |> case do
+      true ->
+        conn
+
+      false ->
+        conn
+        |> put_status(:unauthorized)
+        |> text("")
+        |> halt()
+    end
   end
 
   defp extract_webhook_signature(conn, params) do

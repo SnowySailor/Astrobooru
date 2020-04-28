@@ -7,6 +7,7 @@ defmodule Philomena.Paypal.HookHandlers.BillingSubscription do
     case DateTime.from_iso8601(time) do
       {:ok, parsed_time, 0} ->
         add_subscription_payment(id, parsed_time)
+
       _ ->
         {:error, "could not parse time: #{time}"}
     end
@@ -19,7 +20,7 @@ defmodule Philomena.Paypal.HookHandlers.BillingSubscription do
     add_subscription_payment(id, time)
   end
 
-  def cancelled(%{"resource" => %{"id" => id}}) do 
+  def cancelled(%{"resource" => %{"id" => id}}) do
     Subscription
     |> where([s], s.id == ^id)
     |> Repo.update_all(set: [cancelled: true])
@@ -29,17 +30,16 @@ defmodule Philomena.Paypal.HookHandlers.BillingSubscription do
     case DateTime.from_iso8601(time) do
       {:ok, parsed_time, 0} ->
         add_subscription_payment(id, parsed_time)
+
       _ ->
         {:error, "could not parse time #{time}"}
     end
   end
 
   def sale_reversed(event) do
-    
   end
 
   def sale_refunded(event) do
-    
   end
 
   def add_subscription_payment(subscription_id, time) do

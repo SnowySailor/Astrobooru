@@ -31,7 +31,7 @@ defmodule Philomena.PremiumSubscription.Subscription do
       |> where([s], s.cancelled == false)
       |> distinct(:id)
       |> Repo.all()
-    
+
     success =
       subscriptions
       |> Enum.filter(&active?(&1.id))
@@ -40,6 +40,7 @@ defmodule Philomena.PremiumSubscription.Subscription do
 
     if success do
       ids = Enum.map(subscriptions, fn s -> s.id end)
+
       Subscription
       |> where([s], s.id in ^ids)
       |> Repo.update_all(set: [cancelled: true])

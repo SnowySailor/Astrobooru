@@ -18,7 +18,7 @@ defmodule PhilomenaWeb.PaypalHookController do
       %{"resource_type" => "subscription"} -> "subscription"
       %{"resource" => %{"billing_agreement_id" => _id}} -> "subscription"
       %{"resource_type" => "sale"} -> "sale"
-      _ -> "unknown"      
+      _ -> "unknown"
     end
   end
 
@@ -26,14 +26,19 @@ defmodule PhilomenaWeb.PaypalHookController do
     case type do
       "BILLING.SUBSCRIPTION.CANCELLED" ->
         BillingSubscription.cancelled(event)
+
       "BILLING.SUBSCRIPTION.ACTIVATED" ->
         BillingSubscription.activated(event)
+
       "PAYMENT.SALE.COMPLETED" ->
         BillingSubscription.sale_completed(event)
+
       "PAYMENT.SALE.REVERSED" ->
         BillingSubscription.sale_reversed(event)
+
       "PAYMENT.SALE.REFUNDED" ->
         BillingSubscription.sale_refunded(event)
+
       _ ->
         {:info, "got event without handled type (#{type}): #{inspect(event)}"}
     end

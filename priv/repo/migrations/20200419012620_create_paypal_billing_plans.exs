@@ -12,6 +12,7 @@ defmodule Philomena.Repo.Migrations.CreatePaypalBillingPlans do
             type: :string
           ),
           null: false
+
       add :cycle_duration, :integer, null: false
     end
   end

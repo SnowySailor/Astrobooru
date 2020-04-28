@@ -12,7 +12,8 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
       true ->
         conn
         |> create_new_subscription(plan_id)
-        |> (&(redirect(conn, external: &1))).()
+        |> (&redirect(conn, external: &1)).()
+
       false ->
         conn
         |> put_flash(:info, "You already have a premium subscription")
@@ -23,28 +24,28 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
   def index(conn, %{"premium_subscription_id" => id}) do
     url = Routes.premium_subscription_subscribe_path(conn, :create, id)
     csrf = get_csrf_token()
-    
+
     html(conn, """
-      <html>
-        <body>
-          <form id="autopost" method="POST" action=#{url}>
-            <input type="hidden" name="_csrf_token" value="#{csrf}"/>
-          </form>
-          <script type="text/javascript">
-            function ready(f) {
-              if (document.readyState == "complete" || document.readyState == "interactive") {
-                setTimeout(f, 1);
-              } else {
-                document.addEventListener("DOMContentLoaded", f);
-              }
+    <html>
+      <body>
+        <form id="autopost" method="POST" action=#{url}>
+          <input type="hidden" name="_csrf_token" value="#{csrf}"/>
+        </form>
+        <script type="text/javascript">
+          function ready(f) {
+            if (document.readyState == "complete" || document.readyState == "interactive") {
+              setTimeout(f, 1);
+            } else {
+              document.addEventListener("DOMContentLoaded", f);
             }
-            ready(function() {
-              document.getElementById("autopost").submit();
-            });
-          </script>
-        </body>
-      </html>
-      """)
+          }
+          ready(function() {
+            document.getElementById("autopost").submit();
+          });
+        </script>
+      </body>
+    </html>
+    """)
   end
 
   defp create_new_subscription(conn, plan_id) do
@@ -68,7 +69,7 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
         cancel_url: Path.join([get_site_url(), Routes.premium_subscription_path(conn, :index)])
       }
     }
-    
+
     API.create_subscription(subscription)
     |> associate_user_with_subscription(plan_id, conn.assigns.current_user)
     |> get_approval_link()
@@ -80,19 +81,28 @@ defmodule PhilomenaWeb.PremiumSubscription.SubscribeController do
     |> (fn %{href: link} -> link end).()
   end
 
-  defp associate_user_with_subscription({:ok, %{id: id} = subscription}, plan_id, %User{id: user_id}) do
-    _ = %Subscription{
-      id: id,
-      billing_plan_id: plan_id,
-      user_id: user_id
-    }
-    |> Subscription.changeset(%{})
-    |> Repo.insert(on_conflict: :nothing)
+  defp associate_user_with_subscription({:ok, %{id: id} = subscription}, plan_id, %User{
+         id: user_id
+       }) do
+    _ =
+      %Subscription{
+        id: id,
+        billing_plan_id: plan_id,
+        user_id: user_id
+      }
+      |> Subscription.changeset(%{})
+      |> Repo.insert(on_conflict: :nothing)
+
     subscription
   end
 
   defp associate_user_with_subscription(error, plan_id, user),
-    do: Logger.error("error associating user (#{user.id}) with subscription (plan: #{plan_id}): #{inspect(error)}")
+    do:
+      Logger.error(
+        "error associating user (#{user.id}) with subscription (plan: #{plan_id}): #{
+          inspect(error)
+        }"
+      )
 
   defp get_site_url(),
     do: Application.get_env(:philomena, :site_url)
