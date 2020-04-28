@@ -12,6 +12,12 @@ p
   ' Looking to change your avatar?
   = link "Click here!", to: Routes.avatar_path(@conn, :edit)
 
+= if Philomena.Users.User.can_cancel_premium_subscription?(@current_user) do
+  h3 Premium Subscription
+  p
+    ' Looking to cancel your premium subscription?
+    = link "Click here!", to: Routes.cancel_path(@conn, :index)
+
 h3 API Key
 p
   ' Your API key is

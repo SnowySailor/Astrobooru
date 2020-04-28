@@ -484,6 +484,7 @@ defmodule Philomena.Users.User do
     not
     (
       Subscription
+      |> join(:inner, [s], sp in SubscriptionPayment, on: sp.subscription_id == s.id)
       |> where([s], s.cancelled == false and s.user_id == ^user.id)
       |> limit(1)
       |> Repo.one()

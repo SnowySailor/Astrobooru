@@ -1,13 +1,27 @@
-.block
-  .block__content.js-resizable-media-container
-    = if @can_purchase do
-      = if Enum.any?(@subscription_options) do
-        = for subscription_option <- @subscription_options do
-          = render PhilomenaWeb.PremiumSubscriptionView, "_subscription_option.html", subscription_option: subscription_option, conn: @conn
+h1 Astrobooru Premium
+p
+  ' Astrobooru Premium is a subscription that enables additional features that standard users don't have. Purchasing premium enables further development of Astrobooru and helps to pay for the servers, which cost $150/month to run. Here is what we offer with Astrobooru Premium:
+  ul
+    li Maximum upload size increased from 3MB to 30MB to accomodate high-resolution and high-detail images
+    li Private astrophoto data backups up to 1TB (capacity varies based on your tier; contact us for custom pricing on higher data volumes)
+    li Commission on astrophoto data sales decreased by 50% (you keep more from your sales)
+    li
+      ' Link your
+      code photograher:
+      |  tag to your account so users can find you easily
+    li Link your Instagram, Flickr, Facebook, or any other account to your profile so users can find you elsewhere
+    li Badge on your profile to show off your contributions
 
-      - else
-        .block.block--fixed.block--no-margin.block--warning
-          ' Sorry, no subscriptions are available right now
-    - else
-      .block.block--fixed.block--no-margin.block--warning
-        ' You currently have a premium subscription
+h2 Available Subscriptions
+= if @can_purchase do
+  = if Enum.any?(@subscription_options) do
+    = for subscription_option <- @subscription_options do
+      = render PhilomenaWeb.PremiumSubscriptionView, "_subscription_option.html", subscription_option: subscription_option, conn: @conn
+
+  - else
+    .block.block--fixed.block--no-margin.block--warning
+      ' Sorry, no subscriptions are available right now
+- else
+  p
+    ' You currently have a premium subscription. To cancel, visit your
+    = link "account settings.", to: Routes.pow_registration_path(@conn, :edit)
