@@ -31,6 +31,8 @@ config :philomena,
   proxy_host: nil,
   app_dir: File.cwd!()
 
+config :philomena, Philomena.Repo, migration_source: "ecto_migrations"
+
 config :philomena, :pow,
   user: Philomena.Users.User,
   repo: Philomena.Repo,
@@ -44,6 +46,9 @@ config :philomena, :pow,
 
 config :bcrypt_elixir,
   log_rounds: 12
+
+config :branca,
+  key: "your-secret-key"
 
 config :elastix,
   json_codec: Jason

@@ -26,7 +26,7 @@ defmodule PhilomenaWeb.ProfileController do
     preload: [
       awards: [:badge, :awarded_by],
       public_links: :tag,
-      verified_links: :tag,
+      verified_links: :tag
     ]
 
   plug :set_admin_metadata

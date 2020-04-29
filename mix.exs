@@ -65,7 +65,9 @@ defmodule Philomena.MixProject do
       {:distillery, "~> 2.1"},
       {:dialyxir, "~> 0.5.1"},
       {:ranch_connection_drainer, "~> 0.1"},
-      {:poison, "~> 3.1"}
+      {:branca, "~> 0.2.0"},
+      {:httpoison_retry, "~> 1.1.0"},
+      {:size, "~> 0.1.0"}
     ]
   end
 

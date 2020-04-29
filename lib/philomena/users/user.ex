@@ -3,6 +3,7 @@ defmodule Philomena.Users.User do
   alias Philomena.Slug
 
   use Ecto.Schema
+  import Ecto.Query, warn: false
 
   use Pow.Ecto.Schema,
     password_hash_methods: {&Password.hash_pwd_salt/1, &Password.verify_pass/2},
@@ -27,8 +28,13 @@ defmodule Philomena.Users.User do
   alias Philomena.UserIps.UserIp
   alias Philomena.Bans.User, as: UserBan
   alias Philomena.Donations.Donation
+  alias Philomena.PremiumSubscription.{SubscriptionPayment, BillingPlan, Subscription}
+  alias Philomena.Repo
+
+  require Size
 
   @derive {Phoenix.Param, key: :slug}
+  @default_max_upload_size Size.megabytes(3)
 
   schema "users" do
     has_many :links, UserLink
@@ -43,6 +49,7 @@ defmodule Philomena.Users.User do
     has_many :user_fingerprints, UserFingerprint
     has_many :bans, UserBan
     has_many :donations, Donation
+    has_many :subscriptions, Subscription
     many_to_many :roles, Role, join_through: "users_roles", on_replace: :delete
 
     belongs_to :current_filter, Filter
@@ -444,6 +451,78 @@ defmodule Philomena.Users.User do
       _error ->
         false
     end
+  end
+
+  def premium?(%User{} = user) do
+    data =
+      SubscriptionPayment
+      |> join(:inner, [p], s in Subscription, on: p.subscription_id == s.id)
+      |> join(:inner, [_, s], u in User, on: s.user_id == u.id)
+      |> join(:inner, [_, s], bp in BillingPlan, on: s.billing_plan_id == bp.id)
+      |> where([_, _, u], u.id == ^user.id)
+      |> order_by([p], desc: p.payment_date)
+      |> select([p, _, _, bp], {p, bp})
+      |> limit(1)
+      |> Repo.one()
+
+    case data do
+      nil ->
+        false
+
+      {payment, billing_plan} ->
+        payment.payment_date
+        |> DateTime.add(billing_plan.cycle_duration, :second)
+        |> DateTime.compare(DateTime.utc_now())
+        |> case do
+          :lt -> false
+          _ -> true
+        end
+    end
+  end
+
+  def premium?(_),
+    do: false
+
+  def can_cancel_premium_subscription?(%User{} = user) do
+    not (Subscription
+         |> join(:inner, [s], sp in SubscriptionPayment, on: sp.subscription_id == s.id)
+         |> where([s], s.cancelled == false and s.user_id == ^user.id)
+         |> limit(1)
+         |> Repo.one()
+         |> is_nil())
+  end
+
+  def can_purchase_premium_subscription?(%User{} = user) do
+    not can_cancel_premium_subscription?(user)
+  end
+
+  def can_purchase_premium_subscription?(_),
+    do: true
+
+  def file_size_allowed?(user, path) do
+    size = max_allowed_file_size(user)
+    {File.stat!(path).size <= size, size}
+  end
+
+  def max_allowed_file_size(%User{} = user) do
+    {limit} =
+      Subscription
+      |> where([s], s.user_id == ^user.id and s.cancelled == false)
+      |> limit(1)
+      |> select([s], [s.image_size_limit])
+      |> Repo.one()
+
+    case limit do
+      nil ->
+        @default_max_upload_size
+
+      _ ->
+        limit
+    end
+  end
+
+  def max_allowed_file_size(_) do
+    @default_max_upload_size
   end
 
   defp backup_code_valid?(user, token),

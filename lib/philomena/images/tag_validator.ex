@@ -2,7 +2,7 @@ defmodule Philomena.Images.TagValidator do
   import Ecto.Changeset
 
   @ratings MapSet.new(["dso", "planetary", "lunar", "solar", "landscape"])
-  @empty   MapSet.new()
+  @empty MapSet.new()
 
   def validate_tags(changeset) do
     tags = changeset |> get_field(:tags)

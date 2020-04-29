@@ -22,6 +22,10 @@ defmodule PhilomenaWeb.Router do
     plug PhilomenaWeb.AdminCountersPlug
   end
 
+  pipeline :paypal_webhook do
+    plug PhilomenaWeb.PaypalWebhookValidatorPlug
+  end
+
   pipeline :api do
     plug PhilomenaWeb.ApiTokenPlug
     plug PhilomenaWeb.EnsureUserEnabledPlug
@@ -61,7 +65,13 @@ defmodule PhilomenaWeb.Router do
   end
 
   scope "/" do
-    pipe_through [:browser, :ensure_totp, :ensure_not_banned, :ensure_tor_authorized, :captcha_data_provider]
+    pipe_through [
+      :browser,
+      :ensure_totp,
+      :ensure_not_banned,
+      :ensure_tor_authorized,
+      :captcha_data_provider
+    ]
 
     pow_registration_routes()
   end
@@ -89,6 +99,12 @@ defmodule PhilomenaWeb.Router do
     scope "/sessions", Session, as: :session do
       resources "/totp", TotpController, only: [:new, :create], singleton: true
     end
+  end
+
+  scope "/paypal", PhilomenaWeb do
+    pipe_through [:paypal_webhook]
+
+    resources "/hook", PaypalHookController, only: [:create]
   end
 
   scope "/api/v1/rss", PhilomenaWeb.Api.Rss, as: :api_rss do
@@ -143,6 +159,16 @@ defmodule PhilomenaWeb.Router do
     scope "/notifications", Notification, as: :notification do
       resources "/unread", UnreadController, only: [:index]
     end
+
+    resources "/subscription", PremiumSubscriptionController, only: [] do
+      resources "/subscribe", PremiumSubscription.SubscribeController, only: [:index, :create]
+    end
+
+    resources "/subscription/cancel", PremiumSubscription.CancelController,
+      only: [:index, :create]
+
+    resources "/subscription/paypal/return", PremiumSubscription.PaypalReturnController,
+      only: [:index]
 
     resources "/notifications", NotificationController, only: [:index, :delete]
 
@@ -376,6 +402,8 @@ defmodule PhilomenaWeb.Router do
     get "/", ActivityController, :index
 
     resources "/activity", ActivityController, only: [:index]
+
+    resources "/subscription", PremiumSubscriptionController, only: [:index]
 
     scope "/images", Image, as: :image do
       resources "/scrape", ScrapeController, only: [:create]
