@@ -55,6 +55,10 @@ defmodule PhilomenaWeb.Router do
     plug PhilomenaWeb.FilterBannedUsersPlug
   end
 
+  pipeline :ensure_password_not_compromised do
+    plug PhilomenaWeb.CompromisedPasswordCheckPlug
+  end
+
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated,
       error_handler: Pow.Phoenix.PlugErrorHandler
@@ -70,7 +74,8 @@ defmodule PhilomenaWeb.Router do
       :ensure_totp,
       :ensure_not_banned,
       :ensure_tor_authorized,
-      :captcha_data_provider
+      :captcha_data_provider,
+      :ensure_password_not_compromised
     ]
 
     pow_registration_routes()

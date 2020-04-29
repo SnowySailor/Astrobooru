@@ -41,3 +41,6 @@ npm-debug.log
 
 docker/web/ssl_data/*
 !docker/web/ssl_data/.keep
+
+# Intellij IDEA
+.idea

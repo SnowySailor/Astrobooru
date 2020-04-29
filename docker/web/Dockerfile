@@ -1,4 +1,4 @@
-FROM nginx:1.17.6
+FROM nginx:1.17.10
 ENV APP_DIR /srv/philomena
 
 COPY docker/web/nginx.conf /tmp/docker.nginx

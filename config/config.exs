@@ -47,9 +47,6 @@ config :philomena, :pow,
 config :bcrypt_elixir,
   log_rounds: 12
 
-config :branca,
-  key: "your-secret-key"
-
 config :elastix,
   json_codec: Jason
 
@@ -62,8 +59,7 @@ config :canary,
 config :philomena, PhilomenaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "xZYTon09JNRrj8snd7KL31wya4x71jmo5aaSSRmw1dGjWLRmEwWMTccwxgsGFGjM",
-  render_errors: [view: PhilomenaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Philomena.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: PhilomenaWeb.ErrorView, accepts: ~w(html json)]
 
 config :philomena, :generators, migration: false
 
