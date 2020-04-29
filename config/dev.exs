@@ -14,10 +14,13 @@ config :philomena,
   redis_host: "redis",
   captcha_site_key: "",
   captcha_secret_key: "",
-  paypal_client_id: "",
-  paypal_client_secret: "",
-  paypal_api_base_url: "https://api.sandbox.paypal.com/v1/",
-  paypal_webhook_id: ""
+  paypal_client_id:
+    "",
+  paypal_client_secret:
+    "",
+  paypal_api_base_url: "https://api.paypal.com",
+  paypal_webhook_id: "",
+  site_url: "https://astrobooru.com"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
