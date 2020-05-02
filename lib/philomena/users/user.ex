@@ -505,7 +505,7 @@ defmodule Philomena.Users.User do
   end
 
   def max_allowed_file_size(%User{} = user) do
-    {limit} =
+    [limit] =
       Subscription
       |> where([s], s.user_id == ^user.id and s.cancelled == false)
       |> limit(1)

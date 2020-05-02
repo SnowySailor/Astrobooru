@@ -15,6 +15,8 @@ defmodule Philomena.PremiumSubscription.Subscription do
     belongs_to :billing_plan, BillingPlan, type: :string
     has_many :payments, SubscriptionPayment
     field :cancelled, :boolean, null: false, default: false
+    field :image_size_limit, :integer, null: false, default: 3_000_000
+    field :backup_size_limit, :integer, null: false, default: 0
   end
 
   @doc false

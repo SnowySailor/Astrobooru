@@ -2,7 +2,7 @@ h1 Astrobooru Premium
 p
   ' Astrobooru Premium is a subscription that enables additional features that standard users don't have. Purchasing premium enables further development of Astrobooru and helps to pay for the servers, which cost $150/month to run. Here is what we offer with Astrobooru Premium:
   ul
-    li Maximum upload size increased from 3MB to 30MB to accomodate high-resolution and high-detail images
+    li Maximum upload size increased from 3MB to 30MB to accommodate high-resolution and high-detail images
     li Private astrophoto data backups up to 1TB (capacity varies based on your tier; contact us for custom pricing on higher data volumes)
     li Commission on astrophoto data sales decreased by 50% (you keep more from your sales)
     li
@@ -10,7 +10,7 @@ p
       code photograher:
       |  tag to your account so users can find you easily
     li Link your Instagram, Flickr, Facebook, or any other account to your profile so users can find you elsewhere
-    li Badge on your profile to show off your contributions
+    li Badge on your profile to show your contributions
 
 h2 Available Subscriptions
 = if @can_purchase do

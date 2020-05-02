@@ -66,10 +66,10 @@
     .field
       = label f, :anonymous, "Post anonymously"
       = checkbox f, :anonymous, class: "checkbox", value: anonymous_by_default?(@conn)
-
-  .field
-    div.h-captcha data-sitekey=@captcha_site_key
-    script(src="https://hcaptcha.com/1/api.js" async defer)
+  - else
+    .field
+      div.h-captcha data-sitekey=@captcha_site_key
+      script(src="https://hcaptcha.com/1/api.js" async defer)
 
   .actions
     = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Please wait..."]
