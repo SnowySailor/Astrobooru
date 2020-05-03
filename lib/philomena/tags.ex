@@ -7,6 +7,8 @@ defmodule Philomena.Tags do
   alias Ecto.Multi
   alias Philomena.Repo
 
+  require Logger
+  alias Logger
   alias Philomena.Elasticsearch
   alias Philomena.Tags.Tag
   alias Philomena.Tags.Uploader
@@ -17,6 +19,9 @@ defmodule Philomena.Tags do
   alias Philomena.Images.Tagging
   alias Philomena.UserLinks.UserLink
   alias Philomena.DnpEntries.DnpEntry
+  alias Philomena.Comments
+  alias Philomena.Astrometry.API
+  alias PhilomenaWeb.ImageView
 
   @spec get_or_create_tags(String.t()) :: List.t()
   def get_or_create_tags(tag_list) do
@@ -431,5 +436,53 @@ defmodule Philomena.Tags do
   """
   def change_implication(%Implication{} = implication) do
     Implication.changeset(implication, %{})
+  end
+
+  def autopopulate_object_tags(%Image{} = image) do
+    Logger.info("starting solve")
+    object_tags_map =
+      ImageView.pretty_url(image, true, false)
+      |> API.get_tags()
+      |> filter_astrometry_tags()
+      |> format_object_tags()
+      |> MapSet.new()
+
+    Logger.info("got tags: #{inspect(object_tags_map)}")
+
+    existing_tags_map =
+      image.tags
+      |> Enum.map(fn tag -> tag.name end)
+      |> MapSet.new()
+
+    Logger.info("got existing: #{inspect(existing_tags_map)}")
+
+    new_tags =
+      MapSet.union(object_tags_map, existing_tags_map)
+      |> Enum.join(", ")
+    existing_tags =
+      existing_tags_map
+      |> Enum.join(", ")
+
+    Logger.info("new tags: #{inspect(new_tags)}, existing: #{inspect(existing_tags)}")
+
+    case Images.update_tags(image, %{"old_tag_input" => existing_tags, "tag_input" => new_tags}) do
+      {:ok, %{image: {image, added_tags, removed_tags}}} ->
+        Logger.info("success")
+        Comments.reindex_comments(image)
+        Images.reindex_image(image)
+        reindex_tags(added_tags ++ removed_tags)
+      {:error, :image, _changeset, _} ->
+        Logger.error("error updating tags for image #{image.id}. Object tags: #{inspect(object_tags_map)}, Existing tags: #{inspect(existing_tags_map)}, New tags: #{inspect(new_tags)}")
+    end
+  end
+
+  defp filter_astrometry_tags(tags) do
+    Enum.map(tags, &String.downcase/1)
+    |> Enum.filter(fn tag -> String.starts_with?(tag, ["m ", "ngc ", "c ", "b ", "arp ", "abell ", "ic ", "sh2 ", "vdb ", "ldn ", "lbn "]) end)
+  end
+
+  defp format_object_tags(tags) do
+    Enum.map(tags, fn tag -> String.replace(tag, ",", "") end)
+    |> Enum.map(fn tag -> "object:" <> tag end)
   end
 end

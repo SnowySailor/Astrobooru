@@ -294,6 +294,51 @@ defmodule Philomena.Images do
     |> Repo.isolated_transaction(:serializable)
   end
 
+  def update_tags(%Image{} = image, attrs) do
+    old_tags = Tags.get_or_create_tags(attrs["old_tag_input"])
+    new_tags = Tags.get_or_create_tags(attrs["tag_input"])
+
+    Multi.new()
+    |> Multi.run(:image, fn repo, _chg ->
+      image
+      |> repo.preload(:tags)
+      |> Image.tag_changeset(%{}, old_tags, new_tags)
+      |> repo.update()
+      |> case do
+        {:ok, image} ->
+          {:ok, {image, image.added_tags, image.removed_tags}}
+
+        error ->
+          error
+      end
+    end)
+    |> Multi.run(:added_tag_count, fn
+      _repo, %{image: {%{hidden_from_users: true}, _added, _removed}} ->
+        {:ok, 0}
+
+      repo, %{image: {_image, added_tags, _removed}} ->
+        tag_ids = added_tags |> Enum.map(& &1.id)
+        tags = Tag |> where([t], t.id in ^tag_ids)
+
+        {count, nil} = repo.update_all(tags, inc: [images_count: 1])
+
+        {:ok, count}
+    end)
+    |> Multi.run(:removed_tag_count, fn
+      _repo, %{image: {%{hidden_from_users: true}, _added, _removed}} ->
+        {:ok, 0}
+
+      repo, %{image: {_image, _added, removed_tags}} ->
+        tag_ids = removed_tags |> Enum.map(& &1.id)
+        tags = Tag |> where([t], t.id in ^tag_ids)
+
+        {count, nil} = repo.update_all(tags, inc: [images_count: -1])
+
+        {:ok, count}
+    end)
+    |> Repo.isolated_transaction(:serializable)
+  end
+
   defp tag_change_attributes(attribution, image, tag, added, user) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 

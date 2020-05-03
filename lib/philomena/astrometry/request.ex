@@ -1,9 +1,10 @@
 defmodule Philomena.Astrometry.Request do
-  defmodule Philomena.Paypal.Request do
   require HTTPoison.Retry
   alias HTTPoison.Retry
+  require Logger
+  alias Logger
 
-  def get(endpoint, headers \\ [], opts \\ []) do
+  def get(endpoint, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
     get_astrometry_api_base_url()
     |> Path.join(endpoint)
     |> HTTPoison.get(headers, opts)
@@ -11,7 +12,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response()
   end
 
-  def post(endpoint, body, headers \\ [], opts \\ []) do
+  def post(endpoint, body, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
     get_astrometry_api_base_url()
     |> Path.join(endpoint)
     |> HTTPoison.post(body, headers, opts)
@@ -19,7 +20,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response()
   end
 
-  def get!(endpoint, headers \\ [], opts \\ []) do
+  def get!(endpoint, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
     get_astrometry_api_base_url()
     |> URI.merge(endpoint)
     |> HTTPoison.get!(headers, opts)
@@ -27,7 +28,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response!()
   end
 
-  def post!(endpoint, body, headers \\ [], opts \\ []) do
+  def post!(endpoint, body, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
     get_astrometry_api_base_url()
     |> URI.merge(endpoint)
     |> HTTPoison.post!(body, headers, opts)
@@ -36,7 +37,7 @@ defmodule Philomena.Astrometry.Request do
   end
 
   defp parse_response!(
-         {:ok, %HTTPoison.Response{status_code: status_code, body: body} = response}
+         %HTTPoison.Response{status_code: status_code, body: body} = response
        ) do
     case status_code do
       n when n in [200, 201] ->
@@ -71,5 +72,4 @@ defmodule Philomena.Astrometry.Request do
 
   defp get_astrometry_api_base_url(),
     do: Application.get_env(:philomena, :astrometry_api_base_url)
-  end
 end
