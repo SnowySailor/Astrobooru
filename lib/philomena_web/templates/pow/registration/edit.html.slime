@@ -12,16 +12,16 @@ p
   ' Looking to change your avatar?
   = link "Click here!", to: Routes.avatar_path(@conn, :edit)
 
+= if can?(@conn, :change_username, @current_user) do
+  p
+    ' Looking to change your username?
+    = link "Click here!", to: Routes.registration_name_path(@conn, :edit)
+
 = if Philomena.Users.User.can_cancel_premium_subscription?(@current_user) do
   h3 Premium Subscription
   p
     ' Looking to cancel your premium subscription?
     = link "Click here!", to: Routes.cancel_path(@conn, :index)
-
-= if can?(@conn, :change_username, @current_user) do
-  p
-    ' Looking to change your username?
-    = link "Click here!", to: Routes.registration_name_path(@conn, :edit)
 
 h3 API Key
 p

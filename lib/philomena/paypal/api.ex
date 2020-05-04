@@ -23,11 +23,6 @@ defmodule Philomena.Paypal.API do
     Request.post("/v2/checkout/orders", body)
   end
 
-  def create_product(product) do
-    body = Jason.encode!(product)
-    Request.post("/v1/catalogs/products", body)
-  end
-
   def delete_product(product_id) do
   end
 

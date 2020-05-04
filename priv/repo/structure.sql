@@ -1063,19 +1063,6 @@ CREATE TABLE public.paypal_billing_plans (
 
 
 --
--- Name: paypal_products; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.paypal_products (
-    id character varying(255) NOT NULL,
-    name character varying(255) NOT NULL,
-    description character varying(255) NOT NULL,
-    type character varying(255) NOT NULL,
-    category character varying(255) NOT NULL
-);
-
-
---
 -- Name: paypal_subscription_payments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2647,14 +2634,6 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.paypal_billing_plans
     ADD CONSTRAINT paypal_billing_plans_pkey PRIMARY KEY (id);
-
-
---
--- Name: paypal_products paypal_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.paypal_products
-    ADD CONSTRAINT paypal_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -4815,14 +4794,6 @@ ALTER TABLE ONLY public.image_sources
 
 
 --
--- Name: paypal_billing_plans paypal_billing_plans_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.paypal_billing_plans
-    ADD CONSTRAINT paypal_billing_plans_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.paypal_products(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: paypal_subscription_payments paypal_subscription_payments_subscription_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4850,5 +4821,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012600), (20200419012620), (20200419012955), (20200419014349), (20200503002523);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523);
 

@@ -1,13 +1,11 @@
 defmodule Philomena.PremiumSubscription.BillingPlan do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Philomena.PremiumSubscription.Product
 
   @primary_key {:id, :string, autogenerate: false}
   @derive {Phoenix.Param, key: :id}
   schema "paypal_billing_plans" do
-    belongs_to :product, Product, type: :string
-
+    field :product_id, :string, null: false
     field :cycle_duration, :integer, null: false
   end
 
