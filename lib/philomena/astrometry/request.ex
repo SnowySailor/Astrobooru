@@ -4,7 +4,9 @@ defmodule Philomena.Astrometry.Request do
   require Logger
   alias Logger
 
-  def get(endpoint, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
+  @default_opts [timeout: 300_000, recv_timeout: 300_000]
+
+  def get(endpoint, headers \\ [], opts \\ @default_opts) do
     get_astrometry_api_base_url()
     |> Path.join(endpoint)
     |> HTTPoison.get(headers, opts)
@@ -12,7 +14,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response()
   end
 
-  def post(endpoint, body, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
+  def post(endpoint, body, headers \\ [], opts \\ @default_opts) do
     get_astrometry_api_base_url()
     |> Path.join(endpoint)
     |> HTTPoison.post(body, headers, opts)
@@ -20,7 +22,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response()
   end
 
-  def get!(endpoint, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
+  def get!(endpoint, headers \\ [], opts \\ @default_opts) do
     get_astrometry_api_base_url()
     |> URI.merge(endpoint)
     |> HTTPoison.get!(headers, opts)
@@ -28,7 +30,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response!()
   end
 
-  def post!(endpoint, body, headers \\ [], opts \\ [timeout: 15_000, recv_timeout: 15_000]) do
+  def post!(endpoint, body, headers \\ [], opts \\ @default_opts) do
     get_astrometry_api_base_url()
     |> URI.merge(endpoint)
     |> HTTPoison.post!(body, headers, opts)

@@ -5,7 +5,7 @@ defmodule Philomena.Repo.Migrations.CreatePaypalSubscriptions do
     create table(:paypal_subscriptions, primary_key: false) do
       add :id, :string, primary_key: true
       add :cancelled, :boolean, null: false, default: false
-      add :image_size_limit, :integer, null: false, default: 3_000_000
+      add :image_size_limit, :integer, null: false, default: 3_145_728
       add :backup_size_limit, :bigint, null: false, default: 0
 
       add :user_id, references(:users, on_update: :update_all, on_delete: :delete_all),

@@ -1,10 +1,30 @@
 defmodule Philomena.Astrometry.Authentication do
   alias Philomena.Astrometry.Request
+  require Logger
+  alias Logger
+
+  @retry_timeout 6_000
+  @request_delay 5_000
 
   def get_session() do
+    get_session(DateTime.utc_now())
+  end
+
+  def get_session(time) do
     headers = [{"Content-Type", "application/x-www-form-urlencoded"}]
-    Request.post!("login", build_auth_body(), headers, [recv_timeout: 15000])
-    |> Map.get(:session)
+    case DateTime.diff(DateTime.utc_now(), time) < @retry_timeout do
+      true ->
+        case Request.post("login", build_auth_body(), headers) do
+          {:ok, data} ->
+            Map.get(data, :session)
+          error ->
+            Logger.error("get_session error: #{inspect(error)}")
+            :timer.sleep(@request_delay)
+            get_session(time)
+        end
+      false ->
+        {:error, "could not get session within #{@retry_timeout/1000} seconds"}
+    end
   end
 
   defp build_auth_body() do
