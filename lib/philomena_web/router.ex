@@ -99,6 +99,7 @@ defmodule PhilomenaWeb.Router do
     # Additional routes for TOTP
     scope "/registrations", Registration, as: :registration do
       resources "/totp", TotpController, only: [:edit, :update], singleton: true
+      resources "/name", NameController, only: [:edit, :update], singleton: true
     end
 
     scope "/sessions", Session, as: :session do
@@ -124,7 +125,7 @@ defmodule PhilomenaWeb.Router do
       resources "/featured", FeaturedController, only: [:show], singleton: true
     end
 
-    resources "/images", ImageController, only: [:show]
+    resources "/images", ImageController, only: [:show, :create]
 
     scope "/search", Search, as: :search do
       resources "/reverse", ReverseController, only: [:create]
@@ -212,6 +213,7 @@ defmodule PhilomenaWeb.Router do
       resources "/file", Image.FileController, only: [:update], singleton: true
       resources "/scratchpad", Image.ScratchpadController, only: [:edit, :update], singleton: true
       resources "/uploader", Image.UploaderController, only: [:update], singleton: true
+      resources "/anonymous", Image.AnonymousController, only: [:create, :delete], singleton: true
 
       resources "/comment_lock", Image.CommentLockController,
         only: [:create, :delete],
@@ -241,9 +243,9 @@ defmodule PhilomenaWeb.Router do
           resources "/delete", Topic.Post.DeleteController, only: [:create], singleton: true
         end
 
-        resources "/poll/votes", Topic.Poll.VoteController,
-          as: :poll_vote,
-          only: [:index, :create, :delete]
+        resources "/poll", Topic.PollController, only: [:edit, :update], singleton: true do
+          resources "/votes", Topic.Poll.VoteController, only: [:index, :create, :delete]
+        end
       end
 
       resources "/subscription", Forum.SubscriptionController,
@@ -464,7 +466,9 @@ defmodule PhilomenaWeb.Router do
       resources "/current", CurrentController, only: [:update], singleton: true
     end
 
-    resources "/filters", FilterController
+    resources "/filters", FilterController do
+      resources "/public", Filter.PublicController, only: [:create], singleton: true
+    end
 
     resources "/profiles", ProfileController, only: [:show] do
       resources "/reports", Profile.ReportController, only: [:new, :create]
@@ -486,6 +490,10 @@ defmodule PhilomenaWeb.Router do
 
     resources "/pages", PageController, only: [:show] do
       resources "/history", Page.HistoryController, only: [:index]
+    end
+
+    scope "/channels", Channel, as: :channel do
+      resources "/nsfw", NsfwController, only: [:create, :delete], singleton: true
     end
 
     resources "/dnp", DnpEntryController, only: [:index, :show]

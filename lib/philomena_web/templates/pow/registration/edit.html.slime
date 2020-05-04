@@ -18,6 +18,11 @@ p
     ' Looking to cancel your premium subscription?
     = link "Click here!", to: Routes.cancel_path(@conn, :index)
 
+= if can?(@conn, :change_username, @current_user) do
+  p
+    ' Looking to change your username?
+    = link "Click here!", to: Routes.registration_name_path(@conn, :edit)
+
 h3 API Key
 p
   ' Your API key is

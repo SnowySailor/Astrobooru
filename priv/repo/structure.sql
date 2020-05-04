@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.1 (Debian 12.1-1.pgdg100+1)
+-- Dumped from database version 12.2 (Debian 12.2-2.pgdg100+1)
 -- Dumped by pg_dump version 12.2 (Debian 12.2-2.pgdg90+1)
 
 SET statement_timeout = 0;
@@ -799,6 +799,37 @@ ALTER SEQUENCE public.image_intensities_id_seq OWNED BY public.image_intensities
 
 
 --
+-- Name: image_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.image_sources (
+    id bigint NOT NULL,
+    image_id bigint NOT NULL,
+    source text NOT NULL,
+    CONSTRAINT length_must_be_valid CHECK (((length(source) >= 8) AND (length(source) <= 1024)))
+);
+
+
+--
+-- Name: image_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.image_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: image_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.image_sources_id_seq OWNED BY public.image_sources.id;
+
+
+--
 -- Name: image_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1060,6 +1091,9 @@ CREATE TABLE public.paypal_subscription_payments (
 
 CREATE TABLE public.paypal_subscriptions (
     id character varying(255) NOT NULL,
+    cancelled boolean DEFAULT false NOT NULL,
+    image_size_limit integer DEFAULT 3145728 NOT NULL,
+    backup_size_limit bigint DEFAULT 0 NOT NULL,
     user_id bigint NOT NULL,
     billing_plan_id character varying(255) NOT NULL
 );
@@ -1297,7 +1331,8 @@ ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
 --
 
 CREATE TABLE public.schema_migrations (
-    version character varying NOT NULL
+    version bigint NOT NULL,
+    inserted_at timestamp(0) without time zone
 );
 
 
@@ -2204,6 +2239,13 @@ ALTER TABLE ONLY public.image_intensities ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: image_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.image_sources ALTER COLUMN id SET DEFAULT nextval('public.image_sources_id_seq'::regclass);
+
+
+--
 -- Name: images id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2560,6 +2602,14 @@ ALTER TABLE ONLY public.image_intensities
 
 
 --
+-- Name: image_sources image_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.image_sources
+    ADD CONSTRAINT image_sources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2828,6 +2878,13 @@ ALTER TABLE ONLY public.versions
 --
 
 CREATE INDEX image_intensities_index ON public.image_intensities USING btree (nw, ne, sw, se);
+
+
+--
+-- Name: image_sources_image_id_source_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX image_sources_image_id_source_index ON public.image_sources USING btree (image_id, source);
 
 
 --
@@ -4750,6 +4807,14 @@ ALTER TABLE ONLY public.gallery_subscriptions
 
 
 --
+-- Name: image_sources image_sources_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.image_sources
+    ADD CONSTRAINT image_sources_image_id_fkey FOREIGN KEY (image_id) REFERENCES public.images(id);
+
+
+--
 -- Name: paypal_billing_plans paypal_billing_plans_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4785,5 +4850,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."ecto_migrations" (version) VALUES (20200419012600), (20200419012620), (20200419012955), (20200419014349);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012600), (20200419012620), (20200419012955), (20200419014349), (20200503002523);
 

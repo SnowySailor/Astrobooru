@@ -98,6 +98,7 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
   # Hide topics
   def can?(%User{role: "moderator"}, :show, %Topic{}), do: true
   def can?(%User{role: "moderator"}, :hide, %Topic{}), do: true
+  def can?(%User{role: "moderator"}, :create_post, %Topic{}), do: true
 
   # Edit tags
   def can?(%User{role: "moderator"}, :edit, %Tag{}), do: true
@@ -280,6 +281,12 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
   # Edit their description and personal title
   def can?(%User{id: id}, :edit_description, %User{id: id}), do: true
   def can?(%User{id: id}, :edit_title, %User{id: id}), do: true
+
+  # Edit their username
+  def can?(%User{id: id}, :change_username, %User{id: id} = user) do
+    time_ago = NaiveDateTime.utc_now() |> NaiveDateTime.add(-1 * 60 * 60 * 24 * 90)
+    NaiveDateTime.diff(user.last_renamed_at, time_ago) < 0
+  end
 
   # View conversations they are involved in
   def can?(%User{id: id}, :show, %Conversation{to_id: id}), do: true

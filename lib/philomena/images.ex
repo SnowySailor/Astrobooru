@@ -14,6 +14,7 @@ defmodule Philomena.Images do
   alias Philomena.Images.Hider
   alias Philomena.Images.Uploader
   alias Philomena.Images.Tagging
+  alias Philomena.Images.ElasticsearchIndex, as: ImageIndex
   alias Philomena.ImageFeatures.ImageFeature
   alias Philomena.SourceChanges.SourceChange
   alias Philomena.TagChanges.TagChange
@@ -369,6 +370,12 @@ defmodule Philomena.Images do
     |> Repo.update()
   end
 
+  def update_anonymous(%Image{} = image, attrs) do
+    image
+    |> Image.anonymous_changeset(attrs)
+    |> Repo.update()
+  end
+
   def hide_image(%Image{} = image, user, attrs) do
     DuplicateReport
     |> where(state: "open")
@@ -559,6 +566,12 @@ defmodule Philomena.Images do
   """
   def change_image(%Image{} = image) do
     Image.changeset(image, %{})
+  end
+
+  def user_name_reindex(old_name, new_name) do
+    data = ImageIndex.user_name_update_by_query(old_name, new_name)
+
+    Elasticsearch.update_by_query(Image, data.query, data.set_replacements, data.replacements)
   end
 
   def reindex_image(%Image{} = image) do

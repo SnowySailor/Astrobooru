@@ -31,8 +31,6 @@ config :philomena,
   proxy_host: nil,
   app_dir: File.cwd!()
 
-config :philomena, Philomena.Repo, migration_source: "ecto_migrations"
-
 config :philomena, :pow,
   user: Philomena.Users.User,
   repo: Philomena.Repo,
@@ -60,8 +58,6 @@ config :philomena, PhilomenaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "xZYTon09JNRrj8snd7KL31wya4x71jmo5aaSSRmw1dGjWLRmEwWMTccwxgsGFGjM",
   render_errors: [view: PhilomenaWeb.ErrorView, accepts: ~w(html json)]
-
-config :philomena, :generators, migration: false
 
 config :phoenix, :template_engines,
   slim: PhoenixSlime.Engine,
