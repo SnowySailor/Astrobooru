@@ -129,6 +129,11 @@ defmodule PhilomenaWeb.ImageController do
               Images.repair_image(image)
             end)
 
+            spawn(fn ->
+              :timer.sleep(10000)
+              Tags.autopopulate_object_tags(image)
+            end)
+
             # ImageProcessor.cast(image.id)
             Images.reindex_image(image)
             Tags.reindex_tags(image.added_tags)
