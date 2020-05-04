@@ -38,9 +38,7 @@ defmodule Philomena.Astrometry.Request do
     |> parse_response!()
   end
 
-  defp parse_response!(
-         %HTTPoison.Response{status_code: status_code, body: body} = response
-       ) do
+  defp parse_response!(%HTTPoison.Response{status_code: status_code, body: body} = response) do
     case status_code do
       n when n in [200, 201] ->
         Jason.decode!(body, keys: :atoms)

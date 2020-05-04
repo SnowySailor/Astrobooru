@@ -439,7 +439,6 @@ defmodule Philomena.Tags do
   end
 
   def autopopulate_object_tags(%Image{} = image) do
-    Logger.info("starting solve")
     object_tags_map =
       ImageView.pretty_url(image, true, false)
       |> API.get_tags()
@@ -447,23 +446,18 @@ defmodule Philomena.Tags do
       |> format_object_tags()
       |> MapSet.new()
 
-    Logger.info("got tags: #{inspect(object_tags_map)}")
-
     existing_tags_map =
       image.tags
       |> Enum.map(fn tag -> tag.name end)
       |> MapSet.new()
 
-    Logger.info("got existing: #{inspect(existing_tags_map)}")
-
     new_tags =
       MapSet.union(object_tags_map, existing_tags_map)
       |> Enum.join(", ")
+
     existing_tags =
       existing_tags_map
       |> Enum.join(", ")
-
-    Logger.info("new tags: #{inspect(new_tags)}, existing: #{inspect(existing_tags)}")
 
     case Images.update_tags(image, %{"old_tag_input" => existing_tags, "tag_input" => new_tags}) do
       {:ok, %{image: {image, added_tags, removed_tags}}} ->
@@ -471,14 +465,33 @@ defmodule Philomena.Tags do
         Comments.reindex_comments(image)
         Images.reindex_image(image)
         reindex_tags(added_tags ++ removed_tags)
+
       {:error, :image, _changeset, _} ->
-        Logger.error("error updating tags for image #{image.id}. Object tags: #{inspect(object_tags_map)}, Existing tags: #{inspect(existing_tags_map)}, New tags: #{inspect(new_tags)}")
+        Logger.error(
+          "error updating tags for image #{image.id}. Object tags: #{inspect(object_tags_map)}, Existing tags: #{
+            inspect(existing_tags_map)
+          }, New tags: #{inspect(new_tags)}"
+        )
     end
   end
 
   defp filter_astrometry_tags(tags) do
     Enum.map(tags, &String.downcase/1)
-    |> Enum.filter(fn tag -> String.starts_with?(tag, ["m ", "ngc ", "c ", "b ", "arp ", "abell ", "ic ", "sh2 ", "vdb ", "ldn ", "lbn "]) end)
+    |> Enum.filter(fn tag ->
+      String.starts_with?(tag, [
+        "m ",
+        "ngc ",
+        "c ",
+        "b ",
+        "arp ",
+        "abell ",
+        "ic ",
+        "sh2 ",
+        "vdb ",
+        "ldn ",
+        "lbn "
+      ])
+    end)
   end
 
   defp format_object_tags(tags) do
