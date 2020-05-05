@@ -533,11 +533,9 @@ defmodule Philomena.Users.User do
     |>
       case do
         %{rows: n} when n in [nil, []] ->
-          IO.puts(@default_max_upload_size)
           @default_max_upload_size
 
         %{rows: [[limit] | _rest]} ->
-          IO.puts(limit)
           limit
       end
   end
