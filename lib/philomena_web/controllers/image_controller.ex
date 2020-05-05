@@ -129,7 +129,8 @@ defmodule PhilomenaWeb.ImageController do
 
             if Image.has_tag?(image, "dso") do
               spawn(fn ->
-                :timer.sleep(5000) # wait until image is likely to be available
+                # wait until image is likely to be available
+                :timer.sleep(5000)
                 Tags.autopopulate_object_tags(image)
               end)
             end

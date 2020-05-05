@@ -115,6 +115,10 @@
         - else
           = button_to "Restore", Routes.image_delete_path(@conn, :delete, @image), method: "delete", class: "button button--state-success"
 
+        = form_for @changeset, Routes.image_platesolve_path(@conn, :create, @image), [method: "post"], fn _f ->
+          .field
+            = submit "Platesolve", class: "button button--state-success"
+
         = form_for @changeset, Routes.image_repair_path(@conn, :create, @image), [method: "post"], fn _f ->
           .field
             = submit "Repair", class: "button button--state-success"

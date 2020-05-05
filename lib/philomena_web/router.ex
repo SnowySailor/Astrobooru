@@ -210,6 +210,7 @@ defmodule PhilomenaWeb.Router do
       resources "/source_history", Image.SourceHistoryController, only: [:delete], singleton: true
       resources "/repair", Image.RepairController, only: [:create], singleton: true
       resources "/feature", Image.FeatureController, only: [:create], singleton: true
+      resources "/platesolve", Image.PlatesolveController, only: [:create], singleton: true
       resources "/file", Image.FileController, only: [:update], singleton: true
       resources "/scratchpad", Image.ScratchpadController, only: [:edit, :update], singleton: true
       resources "/uploader", Image.UploaderController, only: [:update], singleton: true
