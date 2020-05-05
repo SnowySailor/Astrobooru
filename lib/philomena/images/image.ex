@@ -78,6 +78,7 @@ defmodule Philomena.Images.Image do
     field :hidden_image_key, :string
     field :scratchpad, :string
     field :hides_count, :integer, default: 0
+    field :platesolved, :boolean, default: false
 
     # todo: can probably remove these now
     field :tag_list_cache, :string
@@ -186,6 +187,12 @@ defmodule Philomena.Images.Image do
     image
     |> cast(attrs, [:image_sha512_hash, :image_size])
     |> change(processed: true)
+  end
+
+  def platesolve_changeset(image, attrs) do
+    image
+    |> cast(attrs, [])
+    |> change(platesolved: true)
   end
 
   def description_changeset(image, attrs) do

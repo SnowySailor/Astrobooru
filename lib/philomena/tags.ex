@@ -461,10 +461,12 @@ defmodule Philomena.Tags do
 
     case Images.update_tags(image, %{"old_tag_input" => existing_tags, "tag_input" => new_tags}) do
       {:ok, %{image: {image, added_tags, removed_tags}}} ->
-        Logger.info("success")
         Comments.reindex_comments(image)
         Images.reindex_image(image)
         reindex_tags(added_tags ++ removed_tags)
+        image
+        |> Image.platesolve_changeset(%{})
+        |> Repo.update!()
 
       {:error, :image, _changeset, _} ->
         Logger.error(

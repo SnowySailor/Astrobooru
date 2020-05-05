@@ -920,7 +920,8 @@ CREATE TABLE public.images (
     destroyed_content boolean DEFAULT false NOT NULL,
     hidden_image_key character varying,
     scratchpad character varying,
-    hides_count integer DEFAULT 0 NOT NULL
+    hides_count integer DEFAULT 0 NOT NULL,
+    platesolved boolean DEFAULT false
 );
 
 
@@ -1058,7 +1059,9 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 CREATE TABLE public.paypal_billing_plans (
     id character varying(255) NOT NULL,
     product_id character varying(255) NOT NULL,
-    cycle_duration integer NOT NULL
+    cycle_duration integer NOT NULL,
+    image_size_limit integer DEFAULT 3145728 NOT NULL,
+    backup_size_limit integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1079,8 +1082,6 @@ CREATE TABLE public.paypal_subscription_payments (
 CREATE TABLE public.paypal_subscriptions (
     id character varying(255) NOT NULL,
     cancelled boolean DEFAULT false NOT NULL,
-    image_size_limit integer DEFAULT 3145728 NOT NULL,
-    backup_size_limit bigint DEFAULT 0 NOT NULL,
     user_id bigint NOT NULL,
     billing_plan_id character varying(255) NOT NULL
 );
@@ -4821,5 +4822,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055);
 

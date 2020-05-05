@@ -9,6 +9,7 @@
       - else
         p The image should appear in a few minutes; report it otherwise.
       p Implications might have added tags, so check them in the meanwhile.
+      p We're trying to platesolve your image to automatically tag it with known astronomical objects. This can sometimes take up to 15 minutes to complete.
   = if !@image.processed and @image.thumbnails_generated do
     br
     #image-being-optimized.block.block--fixed.block--warning.layout--narrow

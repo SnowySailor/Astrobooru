@@ -516,20 +516,30 @@ defmodule Philomena.Users.User do
   end
 
   def max_allowed_file_size(%User{} = user) do
-    [limit] =
-      Subscription
-      |> where([s], s.user_id == ^user.id and s.cancelled == false)
-      |> limit(1)
-      |> select([s], [s.image_size_limit])
-      |> Repo.one()
+    Repo.query!("""
+      SELECT bp.image_size_limit
+      FROM paypal_billing_plans bp
+      INNER JOIN paypal_subscriptions s ON bp.id = s.billing_plan_id
+      INNER JOIN paypal_subscription_payments sp ON s.id = sp.subscription_id
+      WHERE
+        s.user_id = #{user.id}
+        AND
+        s.cancelled = false
+        AND
+        EXTRACT(epoch FROM (NOW() AT TIME ZONE 'UTC') - sp.payment_date) <= bp.cycle_duration
+      ORDER BY sp.payment_date DESC
+      LIMIT 1
+    """)
+    |>
+      case do
+        %{rows: n} when n in [nil, []] ->
+          IO.puts(@default_max_upload_size)
+          @default_max_upload_size
 
-    case limit do
-      nil ->
-        @default_max_upload_size
-
-      _ ->
-        limit
-    end
+        %{rows: [[limit] | _rest]} ->
+          IO.puts(limit)
+          limit
+      end
   end
 
   def max_allowed_file_size(_) do

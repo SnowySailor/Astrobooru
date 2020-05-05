@@ -7,6 +7,8 @@ defmodule Philomena.PremiumSubscription.BillingPlan do
   schema "paypal_billing_plans" do
     field :product_id, :string, null: false
     field :cycle_duration, :integer, null: false
+    field :image_size_limit, :integer, null: false, default: 3_145_728
+    field :backup_size_limit, :integer, null: false, default: 0
   end
 
   @doc false

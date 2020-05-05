@@ -20,6 +20,11 @@ defmodule Philomena.Astrometry.API do
 
   defp submit_url(url, time) when is_binary(url) do
     case expired?(time) do
+      true ->
+        raise(
+          "could not submit url within #{@retry_timeout / 1000} seconds"
+        )
+
       false ->
         body = build_url_submit_body(url)
 
@@ -30,13 +35,10 @@ defmodule Philomena.Astrometry.API do
             Map.get(data, :subid)
 
           error ->
-            Logger.error("submit_url error: #{inspect(error)}")
+            Logger.warn("submit_url exception: #{inspect(error)}")
             :timer.sleep(@request_delay)
             submit_url(url, time)
         end
-
-      true ->
-        {:error, "could not submit url within #{@retry_timeout / 1000} seconds"}
     end
   end
 
@@ -59,6 +61,11 @@ defmodule Philomena.Astrometry.API do
 
   defp wait_for_jobid(subid, time) when is_integer(subid) do
     case expired?(time) do
+      true ->
+        raise(
+         "submission #{subid} was not assigned jobid within #{@retry_timeout / 1000} seconds"
+        )
+
       false ->
         case Request.get("submissions/#{subid}/") do
           {:ok, body} ->
@@ -76,14 +83,10 @@ defmodule Philomena.Astrometry.API do
             end
 
           error ->
-            Logger.error("wait_for_jobid error: #{inspect(error)}")
+            Logger.warn("wait_for_jobid exception: #{inspect(error)}")
             :timer.sleep(@request_delay)
             wait_for_jobid(subid, time)
         end
-
-      true ->
-        {:error,
-         "submission #{subid} was not assigned jobid within #{@retry_timeout / 1000} seconds"}
     end
   end
 
@@ -93,6 +96,11 @@ defmodule Philomena.Astrometry.API do
 
   defp wait_for_solve(jobid, time) when is_integer(jobid) do
     case expired?(time) do
+      true ->
+        raise(
+          "job #{jobid} did not complete within #{@retry_timeout / 1000} seconds"
+        )
+
       false ->
         case Request.get("jobs/#{jobid}") do
           {:ok, body} ->
@@ -109,13 +117,10 @@ defmodule Philomena.Astrometry.API do
             end
 
           error ->
-            Logger.error("wait_for_solve error: #{inspect(error)}")
+            Logger.warn("wait_for_solve exception: #{inspect(error)}")
             :timer.sleep(@request_delay)
             wait_for_solve(jobid, time)
         end
-
-      true ->
-        {:error, "job #{jobid} did not complete within #{@retry_timeout / 1000} seconds"}
     end
   end
 
@@ -126,7 +131,9 @@ defmodule Philomena.Astrometry.API do
   defp get_machine_tags(jobid, time) when is_integer(jobid) do
     case expired?(time) do
       true ->
-        {:error, "could not get machine tags within #{@retry_timeout / 1000} seconds"}
+        raise(
+          "could not get machine tags within #{@retry_timeout / 1000} seconds"
+        )
 
       false ->
         case Request.get("jobs/#{jobid}/machine_tags") do
@@ -134,7 +141,7 @@ defmodule Philomena.Astrometry.API do
             Map.get(data, :tags)
 
           error ->
-            Logger.error("get_machine_tags error: #{inspect(error)}")
+            Logger.warn("get_machine_tags exception: #{inspect(error)}")
             :timer.sleep(@request_delay)
             get_machine_tags(jobid, time)
         end
