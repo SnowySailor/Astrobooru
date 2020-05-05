@@ -105,9 +105,14 @@ defmodule Philomena.Astrometry.API do
                 jobid
 
               %{status: "failure"} ->
-                {:error, "failed to solve"}
+                raise("failed to solve job #{jobid}")
+
+              %{status: "solving"} ->
+                :timer.sleep(@request_delay)
+                wait_for_solve(jobid, time)
 
               status ->
+                Logger.warn("wait_for_solve got unknown status: #{inspect(status)}")
                 :timer.sleep(@request_delay)
                 wait_for_solve(jobid, time)
             end

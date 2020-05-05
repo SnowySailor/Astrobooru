@@ -325,4 +325,8 @@ defmodule Philomena.Images.Image do
   defp create_key do
     Base.encode16(:crypto.strong_rand_bytes(6), case: :lower)
   end
+
+  def has_tag?(image, tag_name) do
+    Enum.any?(image.tags, fn tag -> tag.name == tag_name end)
+  end
 end

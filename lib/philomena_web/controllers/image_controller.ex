@@ -127,10 +127,12 @@ defmodule PhilomenaWeb.ImageController do
               Images.repair_image(image)
             end)
 
-            spawn(fn ->
-              :timer.sleep(10000)
-              Tags.autopopulate_object_tags(image)
-            end)
+            if Image.has_tag?(image, "dso") do
+              spawn(fn ->
+                :timer.sleep(5000) # wait until image is likely to be available
+                Tags.autopopulate_object_tags(image)
+              end)
+            end
 
             # ImageProcessor.cast(image.id)
             Images.reindex_image(image)
