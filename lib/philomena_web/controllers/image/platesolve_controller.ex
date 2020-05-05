@@ -5,7 +5,12 @@ defmodule PhilomenaWeb.Image.PlatesolveController do
   alias Philomena.Images.Image
 
   plug PhilomenaWeb.CanaryMapPlug, create: :hide
-  plug :load_and_authorize_resource, model: Image, id_name: "image_id", persisted: true
+
+  plug :load_and_authorize_resource,
+    model: Image,
+    id_name: "image_id",
+    persisted: true,
+    preload: [:tags]
 
   def create(conn, _params) do
     spawn(fn ->
