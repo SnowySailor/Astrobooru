@@ -464,6 +464,7 @@ defmodule Philomena.Tags do
         Comments.reindex_comments(image)
         Images.reindex_image(image)
         reindex_tags(added_tags ++ removed_tags)
+
         image
         |> Image.platesolve_changeset(%{})
         |> Repo.update!()

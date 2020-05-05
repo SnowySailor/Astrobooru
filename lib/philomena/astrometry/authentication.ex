@@ -15,9 +15,7 @@ defmodule Philomena.Astrometry.Authentication do
 
     case expired?(time) do
       true ->
-        raise(
-          "could not get session within #{@retry_timeout / 1000} seconds"
-        )
+        raise("could not get session within #{@retry_timeout / 1000} seconds")
 
       false ->
         case Request.post("login", build_auth_body(), headers) do

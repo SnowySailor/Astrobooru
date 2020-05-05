@@ -21,9 +21,7 @@ defmodule Philomena.Astrometry.API do
   defp submit_url(url, time) when is_binary(url) do
     case expired?(time) do
       true ->
-        raise(
-          "could not submit url within #{@retry_timeout / 1000} seconds"
-        )
+        raise("could not submit url within #{@retry_timeout / 1000} seconds")
 
       false ->
         body = build_url_submit_body(url)
@@ -63,7 +61,7 @@ defmodule Philomena.Astrometry.API do
     case expired?(time) do
       true ->
         raise(
-         "submission #{subid} was not assigned jobid within #{@retry_timeout / 1000} seconds"
+          "submission #{subid} was not assigned jobid within #{@retry_timeout / 1000} seconds"
         )
 
       false ->
@@ -97,9 +95,7 @@ defmodule Philomena.Astrometry.API do
   defp wait_for_solve(jobid, time) when is_integer(jobid) do
     case expired?(time) do
       true ->
-        raise(
-          "job #{jobid} did not complete within #{@retry_timeout / 1000} seconds"
-        )
+        raise("job #{jobid} did not complete within #{@retry_timeout / 1000} seconds")
 
       false ->
         case Request.get("jobs/#{jobid}") do
@@ -131,9 +127,7 @@ defmodule Philomena.Astrometry.API do
   defp get_machine_tags(jobid, time) when is_integer(jobid) do
     case expired?(time) do
       true ->
-        raise(
-          "could not get machine tags within #{@retry_timeout / 1000} seconds"
-        )
+        raise("could not get machine tags within #{@retry_timeout / 1000} seconds")
 
       false ->
         case Request.get("jobs/#{jobid}/machine_tags") do

@@ -530,14 +530,13 @@ defmodule Philomena.Users.User do
       ORDER BY sp.payment_date DESC
       LIMIT 1
     """)
-    |>
-      case do
-        %{rows: n} when n in [nil, []] ->
-          @default_max_upload_size
+    |> case do
+      %{rows: n} when n in [nil, []] ->
+        @default_max_upload_size
 
-        %{rows: [[limit] | _rest]} ->
-          limit
-      end
+      %{rows: [[limit] | _rest]} ->
+        limit
+    end
   end
 
   def max_allowed_file_size(_) do
