@@ -24,6 +24,7 @@ defmodule Philomena.Application do
 
       # Start the endpoint when the application starts
       PhilomenaWeb.Endpoint,
+      PhilomenaWeb.StatsUpdater,
 
       # Connection drainer for SIGTERM
       {RanchConnectionDrainer, ranch_ref: PhilomenaWeb.Endpoint.HTTP, shutdown: 30_000}
