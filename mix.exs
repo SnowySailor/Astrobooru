@@ -66,7 +66,8 @@ defmodule Philomena.MixProject do
       {:ranch_connection_drainer, "~> 0.1"},
       {:httpoison_retry, "~> 1.1.0"},
       {:size, "~> 0.1.0"},
-      {:dialyxir, "~> 1.0", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:zarex, "~> 1.0"}
     ]
   end
 

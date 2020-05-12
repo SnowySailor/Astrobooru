@@ -29,6 +29,7 @@ defmodule Philomena.Users.User do
   alias Philomena.Bans.User, as: UserBan
   alias Philomena.Donations.Donation
   alias Philomena.PremiumSubscription.{SubscriptionPayment, BillingPlan, Subscription}
+  alias Philomena.DataBackup
   alias Philomena.Repo
 
   require Size
@@ -510,6 +511,11 @@ defmodule Philomena.Users.User do
   def can_purchase_premium_subscription?(_),
     do: true
 
+  def backup_size_allowed?(user, path) do
+    size = max_allowed_backup_size(user)
+    {File.stat!(path).size <= size, size}
+  end
+
   def file_size_allowed?(user, path) do
     size = max_allowed_file_size(user)
     {File.stat!(path).size <= size, size}
@@ -536,6 +542,36 @@ defmodule Philomena.Users.User do
 
       %{rows: [[limit] | _rest]} ->
         limit
+    end
+  end
+
+  def max_allowed_backup_size(%User{} = user) do
+    space_used =
+      DataBackup
+      |> where([b], b.user_id == ^user.id)
+      |> select([b], coalesce(type(sum(b.disk_size), :integer), 0))
+      |> Repo.one()
+
+    Repo.query!("""
+      SELECT bp.backup_size_limit
+      FROM paypal_billing_plans bp
+      INNER JOIN paypal_subscriptions s ON bp.id = s.billing_plan_id
+      INNER JOIN paypal_subscription_payments sp ON s.id = sp.subscription_id
+      WHERE
+        s.user_id = #{user.id}
+        AND
+        s.cancelled = false
+        AND
+        EXTRACT(epoch FROM (NOW() AT TIME ZONE 'UTC') - sp.payment_date) <= bp.cycle_duration
+      ORDER BY sp.payment_date DESC
+      LIMIT 1
+    """)
+    |> case do
+      %{rows: n} when n in [nil, []] ->
+        0
+
+      %{rows: [[limit] | _rest]} ->
+        limit - space_used
     end
   end
 

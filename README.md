@@ -1,5 +1,4 @@
 # Astrobooru
-![Philomena](/assets/static/images/phoenix.svg)
 
 ## Getting started
 On systems with `docker` and `docker-compose` installed, the process should be as simple as:

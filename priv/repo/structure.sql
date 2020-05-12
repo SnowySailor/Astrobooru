@@ -374,6 +374,38 @@ ALTER SEQUENCE public.conversations_id_seq OWNED BY public.conversations.id;
 
 
 --
+-- Name: data_backups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_backups (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    disk_size bigint NOT NULL,
+    path character varying(255) NOT NULL,
+    create_date timestamp(0) without time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+
+--
+-- Name: data_backups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_backups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_backups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_backups_id_seq OWNED BY public.data_backups.id;
+
+
+--
 -- Name: dnp_entries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1061,7 +1093,7 @@ CREATE TABLE public.paypal_billing_plans (
     product_id character varying(255) NOT NULL,
     cycle_duration integer NOT NULL,
     image_size_limit integer DEFAULT 3145728 NOT NULL,
-    backup_size_limit integer DEFAULT 0 NOT NULL
+    backup_size_limit bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -2157,6 +2189,13 @@ ALTER TABLE ONLY public.conversations ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: data_backups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_backups ALTER COLUMN id SET DEFAULT nextval('public.data_backups_id_seq'::regclass);
+
+
+--
 -- Name: dnp_entries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2499,6 +2538,14 @@ ALTER TABLE ONLY public.commissions
 
 ALTER TABLE ONLY public.conversations
     ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_backups data_backups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_backups
+    ADD CONSTRAINT data_backups_pkey PRIMARY KEY (id);
 
 
 --
@@ -3995,6 +4042,14 @@ CREATE UNIQUE INDEX temp_unique_index_tags_on_slug ON public.tags USING btree (s
 
 
 --
+-- Name: data_backups data_backups_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_backups
+    ADD CONSTRAINT data_backups_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: channels fk_rails_021c624081; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4822,5 +4877,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453);
 

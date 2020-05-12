@@ -1,0 +1,35 @@
+h1 Cloud Backups
+
+p
+  ' Here you can manage your cloud backups (uploading, downloading, and deleting). After uploading, we strongly recommend that you
+  b
+    ' do not
+  ' delete your data from your computer! We recommend using the 3-2-1 strategy for backing up data:
+  ol(reversed)
+    li
+      ' Copies or versions
+    li
+      ' Different types of media
+    li
+      ' Off-site backup
+  ' Please see
+  a href="https://www.backblaze.com/blog/the-3-2-1-backup-strategy/" target="_blank"
+    ' this blog by Backblaze
+  ' (our storage provider) if you're interested in learning more.
+
+
+= form_for @conn, Routes.data_backup_path(@conn, :create), [multipart: true], fn f ->
+  h4 Select a file to backup
+  .image-other
+    #js-image-upload-previews
+    p Upload a file from your computer
+    .field
+      = file_input f, :backup, class: "input js-scraper"
+
+  h4 About this backup
+  .field
+    = label f, :description, "Short description of this file (what it contains)"
+    = text_input f, :description, class: "input input--wide js-image-input", placeholder: "Description"
+
+  .actions
+    = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Please wait..."]

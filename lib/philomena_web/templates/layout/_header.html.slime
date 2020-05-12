@@ -89,6 +89,9 @@ header.header
             a.header__link href=Routes.profile_user_link_path(@conn, :index, @current_user)
               i.fa.fa-fw.fa-link>
               | Account Linking
+            a.header__link href=Routes.data_backup_path(@conn, :index)
+              i.fa.fa-fw.fa-cloud-upload-alt>
+              | Data Backups
             a.header__link href="/settings/edit"
               i.fa.fa-fw.fa-cogs>
               | Settings

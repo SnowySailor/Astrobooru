@@ -34,7 +34,7 @@ defmodule PhilomenaWeb.Endpoint do
     json_decoder: Phoenix.json_library()
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, {:multipart, length: 30_000_000}],
+    parsers: [:urlencoded, {:multipart, length: 50_000_000_000}],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 

@@ -28,8 +28,6 @@ defmodule PhilomenaWeb.Profile.UserLinkController do
     id_name: "profile_id",
     persisted: true
 
-  plug PhilomenaWeb.PremiumSubscriptionPlug
-
   def index(conn, _params) do
     user = conn.assigns.current_user
 

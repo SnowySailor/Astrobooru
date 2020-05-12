@@ -64,6 +64,10 @@ defmodule PhilomenaWeb.Router do
       error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  pipeline :ensure_premium_subscription do
+    plug PhilomenaWeb.PremiumSubscriptionPlug
+  end
+
   pipeline :captcha_data_provider do
     plug PhilomenaWeb.CaptchaDataProviderPlug
   end
@@ -160,8 +164,17 @@ defmodule PhilomenaWeb.Router do
   end
 
   scope "/", PhilomenaWeb do
-    pipe_through [:browser, :ensure_totp, :protected]
+    pipe_through [:browser, :ensure_totp, :protected, :ensure_premium_subscription]
+    resources "/profiles", ProfileController, only: [] do
+      resources "/user_links", Profile.UserLinkController
+    end
 
+    resources "/backups", DataBackupController, only: [:index, :create]
+  end
+
+  scope "/", PhilomenaWeb do
+    pipe_through [:browser, :ensure_totp, :protected]
+      
     scope "/notifications", Notification, as: :notification do
       resources "/unread", UnreadController, only: [:index]
     end
@@ -265,7 +278,6 @@ defmodule PhilomenaWeb.Router do
         only: [:edit, :update],
         singleton: true
 
-      resources "/user_links", Profile.UserLinkController
       resources "/awards", Profile.AwardController, except: [:index, :show]
 
       resources "/details", Profile.DetailController, only: [:index]
