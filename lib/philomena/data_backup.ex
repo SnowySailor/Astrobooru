@@ -20,7 +20,16 @@ defmodule Philomena.DataBackup do
     data_backup
     |> cast(attrs, [])
     |> validate_required([])
-    |> validate_length(:description, max: 50_000, count: :bytes)
+    |> validate_length(:description, max: 500, count: :bytes)
+  end
+
+  @doc false
+  def create_changeset(data_backup, attrs) do
+    now = DateTime.utc_now() |> DateTime.truncate(:second)
+    data_backup
+    |> cast(attrs, [])
+    |> change(create_date: now)
+    |> validate_required([:path, :disk_size, :file_name])
   end
 
   def persist_file(source, user) do
@@ -35,7 +44,7 @@ defmodule Philomena.DataBackup do
   def create_data_backup(data_backup) do
     size = File.stat!(data_backup.path).size
     Map.put(data_backup, :disk_size, size)
-    |> changeset(%{})
+    |> create_changeset(%{})
     |> Repo.insert()
   end
 

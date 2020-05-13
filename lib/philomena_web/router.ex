@@ -169,7 +169,7 @@ defmodule PhilomenaWeb.Router do
       resources "/user_links", Profile.UserLinkController
     end
 
-    resources "/backups", DataBackupController, only: [:index, :create]
+    resources "/backups", DataBackupController, only: [:index, :create, :show, :delete]
   end
 
   scope "/", PhilomenaWeb do

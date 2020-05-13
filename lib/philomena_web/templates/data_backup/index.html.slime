@@ -18,18 +18,45 @@ p
   ' (our storage provider) if you're interested in learning more.
 
 
-= form_for @conn, Routes.data_backup_path(@conn, :create), [multipart: true], fn f ->
+= form_for @conn, Routes.data_backup_path(@conn, :create), [id: "data-backup-form", method: "post", multipart: true, data: [remote: true]], fn f ->
   h4 Select a file to backup
   .image-other
     #js-image-upload-previews
     p Upload a file from your computer
     .field
-      = file_input f, :backup, class: "input js-scraper"
+      = file_input f, :backup, id: "backup_file_input", class: "input js-scraper"
 
   h4 About this backup
   .field
     = label f, :description, "Short description of this file (what it contains)"
-    = text_input f, :description, class: "input input--wide js-image-input", placeholder: "Description"
+    = text_input f, :description, id: "backup_description", class: "input input--wide js-image-input", placeholder: "Description"
 
   .actions
-    = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Please wait..."]
+    = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Uploading..."]
+
+br
+h3 Your Backups
+= if Enum.any?(@data_backups) do
+  .block__content
+    table.table#data-backup-table
+      thead
+        tr
+          td Name
+          td Description
+          td Size
+          td Upload Date
+          td
+      tbody
+        = for backup <- @data_backups do
+          tr
+            td
+              a(href=Routes.data_backup_path(@conn, :show, backup.id) download)
+                = backup.file_name
+            td
+              = backup.description
+            td
+              = Size.humanize!(backup.disk_size)
+            td
+              = backup.create_date
+            td
+              = link "Delete", to: Routes.data_backup_path(@conn, :delete, backup.id), data: [confirm: "Are you really, really sure?", method: "delete"]

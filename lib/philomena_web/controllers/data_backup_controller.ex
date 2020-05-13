@@ -1,15 +1,49 @@
 defmodule PhilomenaWeb.DataBackupController do
   use PhilomenaWeb, :controller
   require Logger
-  alias Logger
   import Phoenix.Controller
+  
+  alias Logger
   alias Philomena.Users.User
   alias Philomena.DataBackup
   alias Zarex
+  alias Philomena.Repo
+  alias PhilomenaWeb.DataBackupView
+  alias Phoenix.HTML
+
+  def delete(conn, %{"id" => id}) do
+    conn
+    |> put_flash(:info, "deleted")
+    |> text("yes")
+    |> halt()
+  end
+
+  def show(conn, %{"id" => id}) do
+    user = Repo.preload(conn.assigns.current_user, :data_backups)
+    backup =
+      user.data_backups
+      |> Enum.filter(fn backup -> backup.id == String.to_integer(id) end)
+
+    case backup do
+      [] ->
+        conn
+        |> put_status(:unauthorized)
+        |> text("unauthorized")
+        |> halt()
+      [backup] ->
+        IO.puts("serving file")
+        conn
+        |> put_resp_header("content-disposition", ~s(attachment; filename="#{backup.file_name}"))
+        |> send_file(200, backup.path)
+    end
+  end
 
   def index(conn, _params) do
+    user = Repo.preload(conn.assigns.current_user, :data_backups)
+    
     render(conn, "index.html",
-      title: "Cloud Backup"
+      title: "Cloud Backup",
+      data_backups: user.data_backups |> Enum.sort_by(&Map.get(&1, :create_date), :desc)
     )
   end
 
@@ -32,10 +66,15 @@ defmodule PhilomenaWeb.DataBackupController do
         }
         |> DataBackup.create_data_backup()
         |> case do
-          {:ok, _} -> 
+          {:ok, backup} ->
             conn
-            |> put_status(:ok)
-            |> text("")
+            |> json(%{
+                description: backup.description,
+                create_date: to_string(backup.create_date),
+                file_size: Size.humanize!(backup.disk_size),
+                download_link: DataBackupView.download_link(conn, backup) |> HTML.safe_to_string(),
+                delete_link: DataBackupView.delete_link(conn, backup) |> HTML.safe_to_string()
+              })
             |> halt()
           error ->
             Logger.error("backup error for user #{user.id}: #{inspect(error)}")
