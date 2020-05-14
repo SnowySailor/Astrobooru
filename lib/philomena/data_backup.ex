@@ -73,7 +73,34 @@ defmodule Philomena.DataBackup do
   end
 
   def upload_to_backblaze(data_backup) do
-    
+    spawn(fn ->
+      case API.upload(data_backup.path, data_backup.file_name) do
+        {:success, upload_data} ->
+          mark_uploaded_and_delete_local(data_backup, upload_data)
+        error ->
+          Logger.error("Failed to upload backup #{data_backup.id} to Backblaze: #{inspect(error)}")
+    end)
+  end
+
+  def mark_uploaded_and_delete_local(data_backup, upload_data) do
+    case mark_uploaded(data_backup, upload_data) do
+      {:ok, _} ->
+        spawn(fn ->
+          remove_file(data_backup)
+        end)
+      error ->
+        Logger.error("Failed to mark #{data_backup.id} as uploaded: #{inspect(error)}")
+    end
+  end
+
+  def remove_file(data_backup) do
+    remove_file(data_backup, DateTime.utc_now())
+  end
+
+  def remove_file(data_backup, start) do
+    case File.rm(data_backup.path) do
+      
+    end
   end
 
   def can_download?(data_backup) do

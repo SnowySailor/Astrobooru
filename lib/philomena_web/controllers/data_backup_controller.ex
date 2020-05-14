@@ -87,6 +87,8 @@ defmodule PhilomenaWeb.DataBackupController do
         |> DataBackup.create_data_backup()
         |> case do
           {:ok, backup} ->
+            DataBackup.upload_to_backblaze(backup)
+
             conn
             |> json(%{
               description: backup.description,
