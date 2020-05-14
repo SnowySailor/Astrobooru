@@ -7,16 +7,30 @@ p
   ' delete your data from your computer! We recommend using the 3-2-1 strategy for backing up data:
   ol(reversed)
     li
-      ' Copies or versions
+      ' copies or versions
     li
-      ' Different types of media
+      ' different types of media
     li
-      ' Off-site backup
+      ' off-site backup
   ' Please see
   a href="https://www.backblaze.com/blog/the-3-2-1-backup-strategy/" target="_blank"
     ' this blog by Backblaze
   ' (our storage provider) if you're interested in learning more.
-
+  br
+  br
+  ' To back up your data, we suggest creating a ZIP file (or similar) and uploading that instead of uploading each file individually. On Windows, put all of your files into a folder, right click the folder, and select
+  code Send to > Compressed (zipped) folder
+  ' . On Mac OS, right click the folder and select
+  code Compress
+  ' . Once your ZIP file is uploaded, you may delete that file from your computer (zipping will make a copy and will not affect the original data). Make sure to keep the original data!
+  br
+  br
+  ' The larger the ZIP file is, the longer it will take to upload. We support uploading files up to
+  b 30GB
+  ' in size. We recommend uploading data for 1 object or 1 night as 1 ZIP file. This makes it easier to only download the data you need. Each file can be downloaded a
+  b
+    ' maximum of 3 times per month!
+  ' The Cloud Backup service is meant to store data in case of an accident or data loss locally, so you should not have to download your data from here very often.
 
 = form_for @conn, Routes.data_backup_path(@conn, :create), [id: "data-backup-form", method: "post", multipart: true, data: [remote: true]], fn f ->
   h4 Select a file to backup

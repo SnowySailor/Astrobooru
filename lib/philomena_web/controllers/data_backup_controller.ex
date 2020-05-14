@@ -6,12 +6,13 @@ defmodule PhilomenaWeb.DataBackupController do
   alias Logger
   alias Philomena.Users.User
   alias Philomena.DataBackup
+  alias Philomena.DataBackup.Download
   alias Zarex
   alias Philomena.Repo
   alias PhilomenaWeb.DataBackupView
   alias Phoenix.HTML
 
-  def delete(conn, %{"id" => id} = params) do
+  def delete(conn, %{"id" => id}) do
     user = Repo.preload(conn.assigns.current_user, :data_backups)
 
     backup =
@@ -21,9 +22,8 @@ defmodule PhilomenaWeb.DataBackupController do
     case backup do
       [] ->
         conn
-        |> put_status(:unauthorized)
-        |> text("unauthorized")
-        |> halt()
+        |> put_flash(:error, "Not authorized")
+        |> redirect(to: Routes.data_backup_path(conn, :index))
 
       [backup] ->
         DataBackup.delete(backup)
@@ -43,14 +43,11 @@ defmodule PhilomenaWeb.DataBackupController do
     case backup do
       [] ->
         conn
-        |> put_status(:unauthorized)
-        |> text("unauthorized")
-        |> halt()
+        |> put_flash(:error, "Not authorized")
+        |> redirect(to: Routes.data_backup_path(conn, :index))
 
       [backup] ->
-        conn
-        |> put_resp_header("content-disposition", ~s(attachment; filename="#{backup.file_name}"))
-        |> send_file(200, backup.path)
+        do_download(conn, backup)
     end
   end
 
@@ -108,6 +105,20 @@ defmodule PhilomenaWeb.DataBackupController do
             |> text("")
             |> halt()
         end
+    end
+  end
+
+  def do_download(conn, backup) do
+    case DataBackup.can_download?(backup) do
+      true ->
+        Download.record(backup)
+        conn
+        |> put_resp_header("content-disposition", ~s(attachment; filename="#{backup.file_name}"))
+        |> send_file(200, backup.path)
+      false ->
+        conn
+        |> put_flash(:error, "You've already downloaded that file 3 times in the past month")
+        |> redirect(to: Routes.data_backup_path(conn, :index))
     end
   end
 end

@@ -374,6 +374,16 @@ ALTER SEQUENCE public.conversations_id_seq OWNED BY public.conversations.id;
 
 
 --
+-- Name: data_backup_downloads; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_backup_downloads (
+    data_backup_id integer NOT NULL,
+    date timestamp(0) without time zone NOT NULL
+);
+
+
+--
 -- Name: data_backups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2541,6 +2551,14 @@ ALTER TABLE ONLY public.commissions
 
 ALTER TABLE ONLY public.conversations
     ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_backup_downloads data_backup_downloads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_backup_downloads
+    ADD CONSTRAINT data_backup_downloads_pkey PRIMARY KEY (data_backup_id, date);
 
 
 --
@@ -4880,5 +4898,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453), (20200514031938);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453), (20200514031938), (20200514043042);
 
