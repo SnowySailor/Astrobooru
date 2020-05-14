@@ -10,6 +10,7 @@ defmodule PhilomenaWeb.PremiumSubscriptionPlug do
     case User.premium?(conn.assigns.current_user) do
       true ->
         conn
+
       false ->
         conn
         |> put_flash(:error, "You need Astrobooru Premium to access that page")

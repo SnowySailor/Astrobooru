@@ -165,6 +165,7 @@ defmodule PhilomenaWeb.Router do
 
   scope "/", PhilomenaWeb do
     pipe_through [:browser, :ensure_totp, :protected, :ensure_premium_subscription]
+
     resources "/profiles", ProfileController, only: [] do
       resources "/user_links", Profile.UserLinkController
     end
@@ -174,7 +175,7 @@ defmodule PhilomenaWeb.Router do
 
   scope "/", PhilomenaWeb do
     pipe_through [:browser, :ensure_totp, :protected]
-      
+
     scope "/notifications", Notification, as: :notification do
       resources "/unread", UnreadController, only: [:index]
     end

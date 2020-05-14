@@ -34,9 +34,10 @@ p
   .actions
     = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Uploading..."]
 
-br
-h3 Your Backups
 = if Enum.any?(@data_backups) do
+  br
+  h3 Your Backups
+  
   .block__content
     table.table#data-backup-table
       thead

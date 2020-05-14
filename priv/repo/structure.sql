@@ -382,7 +382,10 @@ CREATE TABLE public.data_backups (
     user_id bigint NOT NULL,
     disk_size bigint NOT NULL,
     path character varying(255) NOT NULL,
-    create_date timestamp(0) without time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+    create_date timestamp(0) without time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    description character varying(500) NOT NULL,
+    file_name character varying(255) NOT NULL,
+    deleted boolean DEFAULT false NOT NULL
 );
 
 
@@ -4877,5 +4880,5 @@ ALTER TABLE ONLY public.paypal_subscriptions
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453), (20200514031938);
 
