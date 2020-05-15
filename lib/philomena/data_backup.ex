@@ -1,10 +1,13 @@
 defmodule Philomena.DataBackup do
   use Ecto.Schema
+  use Retry
   import Ecto.Changeset
   alias Philomena.DataBackup.Download
+  alias Philomena.Backblaze.API
   alias Philomena.Users.User
   alias Philomena.Repo
   alias Ecto
+  require Logger
 
   schema "data_backups" do
     belongs_to :user, User
@@ -15,6 +18,8 @@ defmodule Philomena.DataBackup do
     field :file_name, :string, null: false
     field :description, :string, size: 500
     field :create_date, :utc_datetime, null: false
+    field :backblaze_file_id, :string
+    field :in_backblaze, :boolean, null: false, default: false
     field :deleted, :boolean, null: false, default: false
   end
 
@@ -45,8 +50,9 @@ defmodule Philomena.DataBackup do
 
   def uploaded_changeset(data_backup, attrs) do
     data_backup
-    |> cast(attrs, [])
+    |> cast(attrs, [:backblaze_file_id])
     |> change(in_backblaze: true)
+    |> validate_required([:in_backblaze, :backblaze_file_id])
   end
 
   def persist_file(source, user) do
@@ -74,32 +80,36 @@ defmodule Philomena.DataBackup do
 
   def upload_to_backblaze(data_backup) do
     spawn(fn ->
-      case API.upload(data_backup.path, data_backup.file_name) do
-        {:success, upload_data} ->
-          mark_uploaded_and_delete_local(data_backup, upload_data)
-        error ->
-          Logger.error("Failed to upload backup #{data_backup.id} to Backblaze: #{inspect(error)}")
+      IO.puts("uploading")
+      response = API.upload_file!(data_backup.path, make_storage_name(data_backup))
+      mark_uploaded_and_delete_local(data_backup, response)
     end)
   end
 
   def mark_uploaded_and_delete_local(data_backup, upload_data) do
-    case mark_uploaded(data_backup, upload_data) do
-      {:ok, _} ->
-        spawn(fn ->
-          remove_file(data_backup)
-        end)
-      error ->
-        Logger.error("Failed to mark #{data_backup.id} as uploaded: #{inspect(error)}")
-    end
+    IO.puts("uploaded: #{inspect(upload_data)}")
+    mark_uploaded(data_backup, upload_data)
+    spawn(fn ->
+      remove_file(data_backup)
+    end)
+  end
+
+  def mark_uploaded(data_backup, upload_data) do
+    data_backup
+    |> uploaded_changeset(%{backblaze_file_id: upload_data.fileId})
+    |> Repo.update!()
   end
 
   def remove_file(data_backup) do
-    remove_file(data_backup, DateTime.utc_now())
-  end
-
-  def remove_file(data_backup, start) do
-    case File.rm(data_backup.path) do
-      
+    retry with: exponential_backoff(1_000) |> cap(120_000) |> expiry(86_400_00), rescue_only: [File.Error] do
+      File.rm!(data_backup.path)
+    after
+      _ ->
+        nil
+    else
+      error ->
+        Logger.error("Could not remove file #{data_backup.path}: #{inspect(error)}")
+        raise error
     end
   end
 
@@ -121,6 +131,14 @@ defmodule Philomena.DataBackup do
           downloads
       end
     downloads < 3
+  end
+
+  def make_storage_name(data_backup) do
+    data_backup
+    |> Repo.preload([:user])
+    |> (fn data_backup -> 
+        "user/" <> to_string(data_backup.user.id) <> "/" <> data_backup.file_name
+      end).() 
   end
 
   defp data_backup_file_root do

@@ -67,7 +67,8 @@ defmodule Philomena.MixProject do
       {:httpoison_retry, "~> 1.1.0"},
       {:size, "~> 0.1.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      {:zarex, "~> 1.0"}
+      {:zarex, "~> 1.0"},
+      {:retry, "~> 0.14"}
     ]
   end
 
