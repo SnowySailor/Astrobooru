@@ -91,6 +91,16 @@ elixir:
       = number_with_delimiter(@images_in_galleries)
     ' times.
 
+  h3 Data Marketplace
+  p
+    ' There are
+    span.stat>
+      = number_with_delimiter(@open_commissions)
+    ' data listings on the site, offering a total of
+    span.stat>
+      = number_with_delimiter(@commission_items)
+    ' items.
+
   h3 Moderation
   p
     ' We have received

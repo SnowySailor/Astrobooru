@@ -52,38 +52,17 @@ defmodule Philomena.Commissions.Commission do
 
   def categories do
     [
-      Anthro: "Anthro",
-      "Canon Characters": "Canon Characters",
-      Comics: "Comics",
-      "Fetish Art": "Fetish Art",
-      "Human and EqG": "Human and EqG",
-      NSFW: "NSFW",
-      "Original Characters": "Original Characters",
-      "Original Species": "Original Species",
-      Pony: "Pony",
-      Requests: "Requests",
-      Safe: "Safe",
-      Shipping: "Shipping",
-      "Violence and Gore": "Violence and Gore"
+      DSO: "DSO",
+      Planetary: "Planetary",
+      Lunar: "Lunar"
     ]
   end
 
   def types do
     [
-      "Sketch",
-      "Colored Sketch",
-      "Inked",
-      "Flat Color",
-      "Vector",
-      "Cel Shaded",
-      "Fully Shaded",
-      "Traditional",
-      "Pixel Art",
-      "Animation",
-      "Crafted Item",
-      "Sculpture",
-      "Plushie",
-      "Other"
+      "Monochrome",
+      "Color",
+      "Video"
     ]
   end
 end

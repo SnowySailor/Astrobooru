@@ -23,6 +23,9 @@ nav#burger
   a href="/comments"
     i.fa.fa-fw.fa-comments<>
     ' Comments
+  a href="/commissions"
+    i.fa.fa-fw.fa-address-card<>
+    ' Data Marketplace
   a href="/subscription"
     i.fa.fa-fw.fa-star<>
     ' Premium Subscriptions

@@ -4,6 +4,7 @@ defmodule Philomena.Polymorphic do
 
   @classes %{
     "Comment" => Philomena.Comments.Comment,
+    "Commission" => Philomena.Commissions.Commission,
     "Conversation" => Philomena.Conversations.Conversation,
     "DnpEntry" => Philomena.DnpEntries.DnpEntry,
     "Filter" => Philomena.Filters.Filter,
@@ -18,6 +19,7 @@ defmodule Philomena.Polymorphic do
 
   @preloads %{
     "Comment" => [:user, image: :tags],
+    "Commission" => [:user],
     "Conversation" => [:from, :to],
     "DnpEntry" => [:requesting_user],
     "Gallery" => [:creator],

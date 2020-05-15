@@ -19,6 +19,7 @@ defmodule PhilomenaWeb.ImageController do
   alias Philomena.Repo
   alias Philomena.Captcha
   alias Philomena.Users.User
+  alias Philomena.Tags
   import Ecto.Query
 
   require Size
@@ -131,11 +132,6 @@ defmodule PhilomenaWeb.ImageController do
                 Tags.autopopulate_object_tags(image)
               end)
             end
-
-            # ImageProcessor.cast(image.id)
-            Images.reindex_image(image)
-            Tags.reindex_tags(image.added_tags)
-            UserStatistics.inc_stat(conn.assigns.current_user, :uploads)
 
             conn
             |> put_flash(:info, "Image created successfully.")

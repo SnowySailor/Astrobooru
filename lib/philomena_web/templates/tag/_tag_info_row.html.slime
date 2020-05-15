@@ -74,11 +74,6 @@
 
           br
 
-        = if Enum.any?(@tag.channels) do
-          strong> Associated streams:
-          = for channel <- @tag.channels do
-            => link channel.title, to: Routes.channel_path(@conn, :show, channel)
-
         = if Enum.any?(@tag.implied_by_tags) do
           input.toggle-box id="implied_by" type="checkbox"
           label for="implied_by"

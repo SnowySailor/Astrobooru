@@ -22,6 +22,7 @@ defmodule Philomena.Users.User do
   alias Philomena.Badges
   alias Philomena.Notifications.UnreadNotification
   alias Philomena.Galleries.Gallery
+  alias Philomena.Commissions.Commission
   alias Philomena.Users.User
   alias Philomena.Roles.Role
   alias Philomena.UserFingerprints.UserFingerprint
@@ -49,6 +50,7 @@ defmodule Philomena.Users.User do
     has_many :user_fingerprints, UserFingerprint
     has_many :bans, UserBan
     has_many :donations, Donation
+    has_one :commission, Commission
     has_many :subscriptions, Subscription
     many_to_many :roles, Role, join_through: "users_roles", on_replace: :delete
 

@@ -257,6 +257,15 @@ defmodule PhilomenaWeb.Router do
     end
 
     resources "/profiles", ProfileController, only: [] do
+      resources "/commission", Profile.CommissionController,
+        only: [:new, :create, :edit, :update, :delete],
+        singleton: true do
+        resources "/items", Profile.Commission.ItemController,
+          only: [:new, :create, :edit, :update, :delete]
+
+        resources "/reports", Profile.Commission.ReportController, only: [:new, :create]
+      end
+
       resources "/description", Profile.DescriptionController,
         only: [:edit, :update],
         singleton: true
@@ -473,6 +482,7 @@ defmodule PhilomenaWeb.Router do
 
     resources "/profiles", ProfileController, only: [:show] do
       resources "/reports", Profile.ReportController, only: [:new, :create]
+      resources "/commission", Profile.CommissionController, only: [:show], singleton: true
       resources "/tag_changes", Profile.TagChangeController, only: [:index]
       resources "/source_changes", Profile.SourceChangeController, only: [:index]
     end
@@ -482,6 +492,7 @@ defmodule PhilomenaWeb.Router do
     end
 
     resources "/posts", PostController, only: [:index]
+    resources "/commissions", CommissionController, only: [:index]
 
     resources "/galleries", GalleryController, only: [:index, :show] do
       resources "/reports", Gallery.ReportController, only: [:new, :create]
