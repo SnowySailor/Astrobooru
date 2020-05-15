@@ -53,7 +53,6 @@ defmodule Philomena.Backblaze.Requests do
   defp parse_response!(
         %HTTPoison.Response{status_code: status_code, body: body} = response
       ) do
-    IO.inspect(response)
     case status_code do
       n when n in [200, 201] ->
         Jason.decode!(body, keys: :atoms)

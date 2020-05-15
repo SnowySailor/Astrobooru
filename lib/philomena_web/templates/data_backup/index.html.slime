@@ -26,7 +26,8 @@ p
   br
   br
   ' The larger the ZIP file is, the longer it will take to upload. We support uploading files up to
-  b 30GB
+  b
+    ' 30GB
   ' in size. We recommend uploading data for 1 object or 1 night as 1 ZIP file. This makes it easier to only download the data you need. Each file can be downloaded a
   b
     ' maximum of 3 times per month!

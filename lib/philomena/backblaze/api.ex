@@ -13,7 +13,7 @@ defmodule Philomena.Backblaze.API do
     headers = Map.merge(headers, %{
       "Content-Type": "b2/x-auto",
       "Content-Length": File.stat!(path).size,
-      "X-Bz-File-Name": URI.encode(name),
+      "X-Bz-File-Name": encode_file_name(name),
       "X-Bz-Content-Sha1": sha1,
       "Authorization": upload_url_resp.authorizationToken
     })
@@ -28,17 +28,7 @@ defmodule Philomena.Backblaze.API do
     Requests.post!("b2_get_upload_url", data, auth)
   end
 
-  # def encode_file_name(name) do
-  #   safe = Enum.to_list(39..43) ++ Enum.to_list(45..59) ++ Enum.to_list(64..90) ++ Enum.to_list(97..122) ++ [126, 95, 33, 61]
-  #   :binary.bin_to_list(name)
-  #   |> Enum.map(fn c ->
-  #     case c do
-  #       c when c in safe ->
-  #         c
-  #       c ->
-  #         "%" + Integer.to_string(c)
-  #     end
-  #   end)
-  #   |> IO.puts()
-  # end
+  def encode_file_name(name) do
+    URI.encode_www_form(name) |> String.replace("%2F", "/")
+  end
 end
