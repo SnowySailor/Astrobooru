@@ -5,20 +5,17 @@ defmodule PhilomenaWeb.ImageController do
   alias PhilomenaWeb.ImageLoader
   alias PhilomenaWeb.CommentLoader
   alias PhilomenaWeb.NotificationCountPlug
+  alias PhilomenaWeb.TextileRenderer
 
   alias Philomena.{
     Images,
     Images.Image,
     Comments.Comment,
-    Galleries.Gallery,
-    Textile.Renderer
+    Galleries.Gallery
   }
 
-  # alias Philomena.Servers.ImageProcessor
-  alias Philomena.UserStatistics
   alias Philomena.Interactions
   alias Philomena.Comments
-  alias Philomena.Tags
   alias Philomena.Repo
   alias Philomena.Captcha
   alias Philomena.Users.User
@@ -61,13 +58,13 @@ defmodule PhilomenaWeb.ImageController do
 
     comments = CommentLoader.load_comments(conn, image)
 
-    rendered = Renderer.render_collection(comments.entries, conn)
+    rendered = TextileRenderer.render_collection(comments.entries, conn)
 
     comments = %{comments | entries: Enum.zip(comments.entries, rendered)}
 
     description =
       %{body: image.description}
-      |> Renderer.render_one(conn)
+      |> TextileRenderer.render_one(conn)
 
     interactions = Interactions.user_interactions([image], conn.assigns.current_user)
 

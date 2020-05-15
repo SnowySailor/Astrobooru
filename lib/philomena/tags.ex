@@ -219,6 +219,10 @@ defmodule Philomena.Tags do
     |> where(tag_id: ^tag.id)
     |> Repo.update_all(set: [tag_id: target_tag.id])
 
+    Channel
+    |> where(associated_artist_tag_id: ^tag.id)
+    |> Repo.update_all(set: [associated_artist_tag_id: target_tag.id])
+
     # Update counter
     Tag
     |> where(id: ^tag.id)
