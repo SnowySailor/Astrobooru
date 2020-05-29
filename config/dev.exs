@@ -22,6 +22,9 @@ config :philomena,
   paypal_webhook_id: "",
   site_url: "https://astrobooru.com"
 
+config :exq,
+  host: "redis"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -74,7 +77,7 @@ config :philomena, PhilomenaWeb.Endpoint,
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
-config :logger, compile_time_purge_matching: [[application: :remote_ip]]
+config :logger, compile_time_purge_matching: [[application: :remote_ip], [application: :mint]]
 
 # Set up mailer
 config :philomena, PhilomenaWeb.Mailer, adapter: Bamboo.LocalAdapter
