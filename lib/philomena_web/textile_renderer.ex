@@ -1,6 +1,5 @@
-defmodule Philomena.Textile.Renderer do
-  # todo: belongs in PhilomenaWeb
-  alias Textile.Parser
+defmodule PhilomenaWeb.TextileRenderer do
+  alias Philomena.Textile.Parser
   alias Philomena.Images.Image
   alias Philomena.Repo
   import Phoenix.HTML
@@ -111,6 +110,7 @@ defmodule Philomena.Textile.Renderer do
     |> Enum.flat_map(fn t ->
       Regex.scan(~r|&gt;&gt;(\d+)|, t, capture: :all_but_first)
       |> Enum.map(fn [first] -> String.to_integer(first) end)
+      |> Enum.filter(&(&1 < 2_147_483_647))
     end)
     |> load_images()
   end

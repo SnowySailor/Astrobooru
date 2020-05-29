@@ -3,7 +3,7 @@ defmodule PhilomenaWeb.ProfileController do
 
   alias PhilomenaWeb.ImageLoader
   alias Philomena.Elasticsearch
-  alias Philomena.Textile.Renderer
+  alias PhilomenaWeb.TextileRenderer
   alias Philomena.UserStatistics.UserStatistic
   alias Philomena.Users.User
   alias Philomena.Bans
@@ -97,7 +97,7 @@ defmodule PhilomenaWeb.ProfileController do
 
     recent_comments =
       recent_comments
-      |> Renderer.render_collection(conn)
+      |> TextileRenderer.render_collection(conn)
       |> Enum.zip(recent_comments)
 
     recent_posts =
@@ -121,9 +121,11 @@ defmodule PhilomenaWeb.ProfileController do
       )
       |> Enum.filter(&Canada.Can.can?(current_user, :show, &1.topic))
 
-    about_me = Renderer.render_one(%{body: user.description || ""}, conn)
+    about_me = TextileRenderer.render_one(%{body: user.description || ""}, conn)
 
-    scratchpad = Renderer.render_one(%{body: user.scratchpad || ""}, conn)
+    scratchpad = TextileRenderer.render_one(%{body: user.scratchpad || ""}, conn)
+
+    commission_information = commission_info(user.commission, conn)
 
     recent_galleries =
       Gallery
@@ -147,6 +149,7 @@ defmodule PhilomenaWeb.ProfileController do
       "show.html",
       user: user,
       interactions: interactions,
+      commission_information: commission_information,
       recent_artwork: recent_artwork,
       recent_uploads: recent_uploads,
       recent_faves: recent_faves,
@@ -193,6 +196,11 @@ defmodule PhilomenaWeb.ProfileController do
 
   defp map_fetch(nil, _field_name), do: nil
   defp map_fetch(map, field_name), do: Map.get(map, field_name)
+
+  defp commission_info(%{information: info}, conn) when info not in [nil, ""],
+    do: TextileRenderer.render_one(%{body: info}, conn)
+
+  defp commission_info(_commission, _conn), do: ""
 
   defp tags([]), do: []
   defp tags(links), do: Enum.map(links, & &1.tag) |> Enum.reject(&is_nil/1)
@@ -255,7 +263,7 @@ defmodule PhilomenaWeb.ProfileController do
 
         mod_notes =
           mod_notes
-          |> Renderer.render_collection(conn)
+          |> TextileRenderer.render_collection(conn)
           |> Enum.zip(mod_notes)
 
         assign(conn, :mod_notes, mod_notes)

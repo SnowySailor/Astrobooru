@@ -2,7 +2,7 @@ defmodule PhilomenaWeb.DnpEntryController do
   use PhilomenaWeb, :controller
 
   alias Philomena.DnpEntries.DnpEntry
-  alias Philomena.Textile.Renderer
+  alias PhilomenaWeb.TextileRenderer
   alias Philomena.DnpEntries
   alias Philomena.Tags.Tag
   alias Philomena.ModNotes.ModNote
@@ -11,6 +11,7 @@ defmodule PhilomenaWeb.DnpEntryController do
   import Ecto.Query
 
   plug PhilomenaWeb.FilterBannedUsersPlug when action in [:new, :create]
+  plug :set_tags when action in [:new, :create, :edit, :update, :create]
 
   plug :load_and_authorize_resource,
     model: DnpEntry,
@@ -43,7 +44,7 @@ defmodule PhilomenaWeb.DnpEntryController do
     bodies =
       dnp_entries
       |> Enum.map(&%{body: &1.conditions || "-"})
-      |> Renderer.render_collection(conn)
+      |> TextileRenderer.render_collection(conn)
 
     dnp_entries = %{dnp_entries | entries: Enum.zip(bodies, dnp_entries.entries)}
 
@@ -60,7 +61,7 @@ defmodule PhilomenaWeb.DnpEntryController do
     dnp_entry = conn.assigns.dnp_entry
 
     [conditions, reason, instructions] =
-      Renderer.render_collection(
+      TextileRenderer.render_collection(
         [
           %{body: dnp_entry.conditions || "-"},
           %{body: dnp_entry.reason || "-"},
@@ -83,15 +84,14 @@ defmodule PhilomenaWeb.DnpEntryController do
 
     render(conn, "new.html",
       title: "New DNP Listing",
-      changeset: changeset,
-      selectable_tags: selectable_tags(conn)
+      changeset: changeset
     )
   end
 
   def create(conn, %{"dnp_entry" => dnp_entry_params}) do
     case DnpEntries.create_dnp_entry(
            conn.assigns.current_user,
-           selectable_tags(conn),
+           conn.assigns.selectable_tags,
            dnp_entry_params
          ) do
       {:ok, dnp_entry} ->
@@ -100,7 +100,7 @@ defmodule PhilomenaWeb.DnpEntryController do
         |> redirect(to: Routes.dnp_entry_path(conn, :show, dnp_entry))
 
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset, selectable_tags: selectable_tags(conn))
+        render(conn, "new.html", changeset: changeset)
     end
   end
 
@@ -109,15 +109,14 @@ defmodule PhilomenaWeb.DnpEntryController do
 
     render(conn, "edit.html",
       title: "Editing DNP Listing",
-      changeset: changeset,
-      selectable_tags: selectable_tags(conn)
+      changeset: changeset
     )
   end
 
   def update(conn, %{"dnp_entry" => dnp_entry_params}) do
     case DnpEntries.update_dnp_entry(
            conn.assigns.dnp_entry,
-           selectable_tags(conn),
+           conn.assigns.selectable_tags,
            dnp_entry_params
          ) do
       {:ok, dnp_entry} ->
@@ -126,7 +125,7 @@ defmodule PhilomenaWeb.DnpEntryController do
         |> redirect(to: Routes.dnp_entry_path(conn, :show, dnp_entry))
 
       {:error, changeset} ->
-        render(conn, "edit.html", changeset: changeset, selectable_tags: selectable_tags(conn))
+        render(conn, "edit.html", changeset: changeset)
     end
   end
 
@@ -165,13 +164,25 @@ defmodule PhilomenaWeb.DnpEntryController do
 
         mod_notes =
           mod_notes
-          |> Renderer.render_collection(conn)
+          |> TextileRenderer.render_collection(conn)
           |> Enum.zip(mod_notes)
 
         assign(conn, :mod_notes, mod_notes)
 
       _false ->
         conn
+    end
+  end
+
+  defp set_tags(conn, _opts) do
+    tags = selectable_tags(conn)
+
+    case tags do
+      [] ->
+        PhilomenaWeb.NotAuthorizedPlug.call(conn)
+
+      _ ->
+        assign(conn, :selectable_tags, tags)
     end
   end
 end

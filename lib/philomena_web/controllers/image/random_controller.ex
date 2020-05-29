@@ -1,16 +1,17 @@
 defmodule PhilomenaWeb.Image.RandomController do
   use PhilomenaWeb, :controller
 
+  alias PhilomenaWeb.ImageSorter
+  alias PhilomenaWeb.ImageScope
   alias Philomena.Elasticsearch
   alias Philomena.Images.Query
   alias Philomena.Images.Image
-  alias Philomena.ImageSorter
 
   def index(conn, params) do
     user = conn.assigns.current_user
     filter = conn.assigns.compiled_filter
 
-    scope = Philomena.ImageScope.scope(conn)
+    scope = ImageScope.scope(conn)
     query = query(user, params)
     random_id = random_image_id(query, filter)
 
@@ -30,21 +31,21 @@ defmodule PhilomenaWeb.Image.RandomController do
   defp query(_user, _), do: %{match_all: %{}}
 
   defp random_image_id(query, filter) do
-    sort = ImageSorter.parse_sort(%{"sf" => "random"})
+    %{query: query, sorts: sort} = ImageSorter.parse_sort(%{"sf" => "random"}, query)
 
     Elasticsearch.search_records(
       Image,
       %{
         query: %{
           bool: %{
-            must: List.flatten([sort.queries, query]),
+            must: query,
             must_not: [
               filter,
               %{term: %{hidden_from_users: true}}
             ]
           }
         },
-        sort: sort.sorts
+        sort: sort
       },
       %{page_size: 1},
       Image

@@ -1,5 +1,5 @@
-defmodule Philomena.ImageNavigator do
-  alias Philomena.ImageSorter
+defmodule PhilomenaWeb.ImageNavigator do
+  alias PhilomenaWeb.ImageSorter
   alias Philomena.Images.{Image, ElasticsearchIndex}
   alias Philomena.Elasticsearch
   alias Philomena.Repo
@@ -24,7 +24,7 @@ defmodule Philomena.ImageNavigator do
     lt: :lte
   }
 
-  def find_consecutive(image, rel, params, compiled_query, compiled_filter) do
+  def find_consecutive(conn, image, rel, params, compiled_query, compiled_filter) do
     image_index =
       Image
       |> where(id: ^image.id)
@@ -33,10 +33,10 @@ defmodule Philomena.ImageNavigator do
       |> Map.merge(empty_fields())
       |> ElasticsearchIndex.as_json()
 
-    sort_data = ImageSorter.parse_sort(params)
+    %{query: compiled_query, sorts: sort} = ImageSorter.parse_sort(params, compiled_query)
 
     {sorts, filters} =
-      sort_data.sorts
+      sort
       |> Enum.map(&extract_filters(&1, image_index, rel))
       |> Enum.unzip()
 
@@ -48,10 +48,11 @@ defmodule Philomena.ImageNavigator do
       %{
         query: %{
           bool: %{
-            must: List.flatten([compiled_query, sort_data.queries, filters]),
+            must: List.flatten([compiled_query, filters]),
             must_not: [
               compiled_filter,
-              %{term: %{hidden_from_users: true}}
+              %{term: %{hidden_from_users: true}},
+              hidden_filter(conn.assigns.current_user, conn.params["hidden"])
             ]
           }
         },
@@ -134,6 +135,9 @@ defmodule Philomena.ImageNavigator do
       }
     }
   end
+
+  defp hidden_filter(%{id: id}, param) when param != "1", do: %{term: %{hidden_by_user_ids: id}}
+  defp hidden_filter(_user, _param), do: %{match_none: %{}}
 
   defp range_filter(sf, dir, val) do
     %{
