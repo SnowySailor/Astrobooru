@@ -16,8 +16,14 @@ defmodule PhilomenaWeb.Image.CommentController do
     edit: :create_comment,
     update: :create_comment
 
-  plug :load_and_authorize_resource, model: Image, id_name: "image_id", persisted: true
+  plug :load_and_authorize_resource,
+    model: Image,
+    id_name: "image_id",
+    persisted: true,
+    preload: [:tags]
+
   plug :verify_authorized when action in [:show]
+  plug PhilomenaWeb.FilterForcedUsersPlug when action in [:create, :edit, :update]
 
   # Undo the previous private parameter screwery
   plug PhilomenaWeb.LoadCommentPlug, [param: "id", show_hidden: true] when action in [:show]
@@ -62,6 +68,12 @@ defmodule PhilomenaWeb.Image.CommentController do
 
     case Comments.create_comment(image, attributes, comment_params) do
       {:ok, %{comment: comment}} ->
+        PhilomenaWeb.Endpoint.broadcast!(
+          "firehose",
+          "comment:create",
+          PhilomenaWeb.Api.Json.CommentView.render("show.json", %{comment: comment})
+        )
+
         Comments.notify_comment(comment)
         Comments.reindex_comment(comment)
         Images.reindex_image(conn.assigns.image)
@@ -91,6 +103,12 @@ defmodule PhilomenaWeb.Image.CommentController do
   def update(conn, %{"comment" => comment_params}) do
     case Comments.update_comment(conn.assigns.comment, conn.assigns.current_user, comment_params) do
       {:ok, %{comment: comment}} ->
+        PhilomenaWeb.Endpoint.broadcast!(
+          "firehose",
+          "comment:update",
+          PhilomenaWeb.Api.Json.CommentView.render("show.json", %{comment: comment})
+        )
+
         Comments.reindex_comment(comment)
 
         conn

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.2 (Debian 12.2-2.pgdg100+1)
--- Dumped by pg_dump version 12.2 (Debian 12.2-2.pgdg90+1)
+-- Dumped from database version 12.3 (Debian 12.3-1.pgdg100+1)
+-- Dumped by pg_dump version 12.3 (Debian 12.3-1.pgdg90+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -46,7 +46,6 @@ CREATE TABLE public.adverts (
 --
 
 CREATE SEQUENCE public.adverts_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -59,18 +58,6 @@ CREATE SEQUENCE public.adverts_id_seq
 --
 
 ALTER SEQUENCE public.adverts_id_seq OWNED BY public.adverts.id;
-
-
---
--- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.ar_internal_metadata (
-    key character varying NOT NULL,
-    value character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
 
 
 --
@@ -96,7 +83,6 @@ CREATE TABLE public.badge_awards (
 --
 
 CREATE SEQUENCE public.badge_awards_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -132,7 +118,6 @@ CREATE TABLE public.badges (
 --
 
 CREATE SEQUENCE public.badges_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -195,7 +180,6 @@ CREATE TABLE public.channels (
 --
 
 CREATE SEQUENCE public.channels_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -241,7 +225,6 @@ CREATE TABLE public.comments (
 --
 
 CREATE SEQUENCE public.comments_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -278,7 +261,6 @@ CREATE TABLE public.commission_items (
 --
 
 CREATE SEQUENCE public.commission_items_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -318,7 +300,6 @@ CREATE TABLE public.commissions (
 --
 
 CREATE SEQUENCE public.commissions_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -358,7 +339,6 @@ CREATE TABLE public.conversations (
 --
 
 CREATE SEQUENCE public.conversations_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -446,7 +426,6 @@ CREATE TABLE public.dnp_entries (
 --
 
 CREATE SEQUENCE public.dnp_entries_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -484,7 +463,6 @@ CREATE TABLE public.donations (
 --
 
 CREATE SEQUENCE public.donations_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -521,7 +499,6 @@ CREATE TABLE public.duplicate_reports (
 --
 
 CREATE SEQUENCE public.duplicate_reports_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -572,7 +549,6 @@ CREATE TABLE public.filters (
 --
 
 CREATE SEQUENCE public.filters_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -610,7 +586,6 @@ CREATE TABLE public.fingerprint_bans (
 --
 
 CREATE SEQUENCE public.fingerprint_bans_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -661,7 +636,6 @@ CREATE TABLE public.forums (
 --
 
 CREATE SEQUENCE public.forums_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -701,7 +675,6 @@ CREATE TABLE public.galleries (
 --
 
 CREATE SEQUENCE public.galleries_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -733,7 +706,6 @@ CREATE TABLE public.gallery_interactions (
 --
 
 CREATE SEQUENCE public.gallery_interactions_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -977,7 +949,6 @@ CREATE TABLE public.images (
 --
 
 CREATE SEQUENCE public.images_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1011,7 +982,6 @@ CREATE TABLE public.messages (
 --
 
 CREATE SEQUENCE public.messages_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1047,7 +1017,6 @@ CREATE TABLE public.mod_notes (
 --
 
 CREATE SEQUENCE public.mod_notes_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1084,7 +1053,6 @@ CREATE TABLE public.notifications (
 --
 
 CREATE SEQUENCE public.notifications_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1151,7 +1119,6 @@ CREATE TABLE public.poll_options (
 --
 
 CREATE SEQUENCE public.poll_options_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1184,7 +1151,6 @@ CREATE TABLE public.poll_votes (
 --
 
 CREATE SEQUENCE public.poll_votes_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1223,7 +1189,6 @@ CREATE TABLE public.polls (
 --
 
 CREATE SEQUENCE public.polls_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1270,7 +1235,6 @@ CREATE TABLE public.posts (
 --
 
 CREATE SEQUENCE public.posts_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1312,7 +1276,6 @@ CREATE TABLE public.reports (
 --
 
 CREATE SEQUENCE public.reports_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1346,7 +1309,6 @@ CREATE TABLE public.roles (
 --
 
 CREATE SEQUENCE public.roles_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1395,7 +1357,6 @@ CREATE TABLE public.site_notices (
 --
 
 CREATE SEQUENCE public.site_notices_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1434,7 +1395,6 @@ CREATE TABLE public.source_changes (
 --
 
 CREATE SEQUENCE public.source_changes_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1540,7 +1500,6 @@ CREATE TABLE public.subnet_bans (
 --
 
 CREATE SEQUENCE public.subnet_bans_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1580,7 +1539,6 @@ CREATE TABLE public.tag_changes (
 --
 
 CREATE SEQUENCE public.tag_changes_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1624,7 +1582,6 @@ CREATE TABLE public.tags (
 --
 
 CREATE SEQUENCE public.tags_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1693,7 +1650,6 @@ CREATE TABLE public.topics (
 --
 
 CREATE SEQUENCE public.topics_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1724,7 +1680,6 @@ CREATE TABLE public.unread_notifications (
 --
 
 CREATE SEQUENCE public.unread_notifications_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1763,7 +1718,6 @@ CREATE TABLE public.user_bans (
 --
 
 CREATE SEQUENCE public.user_bans_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1797,7 +1751,6 @@ CREATE TABLE public.user_fingerprints (
 --
 
 CREATE SEQUENCE public.user_fingerprints_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1831,7 +1784,6 @@ CREATE TABLE public.user_ips (
 --
 
 CREATE SEQUENCE public.user_ips_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1874,7 +1826,6 @@ CREATE TABLE public.user_links (
 --
 
 CREATE SEQUENCE public.user_links_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1907,7 +1858,6 @@ CREATE TABLE public.user_name_changes (
 --
 
 CREATE SEQUENCE public.user_name_changes_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1944,7 +1894,6 @@ CREATE TABLE public.user_statistics (
 --
 
 CREATE SEQUENCE public.user_statistics_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1977,7 +1926,6 @@ CREATE TABLE public.user_whitelists (
 --
 
 CREATE SEQUENCE public.user_whitelists_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2069,7 +2017,8 @@ CREATE TABLE public.users (
     consumed_timestep integer,
     otp_required_for_login boolean,
     otp_backup_codes character varying[],
-    last_renamed_at timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
+    last_renamed_at timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    forced_filter_id bigint
 );
 
 
@@ -2078,7 +2027,6 @@ CREATE TABLE public.users (
 --
 
 CREATE SEQUENCE public.users_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2123,7 +2071,6 @@ CREATE TABLE public.versions (
 --
 
 CREATE SEQUENCE public.versions_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2489,14 +2436,6 @@ ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.ver
 
 ALTER TABLE ONLY public.adverts
     ADD CONSTRAINT adverts_pkey PRIMARY KEY (id);
-
-
---
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.ar_internal_metadata
-    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
 --
@@ -2938,13 +2877,6 @@ CREATE UNIQUE INDEX image_sources_image_id_source_index ON public.image_sources 
 
 
 --
--- Name: index_adverts_on_live; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_adverts_on_live ON public.adverts USING btree (live);
-
-
---
 -- Name: index_adverts_on_restrictions; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3043,6 +2975,13 @@ CREATE INDEX index_comments_on_image_id ON public.comments USING btree (image_id
 
 
 --
+-- Name: index_comments_on_image_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_comments_on_image_id_and_created_at ON public.comments USING btree (image_id, created_at);
+
+
+--
 -- Name: index_comments_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3068,13 +3007,6 @@ CREATE INDEX index_commission_items_on_example_image_id ON public.commission_ite
 --
 
 CREATE INDEX index_commission_items_on_item_type ON public.commission_items USING btree (item_type);
-
-
---
--- Name: index_commissions_on_categories; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_commissions_on_categories ON public.commissions USING btree (categories);
 
 
 --
@@ -3120,10 +3052,10 @@ CREATE INDEX index_conversations_on_to_id ON public.conversations USING btree (t
 
 
 --
--- Name: index_dnp_entries_on_modifying_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_dnp_entries_on_aasm_state_filtered; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_dnp_entries_on_modifying_user_id ON public.dnp_entries USING btree (modifying_user_id);
+CREATE INDEX index_dnp_entries_on_aasm_state_filtered ON public.dnp_entries USING btree (aasm_state) WHERE ((aasm_state)::text = ANY (ARRAY[('requested'::character varying)::text, ('claimed'::character varying)::text, ('rescinded'::character varying)::text, ('acknowledged'::character varying)::text]));
 
 
 --
@@ -3183,10 +3115,31 @@ CREATE INDEX index_duplicate_reports_on_state ON public.duplicate_reports USING 
 
 
 --
+-- Name: index_duplicate_reports_on_state_filtered; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_duplicate_reports_on_state_filtered ON public.duplicate_reports USING btree (state) WHERE ((state)::text = ANY (ARRAY[('open'::character varying)::text, ('claimed'::character varying)::text]));
+
+
+--
 -- Name: index_duplicate_reports_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_duplicate_reports_on_user_id ON public.duplicate_reports USING btree (user_id);
+
+
+--
+-- Name: index_filters_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_filters_on_name ON public.filters USING btree (name);
+
+
+--
+-- Name: index_filters_on_system; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_filters_on_system ON public.filters USING btree (system) WHERE (system = true);
 
 
 --
@@ -3271,6 +3224,20 @@ CREATE INDEX index_galleries_on_thumbnail_id ON public.galleries USING btree (th
 --
 
 CREATE INDEX index_gallery_interactions_on_gallery_id ON public.gallery_interactions USING btree (gallery_id);
+
+
+--
+-- Name: index_gallery_interactions_on_gallery_id_and_image_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_gallery_interactions_on_gallery_id_and_image_id ON public.gallery_interactions USING btree (gallery_id, image_id);
+
+
+--
+-- Name: index_gallery_interactions_on_gallery_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_gallery_interactions_on_gallery_id_and_position ON public.gallery_interactions USING btree (gallery_id, "position");
 
 
 --
@@ -3428,13 +3395,6 @@ CREATE INDEX index_images_on_featured_on ON public.images USING btree (featured_
 
 
 --
--- Name: index_images_on_first_seen_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_images_on_first_seen_at ON public.images USING btree (first_seen_at);
-
-
---
 -- Name: index_images_on_image_orig_sha512_hash; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3494,7 +3454,7 @@ CREATE INDEX index_mod_notes_on_notable_type_and_notable_id ON public.mod_notes 
 -- Name: index_notifications_on_actor_id_and_actor_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_notifications_on_actor_id_and_actor_type ON public.notifications USING btree (actor_id, actor_type);
+CREATE UNIQUE INDEX index_notifications_on_actor_id_and_actor_type ON public.notifications USING btree (actor_id, actor_type);
 
 
 --
@@ -3673,10 +3633,31 @@ CREATE INDEX index_subnet_bans_on_created_at ON public.subnet_bans USING btree (
 
 
 --
+-- Name: index_subnet_bans_on_specification; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_subnet_bans_on_specification ON public.subnet_bans USING gist (specification inet_ops);
+
+
+--
+-- Name: index_tag_changes_on_fingerprint; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tag_changes_on_fingerprint ON public.tag_changes USING btree (fingerprint);
+
+
+--
 -- Name: index_tag_changes_on_image_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_tag_changes_on_image_id ON public.tag_changes USING btree (image_id);
+
+
+--
+-- Name: index_tag_changes_on_ip; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tag_changes_on_ip ON public.tag_changes USING gist (ip inet_ops);
 
 
 --
@@ -3718,14 +3699,14 @@ CREATE INDEX index_tags_on_aliased_tag_id ON public.tags USING btree (aliased_ta
 -- Name: index_tags_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_tags_on_name ON public.tags USING btree (name);
+CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 
 
 --
 -- Name: index_tags_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_tags_on_slug ON public.tags USING btree (slug);
+CREATE UNIQUE INDEX index_tags_on_slug ON public.tags USING btree (slug);
 
 
 --
@@ -3799,13 +3780,6 @@ CREATE INDEX index_topics_on_slug ON public.topics USING btree (slug);
 
 
 --
--- Name: index_topics_on_sticky; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_topics_on_sticky ON public.topics USING btree (sticky);
-
-
---
 -- Name: index_topics_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3837,7 +3811,7 @@ CREATE INDEX index_user_bans_on_banning_user_id ON public.user_bans USING btree 
 -- Name: index_user_bans_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_user_bans_on_created_at ON public.user_bans USING btree (created_at);
+CREATE INDEX index_user_bans_on_created_at ON public.user_bans USING btree (created_at DESC);
 
 
 --
@@ -3967,6 +3941,13 @@ CREATE UNIQUE INDEX index_users_on_authentication_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_created_at ON public.users USING btree (created_at);
+
+
+--
 -- Name: index_users_on_current_filter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3991,7 +3972,7 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 -- Name: index_users_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_on_name ON public.users USING btree (name);
+CREATE UNIQUE INDEX index_users_on_name ON public.users USING btree (name);
 
 
 --
@@ -4002,10 +3983,24 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_role ON public.users USING btree (role) WHERE ((role)::text <> 'user'::text);
+
+
+--
 -- Name: index_users_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_on_slug ON public.users USING btree (slug);
+CREATE UNIQUE INDEX index_users_on_slug ON public.users USING btree (slug);
+
+
+--
+-- Name: index_users_on_watched_tag_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_watched_tag_ids ON public.users USING gin (watched_tag_ids);
 
 
 --
@@ -4048,20 +4043,6 @@ CREATE INDEX intensities_index ON public.images USING btree (se_intensity, sw_in
 --
 
 CREATE INDEX paypal_subscriptions_user_id_index ON public.paypal_subscriptions USING btree (user_id);
-
-
---
--- Name: temp_unique_index_tags_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX temp_unique_index_tags_on_name ON public.tags USING btree (name);
-
-
---
--- Name: temp_unique_index_tags_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX temp_unique_index_tags_on_slug ON public.tags USING btree (slug);
 
 
 --
@@ -4897,8 +4878,27 @@ ALTER TABLE ONLY public.paypal_subscriptions
 
 
 --
+-- Name: users users_forced_filter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_forced_filter_id_fkey FOREIGN KEY (forced_filter_id) REFERENCES public.filters(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20200419012620), (20200419012955), (20200419014349), (20200503002523), (20200505015055), (20200512033056), (20200512033453), (20200514031938), (20200514043042), (20200515041040);
-
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012620);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419012955);
+INSERT INTO public."schema_migrations" (version) VALUES (20200419014349);
+INSERT INTO public."schema_migrations" (version) VALUES (20200503002523);
+INSERT INTO public."schema_migrations" (version) VALUES (20200505015055);
+INSERT INTO public."schema_migrations" (version) VALUES (20200512033056);
+INSERT INTO public."schema_migrations" (version) VALUES (20200512033453);
+INSERT INTO public."schema_migrations" (version) VALUES (20200514031938);
+INSERT INTO public."schema_migrations" (version) VALUES (20200514043042);
+INSERT INTO public."schema_migrations" (version) VALUES (20200515041040);
+INSERT INTO public."schema_migrations" (version) VALUES (20200607000511);
+INSERT INTO public."schema_migrations" (version) VALUES (20200617111116);
+INSERT INTO public."schema_migrations" (version) VALUES (20200617113333);
