@@ -99,6 +99,13 @@ defmodule Philomena.Images do
     |> Repo.isolated_transaction(:serializable)
     |> case do
       {:ok, %{image: image}} = result ->
+        if Image.has_tag?(image, "dso") do
+          spawn(fn ->
+            # wait until image is likely to be available
+            :timer.sleep(5000)
+            Tags.autopopulate_object_tags(image)
+          end)
+        end
         repair_image(image)
         reindex_image(image)
         Tags.reindex_tags(image.added_tags)

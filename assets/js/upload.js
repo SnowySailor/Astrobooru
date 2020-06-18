@@ -83,16 +83,18 @@ function setupImageUpload() {
 
   // Enable/disable the fetch button based on content in the image scraper. Fetching with no URL makes no sense.
   remoteUrl.addEventListener('input', () => {
-    if(remoteUrl.value.length > 0) {
+    if (remoteUrl.value.length > 0) {
       enableFetch();
-    } else {
+    }
+    else {
       disableFetch();
     }
   });
 
-  if(remoteUrl.value.length > 0) {
+  if (remoteUrl.value.length > 0) {
     enableFetch();
-  } else {
+  }
+  else {
     disableFetch();
   }
 }

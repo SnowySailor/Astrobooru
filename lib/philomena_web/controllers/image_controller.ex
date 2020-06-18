@@ -19,7 +19,6 @@ defmodule PhilomenaWeb.ImageController do
   alias Philomena.Repo
   alias Philomena.Captcha
   alias Philomena.Users.User
-  alias Philomena.Tags
   import Ecto.Query
 
   require Size
@@ -121,17 +120,11 @@ defmodule PhilomenaWeb.ImageController do
       {true, _} ->
         case Images.create_image(attributes, image_params) do
           {:ok, %{image: image}} ->
-            spawn(fn ->
-              Images.repair_image(image)
-            end)
-
-            if Image.has_tag?(image, "dso") do
-              spawn(fn ->
-                # wait until image is likely to be available
-                :timer.sleep(5000)
-                Tags.autopopulate_object_tags(image)
-              end)
-            end
+            PhilomenaWeb.Endpoint.broadcast!(
+              "firehose",
+              "image:create",
+              PhilomenaWeb.Api.Json.ImageView.render("show.json", %{image: image, interactions: []})
+            )
 
             conn
             |> put_flash(:info, "Image created successfully.")
