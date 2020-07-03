@@ -496,7 +496,7 @@ defmodule PhilomenaWeb.Router do
     end
 
     resources "/posts", PostController, only: [:index]
-    resources "/markets", CommissionController, only: [:index]
+    resources "/market", CommissionController, only: [:index]
 
     resources "/galleries", GalleryController, only: [:index, :show] do
       resources "/reports", Gallery.ReportController, only: [:new, :create]

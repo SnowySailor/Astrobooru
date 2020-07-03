@@ -17,7 +17,7 @@ defmodule PhilomenaWeb.CommissionController do
     conn = Map.put(conn, :params, params)
 
     render(conn, "index.html",
-      title: "Commissions",
+      title: "Data Marketplace",
       commissions: commissions,
       layout_class: "layout--wide"
     )
