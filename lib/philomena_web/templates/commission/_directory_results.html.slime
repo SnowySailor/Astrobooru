@@ -4,7 +4,7 @@ elixir:
 
 .block
   .block__header
-    span.block__header__title Open Commissions
+    span.block__header__title Data for Sale
     = pagination
 
     = cond do
@@ -61,4 +61,4 @@ elixir:
                       = link "More information", to: Routes.profile_commission_path(@conn, :show, c.user)
 
       - true ->
-        p We couldn't find any commission listings to display. Sorry!
+        p There are currently no market listings
