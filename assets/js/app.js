@@ -15,3 +15,7 @@ import './vendor/es6.polyfill';
 // Our code
 import './ujs';
 import './when-ready';
+
+import '../css/themes/default.scss';
+import '../css/themes/light.scss';
+import '../css/themes/red.scss';
