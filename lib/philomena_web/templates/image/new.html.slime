@@ -4,10 +4,10 @@
       ' Read the
       a> href="/pages/rules" site rules
 
-  = if !@conn.assigns.current_user do
-    p
-      strong<> Sorry, but due to spam, anonymous uploaders need to fill this out.
-      | If you're logged in, you can still post anonymously and won't have to deal with captchas!
+  p
+    strong
+      ' Please check it isn't already here with
+      a href="/search/reverse" reverse search.
 
   / todo: extract this
   h4 Select an image
@@ -22,6 +22,7 @@
       = error_tag f, :image_height
       = error_tag f, :image_name
       = error_tag f, :image_mime_type
+      = error_tag f, :image_duration
       = error_tag f, :image_orig_sha512_hash
 
     .field-error-js.hidden.js-scraper
@@ -71,6 +72,8 @@
     .field
       div.h-captcha data-sitekey=@captcha_site_key
       script(src="https://hcaptcha.com/1/api.js" async defer)
+
+  = render PhilomenaWeb.CaptchaView, "_captcha.html", name: "image", conn: @conn
 
   .actions
     = submit "Upload", class: "button", autocomplete: "off", data: [disable_with: "Please wait..."]

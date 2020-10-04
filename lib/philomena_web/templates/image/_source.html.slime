@@ -12,9 +12,7 @@
         button.button.button--separate-left type="reset" data-click-hide="#source-form" data-click-show="#image-source"
           ' Cancel
 
-      = if !@conn.assigns.current_user do
-        div.h-captcha data-sitekey=@captcha_site_key
-        script(src="https://hcaptcha.com/1/api.js" async defer)
+      = render PhilomenaWeb.CaptchaView, "_captcha.html", name: "source", conn: @conn
 
     - else
       p

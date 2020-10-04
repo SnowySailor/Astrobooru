@@ -1,11 +1,9 @@
 defmodule PhilomenaWeb.ImageSorter do
   @allowed_fields ~W(
-    created_at
     updated_at
     first_seen_at
     aspect_ratio
     faves
-    id
     downvotes
     upvotes
     width
@@ -14,6 +12,9 @@ defmodule PhilomenaWeb.ImageSorter do
     comment_count
     tag_count
     wilson_score
+    pixels
+    size
+    duration
   )
 
   def parse_sort(params, query) do
@@ -26,11 +27,11 @@ defmodule PhilomenaWeb.ImageSorter do
   defp parse_sd(_params), do: "desc"
 
   defp parse_sf(%{"sf" => sf}, sd, query) when sf in @allowed_fields do
-    %{query: query, sorts: [%{sf => sd}]}
+    %{query: query, sorts: [%{sf => sd}, %{"id" => sd}]}
   end
 
   defp parse_sf(%{"sf" => "_score"}, sd, query) do
-    %{query: query, sorts: [%{"_score" => sd}]}
+    %{query: query, sorts: [%{"_score" => sd}, %{"id" => sd}]}
   end
 
   defp parse_sf(%{"sf" => "random"}, sd, query) do
@@ -63,7 +64,8 @@ defmodule PhilomenaWeb.ImageSorter do
                   }
                 }
               }
-            }
+            },
+            %{"id" => "desc"}
           ]
         }
 
@@ -73,7 +75,7 @@ defmodule PhilomenaWeb.ImageSorter do
   end
 
   defp parse_sf(_params, sd, query) do
-    %{query: query, sorts: [%{"created_at" => sd}]}
+    %{query: query, sorts: [%{"id" => sd}]}
   end
 
   defp random_query(seed, sd, query) do
@@ -85,7 +87,7 @@ defmodule PhilomenaWeb.ImageSorter do
           boost_mode: :replace
         }
       },
-      sorts: [%{"_score" => sd}]
+      sorts: [%{"_score" => sd}, %{"id" => sd}]
     }
   end
 end

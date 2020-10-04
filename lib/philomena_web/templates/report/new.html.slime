@@ -60,11 +60,6 @@ p
       .block__tab.communication-edit__tab.hidden data-tab="preview"
         ' [Loading preview...]
 
-    = if !@conn.assigns.current_user do
-      .field
-        div.h-captcha data-sitekey=@captcha_site_key
-        script(src="https://hcaptcha.com/1/api.js" async defer)
-      p
-        ' This helps stop bot spam; log in if you don't want to deal with captchas.
+    = render PhilomenaWeb.CaptchaView, "_captcha.html", name: "report", conn: @conn
 
     = submit "Send Report", class: "button"

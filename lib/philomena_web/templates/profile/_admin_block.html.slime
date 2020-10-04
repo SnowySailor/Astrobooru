@@ -12,12 +12,6 @@
     em
       ' (none)
 
-  = if @forced do
-    br
-    i.fa.fa-fw.fa-filter>
-    strong.comment_deleted> Forced Filter:
-    = link @forced.name, to: Routes.filter_path(@conn, :show, @forced)
-
   br
   i.far.fa-fw.fa-clock>
   ' Last seen
@@ -33,8 +27,21 @@
       ' (never)
 
   br
+  i.fas.fa-fw.fa-key>
   ' Two factor auth:
   strong = enabled_text(@user.otp_required_for_login)
+
+  br
+
+  = if @user.locked_at do
+    i.fas.fa-fw.fa-lock>
+    strong.comment_deleted>
+      ' Account locked,
+      => @user.failed_attempts
+      ' failed login attempts
+  - else
+    i.fas.fa-fw.fa-unlock>
+    ' Not currently locked
 
 br
 
@@ -79,7 +86,7 @@ a.label.label--primary.label--block href="#" data-click-toggle=".js-admin__optio
 
   ul.profile-admin__options__column
     = if can?(@conn, :edit, @user) do
-      li 
+      li
         = link to: Routes.admin_user_path(@conn, :edit, @user) do
           i.fas.fa-fw.fa-edit
           span.admin__button Edit User
@@ -92,7 +99,7 @@ a.label.label--primary.label--block href="#" data-click-toggle=".js-admin__optio
       = if @forced do
         li
           = link to: Routes.admin_user_force_filter_path(@conn, :delete, @user), data: [confirm: "Are you really, really sure?", method: "delete"] do
-            i.fas.faw-fw.fa-filter
+            i.fas.fa-fw.fa-filter
             span.admin__button Remove Force Filter
 
       = if @user.deleted_at do
@@ -106,36 +113,42 @@ a.label.label--primary.label--block href="#" data-click-toggle=".js-admin__optio
             i.fa.fa-fw.fa-times
             span.admin__button Deactivate Account
 
-      li 
+      = if @user.locked_at do
+        li
+          = link to: Routes.admin_user_unlock_path(@conn, :create, @user), data: [method: "post"] do
+            i.fas.fa-fw.fa-unlock
+            span.admin__button Unlock Account
+
+      li
         = link to: Routes.admin_user_wipe_path(@conn, :create, @user), data: [confirm: "This is irreversible, destroying all identifying information including email. Are you sure?", method: "post"] do
           i.fas.fa-fw.fa-eraser
           span.admin__button Wipe PII
-    
+
     = if can?(@conn, :index, Philomena.Users.User) do
-      li 
+      li
         = link to: Routes.admin_user_vote_path(@conn, :delete, @user), data: [confirm: "Are you really, really sure?", method: "delete"] do
           i.far.fa-fw.fa-file-excel
           span.admin__button Remove All Votes/Faves
 
-      li 
+      li
         = link to: Routes.admin_user_downvote_path(@conn, :delete, @user), data: [confirm: "Are you really, really sure?", method: "delete"] do
           i.fa.fa-fw.fa-arrow-down
           span.admin__button Remove All Downvotes
 
       = if can?(@conn, :index, %Philomena.Donations.Donation{}) do
-        li 
+        li
           = link to: Routes.admin_donation_user_path(@conn, :show, @user) do
             i.fas.fa-fw.fa-dollar-sign
             span.admin__button Donations
 
     = if can?(@conn, :edit, %Philomena.UserLinks.UserLink{}) do
-      li 
+      li
         = link to: Routes.profile_user_link_path(@conn, :new, @user) do
           i.fa.fa-fw.fa-link
           span.admin__button Add User Link
 
     = if can?(@conn, :create, Philomena.Bans.User) do
-      li 
+      li
         = link to: Routes.admin_user_ban_path(@conn, :new, username: @user.name) do
           i.fa.fa-fw.fa-ban
           span.admin__button Ban this sucker

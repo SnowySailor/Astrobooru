@@ -44,3 +44,9 @@ docker/web/ssl_data/*
 
 # Intellij IDEA
 .idea
+
+# ElixirLS
+.elixir_ls
+
+# Index dumps
+*.jsonl

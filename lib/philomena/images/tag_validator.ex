@@ -2,9 +2,6 @@ defmodule Philomena.Images.TagValidator do
   alias Philomena.Servers.Config
   import Ecto.Changeset
 
-  @ratings MapSet.new(["dso", "planetary", "lunar", "solar", "landscape"])
-  @empty MapSet.new()
-
   def validate_tags(changeset) do
     tags = changeset |> get_field(:tags)
 
@@ -22,15 +19,26 @@ defmodule Philomena.Images.TagValidator do
     |> validate_only_one_rating(rating_set)
   end
 
-  defp ratings(%MapSet{} = tag_set) do
-    MapSet.intersection(tag_set, @ratings)
+  defp ratings(tag_set) do
+    dso = MapSet.intersection(tag_set, dso_rating())
+    planetary = MapSet.intersection(tag_set, planetary_ratings())
+    lunar = MapSet.intersection(tag_set, lunar_ratings())
+    solar = MapSet.intersection(tag_set, solar_rating())
+    landscape = MapSet.intersection(tag_set, landscape_rating())
+
+    %{
+      dso: dso,
+      planetary: planetary,
+      lunar: lunar,
+      solar: solar,
+      landscape: landscape
+    }
   end
 
   defp validate_number_of_tags(changeset, tag_set, num) do
     cond do
       MapSet.size(tag_set) < num ->
-        changeset
-        |> add_error(:tag_input, "must contain at least #{num} tags")
+        add_error(changeset, :tag_input, "must contain at least #{num} tags")
 
       true ->
         changeset
@@ -54,19 +62,26 @@ defmodule Philomena.Images.TagValidator do
     end
   end
 
-  defp validate_has_rating(changeset, %{safe: s, sexual: x, horror: h, gross: g})
-       when s == @empty and x == @empty and h == @empty and g == @empty do
-    changeset
-    |> add_error(:tag_input, "must contain at least one rating tag")
+  defp validate_has_rating(changeset, %{dso: d, planetary: p, lunar: l, solar: s, landscape: la}) do
+    cond do
+      MapSet.size(d) > 0 or MapSet.size(p) > 0 or MapSet.size(l) > 0 or MapSet.size(s) > 0 or MapSet.size(la) > 0 ->
+        changeset
+
+      true ->
+        add_error(changeset, :tag_input, "must contain at least one classification tag")
+    end
   end
 
-  defp validate_has_rating(changeset, _ratings), do: changeset
-
   defp validate_only_one_rating(changeset, ratings) do
+    rating =
+      Enum.reduce(ratings, 0, fn r, acc ->
+        acc + MapSet.size(elem(r, 1))
+      end)
+
     cond do
-      MapSet.size(ratings) > 1 ->
+      rating > 1 ->
         changeset
-        |> add_error(:tag_input, "may contain only one type")
+        |> add_error(:tag_input, "may contain only one classification tag")
 
       true ->
         changeset
@@ -78,4 +93,10 @@ defmodule Philomena.Images.TagValidator do
     |> Enum.map(& &1.name)
     |> MapSet.new()
   end
+
+  defp dso_rating, do: MapSet.new(["dso"])
+  defp planetary_ratings, do: MapSet.new(["planetary"])
+  defp lunar_ratings, do: MapSet.new(["lunar"])
+  defp solar_rating, do: MapSet.new(["solar"])
+  defp landscape_rating, do: MapSet.new(["landscape"])
 end

@@ -49,6 +49,7 @@ defmodule Philomena.Images.Image do
     field :image_format, :string
     field :image_mime_type, :string
     field :image_aspect_ratio, :float
+    field :image_duration, :float
     field :image_is_animated, :boolean, source: :is_animated
     field :ip, EctoNetwork.INET
     field :fingerprint, :string
@@ -119,6 +120,7 @@ defmodule Philomena.Images.Image do
     |> change(first_seen_at: now)
     |> change(attribution)
     |> validate_length(:description, max: 50_000, count: :bytes)
+    |> validate_format(:source_url, ~r/\Ahttps?:\/\//)
   end
 
   def image_changeset(image, attrs) do
@@ -132,6 +134,7 @@ defmodule Philomena.Images.Image do
       :image_format,
       :image_mime_type,
       :image_aspect_ratio,
+      :image_duration,
       :image_orig_sha512_hash,
       :image_sha512_hash,
       :uploaded_image,
@@ -146,12 +149,13 @@ defmodule Philomena.Images.Image do
       :image_format,
       :image_mime_type,
       :image_aspect_ratio,
+      :image_duration,
       :image_orig_sha512_hash,
       :image_sha512_hash,
       :uploaded_image,
       :image_is_animated
     ])
-    |> validate_number(:image_size, greater_than: 0, less_than_or_equal_to: 26_214_400)
+    |> validate_number(:image_size, greater_than: 0, less_than_or_equal_to: 100_000_000)
     |> validate_number(:image_width, greater_than: 0, less_than_or_equal_to: 32767)
     |> validate_number(:image_height, greater_than: 0, less_than_or_equal_to: 32767)
     |> validate_length(:image_name, max: 255, count: :bytes)
@@ -161,6 +165,12 @@ defmodule Philomena.Images.Image do
       message: "(#{attrs["image_mime_type"]}) is invalid"
     )
     |> unsafe_validate_unique([:image_orig_sha512_hash], Repo)
+  end
+
+  def remove_image_changeset(image) do
+    image
+    |> change(removed_image: image.image)
+    |> change(image: nil)
   end
 
   def source_changeset(image, attrs) do
@@ -186,13 +196,13 @@ defmodule Philomena.Images.Image do
 
   def thumbnail_changeset(image, attrs) do
     image
-    |> cast(attrs, [:image_sha512_hash, :image_size])
+    |> cast(attrs, [:image_sha512_hash, :image_size, :image_width, :image_height])
     |> change(thumbnails_generated: true, duplication_checked: true)
   end
 
   def process_changeset(image, attrs) do
     image
-    |> cast(attrs, [:image_sha512_hash, :image_size])
+    |> cast(attrs, [:image_sha512_hash, :image_size, :image_width, :image_height])
     |> change(processed: true)
   end
 
@@ -211,6 +221,7 @@ defmodule Philomena.Images.Image do
   def hide_changeset(image, attrs, user) do
     image
     |> cast(attrs, [:deletion_reason])
+    |> validate_not_hidden()
     |> put_change(:deleter_id, user.id)
     |> put_change(:hidden_image_key, create_key())
     |> put_change(:hidden_from_users, true)
@@ -225,6 +236,7 @@ defmodule Philomena.Images.Image do
 
   def merge_changeset(image, duplicate_of_image) do
     change(image)
+    |> validate_not_hidden()
     |> put_change(:duplicate_id, duplicate_of_image.id)
     |> put_change(:hidden_image_key, create_key())
     |> put_change(:hidden_from_users, true)
@@ -232,6 +244,7 @@ defmodule Philomena.Images.Image do
 
   def unhide_changeset(image) do
     change(image)
+    |> validate_hidden()
     |> put_change(:deleter_id, nil)
     |> put_change(:hidden_image_key, nil)
     |> put_change(:hidden_from_users, false)
@@ -335,5 +348,19 @@ defmodule Philomena.Images.Image do
 
   def has_tag?(image, tag_name) do
     Enum.any?(image.tags, fn tag -> tag.name == tag_name end)
+  end
+  
+  defp validate_hidden(changeset) do
+    case get_field(changeset, :hidden_from_users) do
+      true -> changeset
+      false -> add_error(changeset, :hidden_from_users, "must be true")
+    end
+  end
+
+  defp validate_not_hidden(changeset) do
+    case get_field(changeset, :hidden_from_users) do
+      true -> add_error(changeset, :hidden_from_users, "must be false")
+      false -> changeset
+    end
   end
 end

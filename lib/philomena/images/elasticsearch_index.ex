@@ -31,6 +31,7 @@ defmodule Philomena.Images.ElasticsearchIndex do
           downvoters: %{type: "keyword"},
           downvotes: %{type: "integer"},
           duplicate_id: %{type: "integer"},
+          duration: %{type: "float"},
           faves: %{type: "integer"},
           favourited_by_user_ids: %{type: "keyword"},
           favourited_by_users: %{type: "keyword"},
@@ -46,7 +47,9 @@ defmodule Philomena.Images.ElasticsearchIndex do
           mime_type: %{type: "keyword"},
           orig_sha512_hash: %{type: "keyword"},
           original_format: %{type: "keyword"},
+          pixels: %{type: "integer"},
           score: %{type: "integer"},
+          size: %{type: "integer"},
           sha512_hash: %{type: "keyword"},
           source_url: %{type: "keyword"},
           tag_count: %{type: "integer"},
@@ -70,6 +73,8 @@ defmodule Philomena.Images.ElasticsearchIndex do
               position: %{type: "integer"}
             }
           },
+          gallery_id: %{type: "keyword"},
+          gallery_position: %{type: "object", enabled: false},
           namespaced_tags: %{
             properties: %{
               name: %{type: "keyword"},
@@ -93,6 +98,9 @@ defmodule Philomena.Images.ElasticsearchIndex do
       comment_count: image.comments_count,
       width: image.image_width,
       height: image.image_height,
+      pixels: image.image_width * image.image_height,
+      size: image.image_size,
+      duration: image.image_duration,
       tag_count: length(image.tags),
       aspect_ratio: image.image_aspect_ratio,
       wilson_score: wilson_score(image),
@@ -127,6 +135,8 @@ defmodule Philomena.Images.ElasticsearchIndex do
       namespaced_tags: %{
         name: image.tags |> Enum.flat_map(&([&1] ++ &1.aliases)) |> Enum.map(& &1.name)
       },
+      gallery_id: Enum.map(image.gallery_interactions, & &1.gallery_id),
+      gallery_position: Map.new(image.gallery_interactions, &{&1.gallery_id, &1.position}),
       favourited_by_users: image.favers |> Enum.map(&String.downcase(&1.name)),
       hidden_by_users: image.hiders |> Enum.map(&String.downcase(&1.name)),
       upvoters: image.upvoters |> Enum.map(&String.downcase(&1.name)),

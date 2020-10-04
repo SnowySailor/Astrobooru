@@ -14,6 +14,7 @@ defmodule PhilomenaWeb.ImageController do
     Galleries.Gallery
   }
 
+  alias Philomena.Elasticsearch
   alias Philomena.Interactions
   alias Philomena.Comments
   alias Philomena.Repo
@@ -23,11 +24,16 @@ defmodule PhilomenaWeb.ImageController do
 
   require Size
 
+  plug PhilomenaWeb.LimitPlug,
+       [time: 10, error: "You may only upload images once every 10 seconds."]
+       when action in [:create]
+
   plug :load_image when action in [:show]
 
   plug PhilomenaWeb.FilterBannedUsersPlug when action in [:new, :create]
   plug PhilomenaWeb.UserAttributionPlug when action in [:create]
-  plug PhilomenaWeb.CaptchaPlug when action in [:create]
+  plug PhilomenaWeb.CaptchaPlug when action in [:new, :show, :create]
+  plug PhilomenaWeb.CheckCaptchaPlug when action in [:create]
 
   plug PhilomenaWeb.ScraperPlug,
        [params_name: "image", params_key: "image"] when action in [:create]
@@ -36,6 +42,8 @@ defmodule PhilomenaWeb.ImageController do
 
   def index(conn, _params) do
     {:ok, {images, _tags}} = ImageLoader.search_string(conn, "created_at.lte:3 minutes ago")
+
+    images = Elasticsearch.search_records(images, preload(Image, :tags))
 
     interactions = Interactions.user_interactions(images, conn.assigns.current_user)
 

@@ -49,7 +49,6 @@
     "name": "Administrator",
     "email": "admin@example.com",
     "password": "examplepassword",
-    "password_confirmation": "examplepassword",
     "role": "admin"
   }],
   "rating_tags": [

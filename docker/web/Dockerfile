@@ -1,11 +1,9 @@
-FROM nginx:1.17.10
+FROM nginx:1.18.0
 ENV APP_DIR /srv/philomena
 
+RUN apt-get update && apt-get install -y certbot python-certbot-nginx
 COPY docker/web/nginx.conf /tmp/docker.nginx
-COPY docker/web/ssl_data/fullchain.pem /etc/letsencrypt/live/astrobooru.com/fullchain.pem
-COPY docker/web/ssl_data/privkey.pem /etc/letsencrypt/live/astrobooru.com/privkey.pem
-COPY docker/web/ssl_data/options-ssl-nginx.conf /etc/letsencrypt/options-ssl-nginx.conf
-COPY docker/web/ssl_data/ssl-dhparams.pem  /etc/letsencrypt/ssl-dhparams.pem
+COPY docker/web/ssl_data/letsencrypt /etc/letsencrypt/
 
 RUN envsubst '$APP_DIR' < /tmp/docker.nginx > /etc/nginx/conf.d/default.conf
 EXPOSE 80

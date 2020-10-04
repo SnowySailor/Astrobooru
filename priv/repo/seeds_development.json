@@ -3,7 +3,6 @@
       "name": "DSO Chad",
       "email": "moderator@example.com",
       "password": "dsoimager123",
-      "password_confirmation": "dsoimager123",
       "role": "moderator"
     },
     {
@@ -17,7 +16,6 @@
       "name": "Planetary Beta",
       "email": "betaboi@example.com",
       "password": "planetpostingplebeian",
-      "password_confirmation": "planetpostingplebeian",
       "role": "user"
     }
   ],

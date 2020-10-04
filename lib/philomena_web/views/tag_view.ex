@@ -20,6 +20,10 @@ defmodule PhilomenaWeb.TagView do
     can?(conn, :alias, %Tag{})
   end
 
+  def pretty_tag_path(%{slug: slug}) do
+    "/tags/" <> URI.encode(slug, &(&1 == ?+ or URI.char_unreserved?(&1)))
+  end
+
   def tag_image(%{image: image}) do
     tag_url_root() <> "/" <> image
   end
@@ -132,8 +136,8 @@ defmodule PhilomenaWeb.TagView do
   end
 
   defp implied_by_multitag(tag_names, ignore_tag_names) do
-    Elasticsearch.search_records(
-      Tag,
+    Tag
+    |> Elasticsearch.search_definition(
       %{
         query: %{
           bool: %{
@@ -143,9 +147,9 @@ defmodule PhilomenaWeb.TagView do
         },
         sort: %{images: :desc}
       },
-      %{page_size: 40},
-      Tag |> preload(:implied_tags)
+      %{page_size: 40}
     )
+    |> Elasticsearch.search_records(preload(Tag, :implied_tags))
   end
 
   defp manages_links?(conn),

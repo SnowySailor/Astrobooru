@@ -3,7 +3,9 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
   alias Philomena.Roles.Role
   alias Philomena.Badges.Award
   alias Philomena.Badges.Badge
+  alias Philomena.Channels.Channel
   alias Philomena.Comments.Comment
+  alias Philomena.Commissions.Commission
   alias Philomena.Conversations.Conversation
   alias Philomena.DuplicateReports.DuplicateReport
   alias Philomena.DnpEntries.DnpEntry
@@ -43,8 +45,13 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
   def can?(%User{role: "moderator"}, :show, %Filter{}), do: true
 
   # Manage images
+  def can?(%User{role: "moderator"}, :destroy, %Image{}), do: false
   def can?(%User{role: "moderator"}, _action, Image), do: true
   def can?(%User{role: "moderator"}, _action, %Image{}), do: true
+
+  # Manage channels
+  def can?(%User{role: "moderator"}, _action, Channel), do: true
+  def can?(%User{role: "moderator"}, _action, %Channel{}), do: true
 
   # View comments
   def can?(%User{role: "moderator"}, :show, %Comment{}), do: true
@@ -113,6 +120,9 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
 
   # Revert tag changes
   def can?(%User{role: "moderator"}, :revert, TagChange), do: true
+
+  # Manage commissions
+  def can?(%User{role: "moderator"}, _action, %Commission{}), do: true
 
   # And some privileged moderators can...
 
@@ -246,7 +256,7 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
     do: true
 
   # User link assistant actions
-  def can?(%User{role: "assistant", role_map: %{"UserLink" => "moderator"}}, :show, %UserLink{}),
+  def can?(%User{role: "assistant", role_map: %{"UserLink" => "moderator"}}, _action, %UserLink{}),
     do: true
 
   def can?(
@@ -325,13 +335,9 @@ defimpl Canada.Can, for: [Atom, Philomena.Users.User] do
     do: true
 
   # Edit comments on images
-  def can?(%User{id: id}, action, %Comment{hidden_from_users: false, user_id: id} = comment)
-      when action in [:edit, :update] do
-    # comment must have been made no later than 15 minutes ago
-    time_ago = NaiveDateTime.utc_now() |> NaiveDateTime.add(-15 * 60)
-
-    NaiveDateTime.diff(comment.created_at, time_ago) > 0
-  end
+  def can?(%User{id: id}, action, %Comment{hidden_from_users: false, user_id: id})
+      when action in [:edit, :update],
+      do: true
 
   # Edit metadata on images where that is allowed
   def can?(_user, :edit_metadata, %Image{hidden_from_users: false, tag_editing_allowed: true}),

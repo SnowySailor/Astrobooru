@@ -9,8 +9,13 @@ defmodule PhilomenaWeb.Image.SourceController do
   alias Philomena.Captcha
   import Ecto.Query
 
+  plug PhilomenaWeb.LimitPlug,
+       [time: 5, error: "You may only update metadata once every 5 seconds."]
+       when action in [:update]
+
   plug PhilomenaWeb.FilterBannedUsersPlug
   plug PhilomenaWeb.CaptchaPlug
+  plug PhilomenaWeb.CheckCaptchaPlug
   plug PhilomenaWeb.UserAttributionPlug
   plug PhilomenaWeb.CanaryMapPlug, update: :edit_metadata
   plug :load_and_authorize_resource, model: Image, id_name: "image_id", preload: [:tags, :user]
@@ -27,6 +32,7 @@ defmodule PhilomenaWeb.Image.SourceController do
           "image:source_update",
           %{image_id: image.id, added: [image.source_url], removed: [old_source]}
         )
+
         PhilomenaWeb.Endpoint.broadcast!(
           "firehose",
           "image:update",

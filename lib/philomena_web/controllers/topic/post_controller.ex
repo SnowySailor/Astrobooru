@@ -5,6 +5,10 @@ defmodule PhilomenaWeb.Topic.PostController do
   alias Philomena.Posts
   alias Philomena.UserStatistics
 
+  plug PhilomenaWeb.LimitPlug,
+       [time: 30, error: "You may only make a post once every 30 seconds."]
+       when action in [:create]
+
   plug PhilomenaWeb.FilterBannedUsersPlug
   plug PhilomenaWeb.UserAttributionPlug
 
@@ -35,6 +39,18 @@ defmodule PhilomenaWeb.Topic.PostController do
         Posts.reindex_post(post)
         UserStatistics.inc_stat(conn.assigns.current_user, :forum_posts)
 
+        if forum.access_level == "normal" do
+          PhilomenaWeb.Endpoint.broadcast!(
+            "firehose",
+            "post:create",
+            PhilomenaWeb.Api.Json.Forum.Topic.PostView.render("firehose.json", %{
+              post: post,
+              topic: topic,
+              forum: forum
+            })
+          )
+        end
+
         conn
         |> put_flash(:info, "Post created successfully.")
         |> redirect(
@@ -46,7 +62,7 @@ defmodule PhilomenaWeb.Topic.PostController do
       _error ->
         conn
         |> put_flash(:error, "There was an error creating the post")
-        |> redirect(external: conn.assigns.referrer)
+        |> redirect(to: Routes.forum_topic_path(conn, :show, forum, topic))
     end
   end
 

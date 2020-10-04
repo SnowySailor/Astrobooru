@@ -30,7 +30,8 @@ defmodule PhilomenaWeb.ReportController do
   #
   # plug PhilomenaWeb.FilterBannedUsersPlug
   # plug PhilomenaWeb.UserAttributionPlug
-  # plug PhilomenaWeb.CaptchaPlug when action in [:create]
+  # plug PhilomenaWeb.CaptchaPlug
+  # plug PhilomenaWeb.CheckCaptchaPlug when action in [:create]
   # plug :load_and_authorize_resource, model: Image, id_name: "image_id", persisted: true
 
   def create(conn, action, reportable, reportable_type, %{"report" => report_params}) do
@@ -41,7 +42,7 @@ defmodule PhilomenaWeb.ReportController do
         conn
         |> put_flash(
           :error,
-          "You may not have more than 5 open reports at a time. Did you read the reporting tips?"
+          "You may not have more than #{max_reports()} open reports at a time. Did you read the reporting tips?"
         )
         |> redirect(to: "/")
 
@@ -74,7 +75,13 @@ defmodule PhilomenaWeb.ReportController do
   defp too_many_reports?(conn) do
     user = conn.assigns.current_user
 
-    too_many_reports_user?(user) or too_many_reports_ip?(conn)
+    case user do
+      %{role: role} when role != "user" ->
+        false
+
+      _user ->
+        too_many_reports_user?(user) or too_many_reports_ip?(conn)
+    end
   end
 
   defp too_many_reports_user?(nil), do: false
@@ -86,7 +93,7 @@ defmodule PhilomenaWeb.ReportController do
       |> where([r], r.state in ["open", "in_progress"])
       |> Repo.aggregate(:count, :id)
 
-    reports_open >= 3
+    reports_open >= max_reports()
   end
 
   defp too_many_reports_ip?(conn) do
@@ -98,9 +105,13 @@ defmodule PhilomenaWeb.ReportController do
       |> where([r], r.state in ["open", "in_progress"])
       |> Repo.aggregate(:count, :id)
 
-    reports_open >= 3
+    reports_open >= max_reports()
   end
 
   defp redirect_path(_conn, nil), do: "/"
   defp redirect_path(conn, _user), do: Routes.report_path(conn, :index)
+
+  defp max_reports do
+    3
+  end
 end

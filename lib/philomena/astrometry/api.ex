@@ -4,7 +4,7 @@ defmodule Philomena.Astrometry.API do
   alias Philomena.Astrometry.Request
   alias Philomena.Astrometry.Authentication
 
-  @request_delay 5_000
+  @request_delay 30_000
   @retry_timeout 1_800
 
   def get_tags(url) do
@@ -21,7 +21,7 @@ defmodule Philomena.Astrometry.API do
   defp submit_url(url, time) when is_binary(url) do
     case expired?(time) do
       true ->
-        raise("could not submit url within #{@retry_timeout / 1000} seconds")
+        raise("could not submit url within #{@retry_timeout} seconds")
 
       false ->
         body = build_url_submit_body(url)
@@ -61,7 +61,7 @@ defmodule Philomena.Astrometry.API do
     case expired?(time) do
       true ->
         raise(
-          "submission #{subid} was not assigned jobid within #{@retry_timeout / 1000} seconds"
+          "submission #{subid} was not assigned jobid within #{@retry_timeout} seconds"
         )
 
       false ->
